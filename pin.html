@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinr - View Pin</title>
+
+    <!-- Open Graph Meta Tags for rich previews -->
+    <meta property="og:title" content="Check out my pin!">
+    <meta property="og:description" content="View this pin on Pinr">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://builtbylee.github.io/pinr/assets/og-image.png">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #FCFEFD;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            color: #1c1c1e;
+        }
+
+        .main-card {
+            background: #FCFEFD;
+            border: 1px solid #e5e5ea;
+            border-radius: 32px;
+            /* Slightly tighter radius */
+            padding: 24px 20px;
+            /* Reduced vertical padding further */
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            margin-bottom: 8px;
+            /* Minimal margin */
+            text-align: center;
+        }
+
+        .logo-full {
+            height: 77px;
+            /* Reduced by 30% from 110px */
+            object-fit: contain;
+        }
+
+        .pin-preview-card {
+            background: #f2f2f7;
+            border-radius: 24px;
+            overflow: hidden;
+            width: 100%;
+            height: 60vh;
+            /* Increased from 50vh */
+            max-height: 600px;
+            /* Increased max-height */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .pin-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .gradient-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+            z-index: 2;
+        }
+
+        .pin-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px;
+            z-index: 3;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .pin-title {
+            font-size: 24px;
+            /* Reduced from 28px */
+            font-weight: 700;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .pin-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+
+        .pin-meta svg {
+            width: 16px;
+            height: 16px;
+            fill: #FFFFFF;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .pin-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.95;
+            flex-wrap: wrap;
+        }
+
+        .pin-date {
+            font-size: 14px;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            /* Changed from column */
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: #34C759;
+            color: white;
+            border: none;
+            padding: 14px;
+            /* Reduced from 16px */
+            border-radius: 14px;
+            font-size: 15px;
+            /* Slightly reduced for side-by-side */
+            flex: 1;
+            /* Equal width */
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #000000;
+            color: #ffffff;
+            padding: 14px;
+            /* Reduced from 18px */
+            border-radius: 14px;
+            font-size: 15px;
+            /* Slightly reduced */
+            flex: 1;
+            /* Equal width */
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-state,
+        .error-state {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+        }
+
+        .tagline {
+            margin-top: 24px;
+            text-align: center;
+            color: #8e8e93;
+            font-size: 13px;
+            padding: 0 20px;
+            line-height: 1.4;
+        }
+
+        .journey-note {
+            font-size: 14px;
+            color: #1c1c1e;
+            text-align: center;
+            margin-bottom: 16px;
+            font-weight: 500;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-card">
+        <div class="header">
+            <img src="assets/pinr-logo.png" alt="Pinr" class="logo-full">
+        </div>
+
+        <div id="journey-message-container"></div>
+
+        <div class="pin-preview-card">
+            <div id="content" style="height: 100%;">
+                <div class="loading-state">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="action-buttons" class="buttons">
+            <!-- Buttons appended here -->
+        </div>
+    </div>
+
+    <p class="tagline">Pin your travels. Share your memories.</p>
+
+    <script>
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHNlIbE1uCgnMz8k3E1GFSd2ed3uCT9UI",
+            authDomain: "days-c4ad4.firebaseapp.com",
+            projectId: "days-c4ad4",
+            storageBucket: "days-c4ad4.firebasestorage.app",
+            messagingSenderId: "760973100570",
+            appId: "1:760973100570:web:c3cf0ea65d434fb0cef3a3"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const APP_STORE_URL = 'https://play.google.com/store/apps/details?id=com.builtbylee.app80days';
+
+        async function loadPin() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pinId = urlParams.get('id');
+            const type = urlParams.get('type'); // 'story' or undefined
+
+            if (!pinId) {
+                showError('No ID provided');
+                return;
+            }
+
+            try {
+                // If type is 'story', we still fetch the pinId passed (which should be the COVER PIN ID of the story)
+                // Wait, if the user shares a "Journey", does the app share the Story ID or the Cover Pin ID?
+                // The prompt says: "if a user shares a Journey... they only see the first pin".
+                // This implies the ID passed IS a Pin ID (the first pin).
+                // But we need to know it IS a journey to show the message.
+                // So the URL should be pin.html?id={pinId}&type=story OR pin.html?id={pinId}&journey=true
+
+                const pinDoc = await db.collection('pins').doc(pinId).get();
+
+                if (!pinDoc.exists) {
+                    showError('Pin not found');
+                    return;
+                }
+
+                const pin = pinDoc.data();
+                displayPin(pin, pinId, type === 'story');
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError('Unable to load preview');
+            }
+        }
+
+        function displayPin(pin, pinId, isJourney) {
+            // Check for imageUrl (Firestore field) or fallback to imageUris (legacy/app state)
+            const imageUrl = pin.imageUrl || (pin.imageUris && pin.imageUris[0]) || '';
+            const deepLink = `pinr://pin/${pinId}`; // Deep link still points to Pin (unless we want to deep link to story?)
+            // If it's a journey, deep link should probably go to the pin for now as per "just like if they had shared just a pin" logic, 
+            // OR if the app supports it, we could deep link to the story.
+            // For now, let's stick to the pin deep link to ensure it works, as the user said "they only see the first pin".
+
+            // Update Open Graph tags
+            document.querySelector('meta[property="og:title"]').content = pin.title || 'Pinr Memory';
+            document.querySelector('meta[property="og:description"]').content = pin.locationName || 'View this travel memory';
+            if (imageUrl) {
+                document.querySelector('meta[property="og:image"]').content = imageUrl;
+            }
+
+            const dateStr = pin.date ? new Date(pin.date).toLocaleDateString('en-US', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            }) : '';
+
+            // 0. Render Journey Message if needed
+            if (isJourney) {
+                document.getElementById('journey-message-container').innerHTML = `
+                    <div class="journey-note">
+                        Get the Pinr app to view the full Journey 📸
+                    </div>
+                `;
+            }
+
+            // 1. Render Card Content (Image + Overlay)
+            document.getElementById('content').innerHTML = `
+                ${imageUrl
+                    ? `<img src="${imageUrl}" alt="${pin.title}" class="pin-image">`
+                    : `<div class="loading-state" style="background:#ddd;">📍</div>`
+                }
+                <div class="gradient-overlay"></div>
+                <div class="pin-details">
+                    <h1 class="pin-title">${pin.title || 'Untitled Pin'}</h1>
+                    <div class="pin-meta">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        ${pin.locationName || 'Unknown Location'}
+                        ${dateStr ? `<span style="margin: 0 6px;">•</span> ${dateStr}` : ''}
+                    </div>
+                </div>
+            `;
+
+            // 2. Render Action Buttons
+            document.getElementById('action-buttons').innerHTML = `
+                <a href="${deepLink}" class="btn-primary">Sign In</a>
+                <a href="#" id="download-btn" class="btn-secondary">Download Pinr</a>
+            `;
+
+            // Add click handler for Download button
+            document.getElementById('download-btn').addEventListener('click', function (e) {
+                e.preventDefault();
+                this.textContent = "Coming Soon";
+                this.style.background = "#555";
+                this.style.cursor = "default";
+            });
+        }
+
+        function showError(message) {
+            document.getElementById('content').innerHTML = `
+                <div class="error-state">
+                    <p style="font-size: 48px; margin-bottom: 16px;">😕</p>
+                    <p>${message}</p>
+                </div>
+            `;
+            document.getElementById('action-buttons').innerHTML = `
+                <a href="#" id="download-btn-error" class="btn-secondary">Download Pinr</a>
+            `;
+            document.getElementById('download-btn-error').addEventListener('click', function (e) {
+                e.preventDefault();
+                this.textContent = "Coming Soon";
+                this.style.background = "#555";
+                this.style.cursor = "default";
+            });
+        }
+
+        // Load on page ready
+        loadPin();
+    </script>
+</body>
+
+</html>
