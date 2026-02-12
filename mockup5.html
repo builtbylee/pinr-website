@@ -2200,143 +2200,82 @@
         // Earth sphere — high resolution for smooth shading
         var geometry = new THREE.SphereGeometry(1, 128, 128);
 
-        // Load textures: day map for detail, water mask for ocean/land, topology for bump
+        // Water mask only — clean illustrated globe style (no terrain textures)
         var textureLoader = new THREE.TextureLoader();
         textureLoader.crossOrigin = 'anonymous';
 
-        var dayMap = textureLoader.load(
-            'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-day.jpg'
-        );
         var waterMask = textureLoader.load(
             'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-water.png'
         );
-        var topoMap = textureLoader.load(
-            'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-topology.png'
-        );
 
-        // Realistic globe shader: uses earth-day.jpg for terrain detail,
-        // then color-corrects to bright cyan oceans + light sage-green land
-        // to match the app's atlas-style globe appearance
+        // Clean illustrated globe: flat bright colors + simple sphere shading
+        // Matching getpinr.com reference: bright sky blue ocean, bright yellow-green land
         var material = new THREE.ShaderMaterial({
             uniforms: {
-                uDayMap: { value: dayMap },
                 uWaterMask: { value: waterMask },
-                uTopoMap: { value: topoMap },
-                uLightDir: { value: new THREE.Vector3(5, 3, 5).normalize() },
-                uTexelSize: { value: new THREE.Vector2(1.0 / 2048.0, 1.0 / 1024.0) }
+                uLightDir: { value: new THREE.Vector3(4, 3, 5).normalize() }
             },
             vertexShader: [
                 'varying vec2 vUv;',
                 'varying vec3 vNormal;',
                 'varying vec3 vViewDir;',
-                'varying vec3 vTangent;',
-                'varying vec3 vBitangent;',
                 'void main() {',
                 '    vUv = uv;',
                 '    vNormal = normalize(normalMatrix * normal);',
                 '    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);',
                 '    vViewDir = normalize(-mvPos.xyz);',
-                '',
-                '    vec3 T = normalize(cross(normal, vec3(0.0, 1.0, 0.0)));',
-                '    if (length(T) < 0.01) T = normalize(cross(normal, vec3(1.0, 0.0, 0.0)));',
-                '    vec3 B = normalize(cross(normal, T));',
-                '    vTangent = normalize(normalMatrix * T);',
-                '    vBitangent = normalize(normalMatrix * B);',
-                '',
                 '    gl_Position = projectionMatrix * mvPos;',
                 '}'
             ].join('\n'),
             fragmentShader: [
-                'uniform sampler2D uDayMap;',
                 'uniform sampler2D uWaterMask;',
-                'uniform sampler2D uTopoMap;',
                 'uniform vec3 uLightDir;',
-                'uniform vec2 uTexelSize;',
                 'varying vec2 vUv;',
                 'varying vec3 vNormal;',
                 'varying vec3 vViewDir;',
-                'varying vec3 vTangent;',
-                'varying vec3 vBitangent;',
                 '',
                 'void main() {',
-                '    vec3 dayColor = texture2D(uDayMap, vUv).rgb;',
-                '    float waterFactor = texture2D(uWaterMask, vUv).r;',
-                '    bool isWater = waterFactor > 0.5;',
+                '    float w = texture2D(uWaterMask, vUv).r;',
+                '    bool isWater = w > 0.5;',
                 '',
-                '    // Bump mapping from topology (land only)',
-                '    float topoC = texture2D(uTopoMap, vUv).r;',
-                '    float topoR = texture2D(uTopoMap, vUv + vec2(uTexelSize.x * 2.0, 0.0)).r;',
-                '    float topoU = texture2D(uTopoMap, vUv + vec2(0.0, uTexelSize.y * 2.0)).r;',
-                '    float topoL = texture2D(uTopoMap, vUv - vec2(uTexelSize.x * 2.0, 0.0)).r;',
-                '    float topoD = texture2D(uTopoMap, vUv - vec2(0.0, uTexelSize.y * 2.0)).r;',
+                '    // Simple diffuse + half-lambert for soft wrap',
+                '    float NdotL = dot(vNormal, uLightDir);',
+                '    float diff = max(NdotL, 0.0);',
+                '    float wrap = NdotL * 0.5 + 0.5;',
                 '',
-                '    vec3 N = vNormal;',
-                '    if (!isWater) {',
-                '        float bumpStrength = 2.0;',
-                '        float dX = (topoR - topoL) * 0.5 * bumpStrength;',
-                '        float dY = (topoU - topoD) * 0.5 * bumpStrength;',
-                '        N = normalize(vNormal + dX * vTangent + dY * vBitangent);',
-                '    }',
-                '',
-                '    // Half-Lambert wrap lighting',
-                '    float rawDot = dot(N, uLightDir);',
-                '    float halfLambert = rawDot * 0.5 + 0.5;',
-                '    halfLambert = halfLambert * halfLambert;',
-                '',
-                '    vec3 finalColor;',
+                '    vec3 color;',
                 '',
                 '    if (isWater) {',
-                '        // Ocean: bright cyan, use day texture luminance for subtle variation',
-                '        float lum = dot(dayColor, vec3(0.299, 0.587, 0.114));',
-                '        vec3 oceanBright = vec3(0.36, 0.78, 0.92);',
-                '        vec3 oceanDeep = vec3(0.28, 0.65, 0.85);',
-                '        vec3 ocean = mix(oceanDeep, oceanBright, 0.4 + lum * 0.4);',
+                '        // Bright sky blue — matching getpinr.com reference',
+                '        vec3 oceanLight = vec3(0.38, 0.80, 0.95);',
+                '        vec3 oceanMid   = vec3(0.30, 0.70, 0.90);',
+                '        vec3 oceanShade = vec3(0.22, 0.55, 0.78);',
                 '',
-                '        float oceanLight = 0.60 + halfLambert * 0.40;',
-                '        ocean *= oceanLight;',
+                '        // Blend based on lighting',
+                '        color = mix(oceanShade, oceanMid, wrap);',
+                '        color = mix(color, oceanLight, diff * 0.7);',
                 '',
-                '        // Specular',
-                '        vec3 halfDir = normalize(uLightDir + vViewDir);',
-                '        float spec = pow(max(dot(N, halfDir), 0.0), 90.0) * 0.15;',
-                '        finalColor = ocean + vec3(1.0) * spec;',
+                '        // Subtle specular glint',
+                '        vec3 h = normalize(uLightDir + vViewDir);',
+                '        float spec = pow(max(dot(vNormal, h), 0.0), 60.0);',
+                '        color += vec3(1.0) * spec * 0.12;',
                 '    } else {',
-                '        // Land: use day texture but brighten + shift toward sage green',
-                '        // Convert to HSL-like adjustment: boost brightness, shift toward green',
-                '        vec3 land = dayColor;',
+                '        // Bright yellow-green — matching getpinr.com reference',
+                '        vec3 landLight = vec3(0.65, 0.82, 0.35);',
+                '        vec3 landMid   = vec3(0.55, 0.75, 0.28);',
+                '        vec3 landShade = vec3(0.38, 0.58, 0.18);',
                 '',
-                '        // Brighten significantly',
-                '        land = pow(land, vec3(0.75));',
-                '',
-                '        // Shift browns/yellows toward sage green, keep greens green',
-                '        float greenness = land.g - max(land.r, land.b);',
-                '        // Mix toward a sage-green tint for non-green areas (deserts, browns)',
-                '        vec3 sageTint = vec3(0.72, 0.82, 0.62);',
-                '        land = mix(land, sageTint * (land.r + land.g + land.b) / 3.0, 0.35 - greenness * 0.5);',
-                '',
-                '        // Boost green channel slightly',
-                '        land.g *= 1.08;',
-                '',
-                '        // Lighting',
-                '        float landLight = 0.50 + halfLambert * 0.55;',
-                '        land *= landLight;',
-                '',
-                '        // Subtle specular for polish',
-                '        vec3 halfDir = normalize(uLightDir + vViewDir);',
-                '        float landSpec = pow(max(dot(N, halfDir), 0.0), 30.0) * 0.06;',
-                '        land += vec3(0.95, 1.0, 0.92) * landSpec;',
-                '',
-                '        finalColor = land;',
+                '        // Blend based on lighting',
+                '        color = mix(landShade, landMid, wrap);',
+                '        color = mix(color, landLight, diff * 0.6);',
                 '    }',
                 '',
-                '    // Strong white atmosphere rim (matching app screenshot)',
-                '    float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 2.2);',
-                '    finalColor = mix(finalColor, vec3(0.90, 0.95, 1.0), fresnel * 0.45);',
+                '    // Atmosphere rim — white glow at edges',
+                '    float fresnel = 1.0 - max(dot(vNormal, vViewDir), 0.0);',
+                '    float rim = pow(fresnel, 2.5);',
+                '    color = mix(color, vec3(0.88, 0.94, 1.0), rim * 0.5);',
                 '',
-                '    // Terminator darkening',
-                '    float terminator = smoothstep(-0.05, 0.3, dot(vNormal, uLightDir));',
-                '    finalColor *= mix(0.70, 1.0, terminator);',
-                '',
-                '    gl_FragColor = vec4(finalColor, 1.0);',
+                '    gl_FragColor = vec4(color, 1.0);',
                 '}'
             ].join('\n')
         });
@@ -2345,13 +2284,13 @@
         globe.rotation.x = 0.15;
         scene.add(globe);
 
-        // Stemkoski-style atmosphere glow (BackSide + AdditiveBlending)
+        // Atmosphere glow (BackSide + AdditiveBlending)
         var atmosphereGeometry = new THREE.SphereGeometry(1, 64, 64);
         var atmosphereMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                c: { value: 0.55 },
-                p: { value: 3.2 },
-                glowColor: { value: new THREE.Color(0.82, 0.92, 1.0) }
+                c: { value: 0.52 },
+                p: { value: 3.5 },
+                glowColor: { value: new THREE.Color(0.78, 0.90, 1.0) }
             },
             vertexShader: [
                 'varying vec3 vNormal;',
