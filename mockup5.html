@@ -293,15 +293,27 @@
         }
 
         .hero-content {
-            text-align: center;
             position: relative;
             z-index: 2;
-            padding-top: 80px;
+            padding-top: 100px;
+        }
+
+        /* Two-column hero grid */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            min-height: calc(100vh - 200px);
+        }
+
+        .hero-text {
+            text-align: left;
         }
 
         .hero-logo {
             height: 48px;
-            margin: 0 auto 60px;
+            margin-bottom: 60px;
         }
 
         .hero-tagline-pre {
@@ -314,7 +326,7 @@
         }
 
         .hero-title {
-            font-size: clamp(48px, 8vw, 112px);
+            font-size: clamp(48px, 6vw, 96px);
             font-weight: 700;
             color: #0f172a;
             letter-spacing: -0.03em;
@@ -350,8 +362,8 @@
         .hero-subtitle {
             font-size: clamp(16px, 2vw, 22px);
             color: #64748b;
-            max-width: 540px;
-            margin: 0 auto 52px;
+            max-width: 480px;
+            margin-bottom: 52px;
             font-weight: 400;
             line-height: 1.6;
         }
@@ -359,10 +371,8 @@
         .hero-buttons {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 80px;
         }
 
         .btn-google-play {
@@ -434,24 +444,25 @@
             margin-top: -2px;
         }
 
-        /* ===== GLOBE CANVAS (shared hero + explore) ===== */
+        /* ===== HERO GLOBE (right column) ===== */
+        .hero-globe-col {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
         .globe-canvas-container {
             position: relative;
-            margin: 0 auto;
         }
 
         .globe-canvas-container canvas {
             width: 100% !important;
             height: 100% !important;
+            border-radius: 50%;
         }
 
         .hero-globe-wrap {
-            width: 340px;
-            height: 340px;
-            margin: 0 auto;
-        }
-
-        .explore-globe-wrap {
             width: 480px;
             height: 480px;
         }
@@ -525,17 +536,11 @@
         }
 
         /* Hero pin positions */
-        .hero-globe-wrap .pin-marker:nth-child(2) { top: 5%; left: -15%; animation-duration: 5.5s; }
-        .hero-globe-wrap .pin-marker:nth-child(3) { top: 15%; right: -20%; animation-duration: 7s; animation-delay: -1s; }
-        .hero-globe-wrap .pin-marker:nth-child(4) { bottom: 25%; left: -25%; animation-duration: 6s; animation-delay: -2s; }
-        .hero-globe-wrap .pin-marker:nth-child(5) { bottom: 10%; right: -10%; animation-duration: 8s; animation-delay: -3s; }
-
-        /* Explore pin positions */
-        .explore-globe-wrap .pin-marker:nth-child(2) { top: 0%; left: -10%; animation-duration: 6s; }
-        .explore-globe-wrap .pin-marker:nth-child(3) { top: 8%; right: -12%; animation-duration: 7s; animation-delay: -1s; }
-        .explore-globe-wrap .pin-marker:nth-child(4) { top: 45%; left: -18%; animation-duration: 5.5s; animation-delay: -2.5s; }
-        .explore-globe-wrap .pin-marker:nth-child(5) { bottom: 20%; right: -15%; animation-duration: 8s; animation-delay: -1.5s; }
-        .explore-globe-wrap .pin-marker:nth-child(6) { bottom: 5%; left: 5%; animation-duration: 6.5s; animation-delay: -3s; }
+        .hero-globe-wrap .pin-marker:nth-child(2) { top: 2%; left: -12%; animation-duration: 5.5s; }
+        .hero-globe-wrap .pin-marker:nth-child(3) { top: 12%; right: -16%; animation-duration: 7s; animation-delay: -1s; }
+        .hero-globe-wrap .pin-marker:nth-child(4) { bottom: 25%; left: -20%; animation-duration: 6s; animation-delay: -2s; }
+        .hero-globe-wrap .pin-marker:nth-child(5) { bottom: 8%; right: -8%; animation-duration: 8s; animation-delay: -3s; }
+        .hero-globe-wrap .pin-marker:nth-child(6) { top: 45%; left: -18%; animation-duration: 6.5s; animation-delay: -1.5s; }
 
         @keyframes pinFloat {
             0%, 100% { transform: translateY(0); }
@@ -675,6 +680,32 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        /* Explore section image (replaces second globe) */
+        .explore-image-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .explore-image-wrap img {
+            width: 100%;
+            border-radius: 24px;
+            box-shadow:
+                0 40px 80px rgba(30, 41, 59, 0.08),
+                0 16px 32px rgba(30, 41, 59, 0.04);
+        }
+
+        .explore-image-glow {
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            top: 15%;
+            left: 15%;
+            background: radial-gradient(circle, rgba(30, 41, 59, 0.05) 0%, transparent 70%);
+            filter: blur(30px);
+            z-index: -1;
         }
 
         /* ===== SECTION 3: STORIES ===== */
@@ -1442,6 +1473,39 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 60px;
+                text-align: center;
+            }
+
+            .hero-text {
+                text-align: center;
+                order: 1;
+            }
+
+            .hero-globe-col {
+                order: 2;
+            }
+
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-logo {
+                margin: 0 auto 60px;
+            }
+
+            .hero-globe-wrap {
+                width: 380px;
+                height: 380px;
+            }
+
             .globe-layout,
             .stories-layout,
             .social-layout {
@@ -1493,9 +1557,8 @@
                 margin-top: 36px;
             }
 
-            .explore-globe-wrap {
-                width: 380px;
-                height: 380px;
+            .explore-image-wrap {
+                max-width: 400px;
                 margin: 0 auto;
             }
 
@@ -1570,11 +1633,6 @@
             }
 
             .hero-globe-wrap {
-                width: 260px;
-                height: 260px;
-            }
-
-            .explore-globe-wrap {
                 width: 280px;
                 height: 280px;
             }
@@ -1633,11 +1691,6 @@
             }
 
             .hero-globe-wrap {
-                width: 220px;
-                height: 220px;
-            }
-
-            .explore-globe-wrap {
                 width: 240px;
                 height: 240px;
             }
@@ -1679,54 +1732,64 @@
     <!-- ===== SECTION 1: HERO ===== -->
     <section class="section hero" id="hero">
         <div class="section-inner hero-content">
-            <img src="assets/pinr-logo.png" alt="Pinr Logo" class="hero-logo reveal reveal-delay-1">
+            <div class="hero-grid">
+                <!-- Left column: text -->
+                <div class="hero-text">
+                    <img src="assets/pinr-logo.png" alt="Pinr Logo" class="hero-logo reveal reveal-delay-1">
 
-            <div class="hero-tagline-pre reveal reveal-delay-2">Explore. Share. Connect.</div>
+                    <div class="hero-tagline-pre reveal reveal-delay-2">Explore. Share. Connect.</div>
 
-            <h1 class="hero-title">
-                <span class="hero-title-word">Travel</span>
-                <span class="hero-title-word">Made</span>
-                <span class="hero-title-word accent">Social.</span>
-            </h1>
+                    <h1 class="hero-title">
+                        <span class="hero-title-word">Travel</span>
+                        <span class="hero-title-word">Made</span>
+                        <span class="hero-title-word accent">Social.</span>
+                    </h1>
 
-            <p class="hero-subtitle reveal reveal-delay-3">
-                Drop pins across the globe, capture your adventures in photo stories, and connect with travelers everywhere.
-            </p>
+                    <p class="hero-subtitle reveal reveal-delay-3">
+                        Drop pins across the globe, capture your adventures in photo stories, and connect with travelers everywhere.
+                    </p>
 
-            <div class="hero-buttons reveal reveal-delay-4">
-                <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="btn-google-play">
-                    <img src="assets/google-play-logo.png" alt="Google Play">
-                    <span>
-                        <span class="btn-sub">Now live on</span>
-                        Google Play
-                    </span>
-                </a>
-                <div class="btn-app-store">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                    <span>
-                        <span class="btn-sub">Coming soon to</span>
-                        App Store
-                    </span>
+                    <div class="hero-buttons reveal reveal-delay-4">
+                        <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="btn-google-play">
+                            <img src="assets/google-play-logo.png" alt="Google Play">
+                            <span>
+                                <span class="btn-sub">Now live on</span>
+                                Google Play
+                            </span>
+                        </a>
+                        <div class="btn-app-store">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                            <span>
+                                <span class="btn-sub">Coming soon to</span>
+                                App Store
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Hero Globe (WebGL via cobe) -->
-            <div class="globe-canvas-container hero-globe-wrap reveal from-scale reveal-delay-5">
-                <canvas id="heroGlobe"></canvas>
-                <!-- Floating pin markers -->
-                <div class="pin-marker pin-marker--dark">
-                    <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-1"></div></div>
+                <!-- Right column: globe -->
+                <div class="hero-globe-col">
+                    <div class="globe-canvas-container hero-globe-wrap reveal from-right reveal-delay-3">
+                        <canvas id="heroGlobe"></canvas>
+                        <!-- Floating pin markers -->
+                        <div class="pin-marker pin-marker--dark">
+                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-1"></div></div>
+                        </div>
+                        <div class="pin-marker pin-marker--slate pin-marker--sm">
+                            <div class="pin-marker-body"><div class="pin-marker-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div></div>
+                        </div>
+                        <div class="pin-marker pin-marker--stone">
+                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-2"></div></div>
+                        </div>
+                        <div class="pin-marker pin-marker--cool pin-marker--sm">
+                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-3"></div></div>
+                        </div>
+                        <div class="pin-marker pin-marker--dark pin-marker--sm">
+                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-5"></div></div>
+                        </div>
+                        <div class="globe-shadow"></div>
+                    </div>
                 </div>
-                <div class="pin-marker pin-marker--slate pin-marker--sm">
-                    <div class="pin-marker-body"><div class="pin-marker-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div></div>
-                </div>
-                <div class="pin-marker pin-marker--stone">
-                    <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-2"></div></div>
-                </div>
-                <div class="pin-marker pin-marker--cool pin-marker--sm">
-                    <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-3"></div></div>
-                </div>
-                <div class="globe-shadow"></div>
             </div>
         </div>
 
@@ -1768,25 +1831,9 @@
                     </div>
                 </div>
                 <div class="globe-visual reveal from-right reveal-delay-2">
-                    <div class="globe-canvas-container explore-globe-wrap" data-parallax data-speed="0.04">
-                        <canvas id="exploreGlobe"></canvas>
-                        <!-- Floating pin markers with profile photos -->
-                        <div class="pin-marker pin-marker--dark">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-1"></div></div>
-                        </div>
-                        <div class="pin-marker pin-marker--slate">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-4"></div></div>
-                        </div>
-                        <div class="pin-marker pin-marker--dark pin-marker--sm">
-                            <div class="pin-marker-body"><div class="pin-marker-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div></div>
-                        </div>
-                        <div class="pin-marker pin-marker--stone">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-5"></div></div>
-                        </div>
-                        <div class="pin-marker pin-marker--cool pin-marker--sm">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-2"></div></div>
-                        </div>
-                        <div class="globe-shadow"></div>
+                    <div class="explore-image-wrap" data-parallax data-speed="0.04">
+                        <div class="explore-image-glow"></div>
+                        <img src="assets/feature-base.png" alt="3D globe with travel pins and profile photos">
                     </div>
                 </div>
             </div>
@@ -2119,98 +2166,112 @@
     })();
     </script>
 
-    <!-- ===== COBE 3D GLOBE (ES Module) ===== -->
+    <!-- ===== THREE.JS 3D GLOBE (ES Module) ===== -->
     <script type="module">
-    import createGlobe from 'https://cdn.jsdelivr.net/npm/cobe@0.6.3/+esm';
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
-    // ===== HERO GLOBE =====
     (function() {
-        var heroCanvas = document.getElementById('heroGlobe');
-        if (!heroCanvas) return;
+        var canvas = document.getElementById('heroGlobe');
+        if (!canvas) return;
 
-        var container = heroCanvas.parentElement;
+        var container = canvas.parentElement;
         var size = container.offsetWidth;
 
-        heroCanvas.width = size * 2;
-        heroCanvas.height = size * 2;
-        heroCanvas.style.width = size + 'px';
-        heroCanvas.style.height = size + 'px';
+        // Set canvas size
+        canvas.width = size * 2;
+        canvas.height = size * 2;
+        canvas.style.width = size + 'px';
+        canvas.style.height = size + 'px';
 
-        var heroPhi = 0;
-        createGlobe(heroCanvas, {
-            devicePixelRatio: 2,
-            width: size * 2,
-            height: size * 2,
-            phi: 0,
-            theta: 0.25,
-            dark: 0,
-            diffuse: 3,
-            mapSamples: 30000,
-            mapBrightness: 1.8,
-            baseColor: [0.55, 0.78, 0.94],
-            markerColor: [0.35, 0.65, 0.42],
-            glowColor: [0.96, 0.96, 1],
-            markers: [
-                { location: [48.8566, 2.3522], size: 0.06 },
-                { location: [35.6762, 139.6503], size: 0.06 },
-                { location: [-13.1631, -72.5450], size: 0.06 },
-                { location: [40.7128, -74.0060], size: 0.06 },
-                { location: [-33.8688, 151.2093], size: 0.05 },
-                { location: [51.5074, -0.1278], size: 0.06 },
-                { location: [1.3521, 103.8198], size: 0.05 },
-            ],
-            onRender: function(state) {
-                state.phi = heroPhi;
-                heroPhi += 0.003;
-            }
+        // Scene setup
+        var scene = new THREE.Scene();
+
+        var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+        camera.position.z = 2.6;
+
+        var renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: true
         });
-    })();
+        renderer.setSize(size * 2, size * 2);
+        renderer.setPixelRatio(2);
+        renderer.setClearColor(0x000000, 0);
 
-    // ===== EXPLORE SECTION GLOBE =====
-    (function() {
-        var exploreCanvas = document.getElementById('exploreGlobe');
-        if (!exploreCanvas) return;
+        // Lighting
+        var ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
 
-        var container = exploreCanvas.parentElement;
-        var size = container.offsetWidth;
+        var directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+        directionalLight.position.set(5, 3, 5);
+        scene.add(directionalLight);
 
-        exploreCanvas.width = size * 2;
-        exploreCanvas.height = size * 2;
-        exploreCanvas.style.width = size + 'px';
-        exploreCanvas.style.height = size + 'px';
+        var rimLight = new THREE.DirectionalLight(0xadd8e6, 0.3);
+        rimLight.position.set(-3, 0, -3);
+        scene.add(rimLight);
 
-        var explorePhi = 0;
-        createGlobe(exploreCanvas, {
-            devicePixelRatio: 2,
-            width: size * 2,
-            height: size * 2,
-            phi: 0,
-            theta: 0.2,
-            dark: 0,
-            diffuse: 2.5,
-            mapSamples: 40000,
-            mapBrightness: 2,
-            baseColor: [0.55, 0.78, 0.94],
-            markerColor: [0.35, 0.65, 0.42],
-            glowColor: [0.96, 0.96, 1],
-            markers: [
-                { location: [48.8566, 2.3522], size: 0.08 },
-                { location: [35.6762, 139.6503], size: 0.08 },
-                { location: [-13.1631, -72.5450], size: 0.08 },
-                { location: [40.7128, -74.0060], size: 0.08 },
-                { location: [-33.8688, 151.2093], size: 0.07 },
-                { location: [51.5074, -0.1278], size: 0.08 },
-                { location: [1.3521, 103.8198], size: 0.07 },
-                { location: [55.7558, 37.6173], size: 0.06 },
-                { location: [-22.9068, -43.1729], size: 0.07 },
-                { location: [28.6139, 77.2090], size: 0.07 },
-                { location: [30.0444, 31.2357], size: 0.06 },
-                { location: [37.5665, 126.9780], size: 0.06 },
-            ],
-            onRender: function(state) {
-                state.phi = explorePhi;
-                explorePhi += 0.002;
+        // Earth sphere
+        var geometry = new THREE.SphereGeometry(1, 64, 64);
+
+        // Load earth texture
+        var textureLoader = new THREE.TextureLoader();
+        textureLoader.crossOrigin = 'anonymous';
+
+        var earthTexture = textureLoader.load(
+            'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-blue-marble.jpg',
+            function() {
+                // Texture loaded successfully
+            },
+            undefined,
+            function() {
+                // Fallback: use a simple blue/green colored sphere
+                material.color.set(0x4a90d9);
             }
+        );
+
+        earthTexture.colorSpace = THREE.SRGBColorSpace;
+
+        var material = new THREE.MeshPhongMaterial({
+            map: earthTexture,
+            shininess: 15,
+            specular: new THREE.Color(0x333333)
+        });
+
+        var globe = new THREE.Mesh(geometry, material);
+        // Tilt the globe slightly
+        globe.rotation.x = 0.15;
+        scene.add(globe);
+
+        // Atmosphere glow
+        var atmosphereGeometry = new THREE.SphereGeometry(1.03, 64, 64);
+        var atmosphereMaterial = new THREE.MeshPhongMaterial({
+            color: 0x93c5fd,
+            transparent: true,
+            opacity: 0.08,
+            side: THREE.FrontSide
+        });
+        var atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+        scene.add(atmosphere);
+
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+            globe.rotation.y += 0.002;
+            atmosphere.rotation.y += 0.002;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle resize
+        window.addEventListener('resize', function() {
+            var newSize = container.offsetWidth;
+            canvas.width = newSize * 2;
+            canvas.height = newSize * 2;
+            canvas.style.width = newSize + 'px';
+            canvas.style.height = newSize + 'px';
+            renderer.setSize(newSize * 2, newSize * 2);
+            camera.updateProjectionMatrix();
         });
     })();
     </script>
