@@ -26,7 +26,7 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: #1e293b;
-            background: #0f172a;
+            background: #ffffff;
             overflow-x: hidden;
             line-height: 1.6;
         }
@@ -63,31 +63,15 @@
 
         .nav.scrolled {
             padding: 12px 40px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .nav.light-mode {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        }
-
-        .nav.light-mode.scrolled {
             background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(30, 41, 59, 0.06);
         }
 
         .nav-logo {
             height: 36px;
-            filter: brightness(0) invert(1);
-            transition: filter 0.5s ease;
-        }
-
-        .nav.light-mode .nav-logo {
-            filter: none;
+            transition: opacity 0.3s ease;
         }
 
         .nav-links {
@@ -100,27 +84,19 @@
         .nav-links a {
             font-size: 14px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(30, 41, 59, 0.55);
             transition: color 0.3s ease;
             letter-spacing: 0.02em;
         }
 
         .nav-links a:hover {
-            color: #f59e0b;
-        }
-
-        .nav.light-mode .nav-links a {
-            color: rgba(30, 41, 59, 0.7);
-        }
-
-        .nav.light-mode .nav-links a:hover {
-            color: #f59e0b;
+            color: #1e293b;
         }
 
         .nav-cta {
             padding: 10px 24px;
-            background: #f59e0b;
-            color: #0f172a !important;
+            background: #1e293b;
+            color: #ffffff !important;
             border-radius: 100px;
             font-weight: 600;
             font-size: 14px;
@@ -129,10 +105,10 @@
         }
 
         .nav-cta:hover {
-            background: #fbbf24;
+            background: #334155;
             transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
-            color: #0f172a !important;
+            box-shadow: 0 4px 20px rgba(30, 41, 59, 0.25);
+            color: #ffffff !important;
         }
 
         /* ===== PROGRESS DOTS ===== */
@@ -151,8 +127,8 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.25);
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            background: rgba(30, 41, 59, 0.12);
+            border: 1.5px solid rgba(30, 41, 59, 0.25);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
@@ -167,7 +143,7 @@
             white-space: nowrap;
             font-size: 11px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(30, 41, 59, 0.45);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
@@ -180,24 +156,10 @@
         }
 
         .progress-dot.active {
-            background: #f59e0b;
-            border-color: #f59e0b;
+            background: #1e293b;
+            border-color: #1e293b;
             transform: scale(1.4);
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
-        }
-
-        .progress-dot.light-dot {
-            background: rgba(30, 41, 59, 0.15);
-            border-color: rgba(30, 41, 59, 0.3);
-        }
-
-        .progress-dot.light-dot::after {
-            color: rgba(30, 41, 59, 0.5);
-        }
-
-        .progress-dot.light-dot.active {
-            background: #f59e0b;
-            border-color: #f59e0b;
+            box-shadow: 0 0 12px rgba(30, 41, 59, 0.3);
         }
 
         /* ===== FLOATING DOWNLOAD BUTTON ===== */
@@ -206,8 +168,8 @@
             bottom: 32px;
             right: 32px;
             z-index: 998;
-            background: #f59e0b;
-            color: #0f172a;
+            background: #1e293b;
+            color: #ffffff;
             padding: 16px 28px;
             border-radius: 100px;
             font-family: 'Space Grotesk', sans-serif;
@@ -216,7 +178,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 32px rgba(30, 41, 59, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -229,9 +191,9 @@
         }
 
         .floating-download:hover {
-            background: #fbbf24;
+            background: #334155;
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(245, 158, 11, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 40px rgba(30, 41, 59, 0.35), 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .floating-download svg {
@@ -290,101 +252,44 @@
         .reveal-delay-6 { transition-delay: 0.6s; }
         .reveal-delay-7 { transition-delay: 0.7s; }
 
+        /* ===== SECTION LABEL ===== */
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: #1e293b;
+            border-radius: 1px;
+        }
+
         /* ===== SECTION 1: HERO ===== */
         .hero {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            background: #ffffff;
             min-height: 100vh;
             position: relative;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 600px 600px at 20% 30%, rgba(124, 58, 237, 0.12) 0%, transparent 70%),
-                radial-gradient(ellipse 500px 500px at 80% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 300px 300px at 60% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-            animation: heroGlow 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes heroGlow {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        /* Floating shapes */
-        .hero-shapes {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .hero-shape {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.04;
-            animation: floatShape 20s ease-in-out infinite;
-        }
-
-        .hero-shape:nth-child(1) {
-            width: 400px;
-            height: 400px;
-            background: #f59e0b;
-            top: 10%;
-            left: -5%;
-            animation-duration: 25s;
-        }
-
-        .hero-shape:nth-child(2) {
-            width: 300px;
-            height: 300px;
-            background: #7c3aed;
-            top: 60%;
-            right: -3%;
-            animation-duration: 20s;
-            animation-delay: -5s;
-        }
-
-        .hero-shape:nth-child(3) {
-            width: 200px;
-            height: 200px;
-            background: #3b82f6;
-            bottom: 20%;
-            left: 30%;
-            animation-duration: 18s;
-            animation-delay: -8s;
-        }
-
-        .hero-shape:nth-child(4) {
-            width: 150px;
-            height: 150px;
-            background: #ec4899;
-            top: 30%;
-            right: 25%;
-            animation-duration: 22s;
-            animation-delay: -3s;
-        }
-
-        @keyframes floatShape {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(30px, -40px) rotate(5deg); }
-            50% { transform: translate(-20px, 20px) rotate(-3deg); }
-            75% { transform: translate(15px, 35px) rotate(4deg); }
-        }
-
-        /* Grid overlay */
+        /* Subtle dot grid */
         .hero::after {
             content: '';
             position: absolute;
             inset: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
+            background-image: radial-gradient(rgba(30, 41, 59, 0.06) 1px, transparent 1px);
+            background-size: 32px 32px;
             pointer-events: none;
+            mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
         }
 
         .hero-content {
@@ -397,13 +302,12 @@
         .hero-logo {
             height: 48px;
             margin: 0 auto 60px;
-            filter: brightness(0) invert(1);
         }
 
         .hero-tagline-pre {
             font-size: 16px;
             font-weight: 500;
-            color: #f59e0b;
+            color: #475569;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             margin-bottom: 24px;
@@ -412,7 +316,7 @@
         .hero-title {
             font-size: clamp(48px, 8vw, 112px);
             font-weight: 700;
-            color: #ffffff;
+            color: #0f172a;
             letter-spacing: -0.03em;
             margin-bottom: 32px;
             line-height: 1.0;
@@ -437,7 +341,7 @@
         }
 
         .hero-title .accent {
-            background: linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b);
+            background: linear-gradient(135deg, #1e293b, #475569);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -445,7 +349,7 @@
 
         .hero-subtitle {
             font-size: clamp(16px, 2vw, 22px);
-            color: rgba(255, 255, 255, 0.55);
+            color: #64748b;
             max-width: 540px;
             margin: 0 auto 52px;
             font-weight: 400;
@@ -458,6 +362,7 @@
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
+            margin-bottom: 80px;
         }
 
         .btn-google-play {
@@ -465,8 +370,8 @@
             align-items: center;
             gap: 14px;
             padding: 16px 36px;
-            background: #ffffff;
-            color: #0f172a;
+            background: #1e293b;
+            color: #ffffff;
             border-radius: 16px;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
@@ -477,8 +382,9 @@
         }
 
         .btn-google-play:hover {
+            background: #334155;
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 40px rgba(30, 41, 59, 0.25);
         }
 
         .btn-google-play img {
@@ -490,7 +396,7 @@
             font-size: 11px;
             font-weight: 400;
             font-family: 'Inter', sans-serif;
-            color: rgba(15, 23, 42, 0.5);
+            color: rgba(255, 255, 255, 0.5);
             display: block;
             text-align: left;
             margin-top: -2px;
@@ -501,9 +407,9 @@
             align-items: center;
             gap: 12px;
             padding: 16px 32px;
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(30, 41, 59, 0.15);
             border-radius: 16px;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 600;
@@ -515,7 +421,7 @@
         .btn-app-store svg {
             width: 22px;
             height: 22px;
-            opacity: 0.45;
+            opacity: 0.4;
         }
 
         .btn-app-store .btn-sub {
@@ -526,6 +432,122 @@
             display: block;
             text-align: left;
             margin-top: -2px;
+        }
+
+        /* ===== HERO GLOBE ===== */
+        .hero-globe-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .hero-globe {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: heroGlobeRotate 30s linear infinite;
+            background: radial-gradient(circle at 35% 35%, #e2e8f0 0%, #cbd5e1 40%, #94a3b8 80%, #64748b 100%);
+            box-shadow:
+                inset -40px -20px 60px rgba(15, 23, 42, 0.15),
+                0 20px 60px rgba(30, 41, 59, 0.1),
+                0 0 0 1px rgba(30, 41, 59, 0.05);
+        }
+
+        /* Globe grid lines */
+        .hero-globe::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 48px,
+                    rgba(30, 41, 59, 0.08) 48px,
+                    rgba(30, 41, 59, 0.08) 49px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 48px,
+                    rgba(30, 41, 59, 0.06) 48px,
+                    rgba(30, 41, 59, 0.06) 49px
+                );
+            mask-image: radial-gradient(circle, black 48%, transparent 50%);
+            -webkit-mask-image: radial-gradient(circle, black 48%, transparent 50%);
+            animation: heroGlobeRotate 30s linear infinite;
+        }
+
+        /* Globe highlight */
+        .hero-globe::after {
+            content: '';
+            position: absolute;
+            top: 8%;
+            left: 12%;
+            width: 35%;
+            height: 25%;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(8px);
+        }
+
+        @keyframes heroGlobeRotate {
+            0% { transform: rotateY(0deg) rotateX(-8deg); }
+            100% { transform: rotateY(360deg) rotateX(-8deg); }
+        }
+
+        /* Globe pins */
+        .hero-globe-pin {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #1e293b;
+            box-shadow: 0 0 8px rgba(30, 41, 59, 0.4);
+            z-index: 5;
+        }
+
+        .hero-globe-pin::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 50%;
+            background: #475569;
+        }
+
+        .hero-globe-pin:nth-child(1) { top: 25%; left: 30%; animation: pinPulse 3s ease-in-out infinite; }
+        .hero-globe-pin:nth-child(2) { top: 40%; left: 65%; animation: pinPulse 3s ease-in-out infinite 0.5s; }
+        .hero-globe-pin:nth-child(3) { top: 60%; left: 40%; animation: pinPulse 3s ease-in-out infinite 1s; }
+        .hero-globe-pin:nth-child(4) { top: 35%; left: 50%; animation: pinPulse 3s ease-in-out infinite 1.5s; }
+        .hero-globe-pin:nth-child(5) { top: 55%; left: 25%; animation: pinPulse 3s ease-in-out infinite 2s; }
+
+        @keyframes pinPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        /* Floating travel icons around globe */
+        .hero-float-icon {
+            position: absolute;
+            color: #94a3b8;
+            opacity: 0.35;
+            animation: floatDrift 8s ease-in-out infinite;
+        }
+
+        .hero-float-icon:nth-child(1) { top: -20px; right: -60px; animation-duration: 7s; }
+        .hero-float-icon:nth-child(2) { bottom: -10px; left: -50px; animation-duration: 9s; animation-delay: -3s; }
+        .hero-float-icon:nth-child(3) { top: 30%; right: -70px; animation-duration: 11s; animation-delay: -5s; }
+
+        @keyframes floatDrift {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-12px) rotate(5deg); }
+            50% { transform: translateY(8px) rotate(-3deg); }
+            75% { transform: translateY(-6px) rotate(2deg); }
         }
 
         /* Scroll indicator */
@@ -545,7 +567,7 @@
 
         .scroll-indicator span {
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(30, 41, 59, 0.3);
             letter-spacing: 0.15em;
             text-transform: uppercase;
             font-weight: 500;
@@ -554,7 +576,7 @@
         .scroll-indicator svg {
             width: 24px;
             height: 24px;
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(30, 41, 59, 0.3);
         }
 
         @keyframes scrollBounce {
@@ -562,18 +584,21 @@
             50% { transform: translateX(-50%) translateY(12px); }
         }
 
-        /* ===== SECTION 2: GLOBE ===== */
+        /* ===== SECTION 2: GLOBE / EXPLORE ===== */
         .globe-section {
-            background: #0f172a;
+            background: #ffffff;
             position: relative;
         }
 
+        /* Subtle top border */
         .globe-section::before {
             content: '';
             position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 800px 800px at 50% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
         }
 
         .globe-layout {
@@ -586,27 +611,7 @@
         }
 
         .globe-text {
-            color: #ffffff;
-        }
-
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #f59e0b;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-
-        .section-label::before {
-            content: '';
-            width: 24px;
-            height: 2px;
-            background: #f59e0b;
-            border-radius: 1px;
+            color: #1e293b;
         }
 
         .globe-text h2 {
@@ -615,10 +620,11 @@
             letter-spacing: -0.03em;
             margin-bottom: 24px;
             line-height: 1.05;
+            color: #0f172a;
         }
 
         .globe-text h2 .accent {
-            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            background: linear-gradient(135deg, #1e293b, #475569);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -626,7 +632,7 @@
 
         .globe-text p {
             font-size: 18px;
-            color: rgba(255, 255, 255, 0.5);
+            color: #64748b;
             line-height: 1.7;
             max-width: 460px;
         }
@@ -645,13 +651,13 @@
             font-family: 'Space Grotesk', sans-serif;
             font-size: 36px;
             font-weight: 700;
-            color: #f59e0b;
+            color: #1e293b;
             line-height: 1;
         }
 
         .globe-stat-label {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.4);
+            color: #94a3b8;
             margin-top: 6px;
             font-weight: 500;
         }
@@ -663,41 +669,174 @@
             justify-content: center;
         }
 
-        .globe-image-wrapper {
+        /* CSS 3D Globe for Explore Section */
+        .explore-globe-wrapper {
             position: relative;
-            width: 100%;
-            max-width: 560px;
+            width: 440px;
+            height: 440px;
+            perspective: 1200px;
         }
 
-        .globe-image-wrapper img {
+        .explore-globe {
             width: 100%;
-            border-radius: 24px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .globe-glow {
-            position: absolute;
-            width: 80%;
-            height: 80%;
-            top: 10%;
-            left: 10%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            height: 100%;
             border-radius: 50%;
-            filter: blur(40px);
-            z-index: 1;
-            animation: globePulse 4s ease-in-out infinite alternate;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: exploreGlobeRotate 25s linear infinite;
+            background: radial-gradient(circle at 30% 30%, #f1f5f9 0%, #e2e8f0 30%, #cbd5e1 60%, #94a3b8 100%);
+            box-shadow:
+                inset -50px -30px 80px rgba(15, 23, 42, 0.12),
+                0 30px 80px rgba(30, 41, 59, 0.08),
+                0 0 0 1px rgba(30, 41, 59, 0.04);
         }
 
-        @keyframes globePulse {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.1); opacity: 1; }
+        /* Latitude lines */
+        .explore-globe-line {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(30, 41, 59, 0.08);
+            left: 50%;
+            top: 50%;
+        }
+
+        .explore-globe-line:nth-child(1) { width: 100%; height: 30%; transform: translate(-50%, -50%) rotateX(75deg); }
+        .explore-globe-line:nth-child(2) { width: 100%; height: 60%; transform: translate(-50%, -50%) rotateX(60deg); }
+        .explore-globe-line:nth-child(3) { width: 100%; height: 85%; transform: translate(-50%, -50%) rotateX(40deg); }
+        .explore-globe-line:nth-child(4) { width: 100%; height: 100%; transform: translate(-50%, -50%) rotateX(0deg); }
+        .explore-globe-line:nth-child(5) { width: 100%; height: 85%; transform: translate(-50%, -50%) rotateX(-40deg); }
+        .explore-globe-line:nth-child(6) { width: 100%; height: 60%; transform: translate(-50%, -50%) rotateX(-60deg); }
+
+        /* Meridian lines */
+        .explore-globe-meridian {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid rgba(30, 41, 59, 0.06);
+            top: 0;
+            left: 0;
+        }
+
+        .explore-globe-meridian:nth-child(7) { transform: rotateY(0deg); }
+        .explore-globe-meridian:nth-child(8) { transform: rotateY(30deg); }
+        .explore-globe-meridian:nth-child(9) { transform: rotateY(60deg); }
+        .explore-globe-meridian:nth-child(10) { transform: rotateY(90deg); }
+        .explore-globe-meridian:nth-child(11) { transform: rotateY(120deg); }
+        .explore-globe-meridian:nth-child(12) { transform: rotateY(150deg); }
+
+        /* Globe highlight */
+        .explore-globe::after {
+            content: '';
+            position: absolute;
+            top: 8%;
+            left: 10%;
+            width: 40%;
+            height: 30%;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(12px);
+            z-index: 3;
+        }
+
+        @keyframes exploreGlobeRotate {
+            0% { transform: rotateY(0deg) rotateX(-12deg) rotateZ(3deg); }
+            100% { transform: rotateY(360deg) rotateX(-12deg) rotateZ(3deg); }
+        }
+
+        /* Explore Globe Pins */
+        .explore-pin {
+            position: absolute;
+            z-index: 5;
+        }
+
+        .explore-pin-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #1e293b;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(30, 41, 59, 0.3);
+            position: relative;
+        }
+
+        .explore-pin-dot::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(30, 41, 59, 0.15);
+            animation: pingRing 3s ease-out infinite;
+        }
+
+        @keyframes pingRing {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .explore-pin:nth-child(13) { top: 22%; left: 35%; }
+        .explore-pin:nth-child(14) { top: 38%; left: 68%; }
+        .explore-pin:nth-child(15) { top: 55%; left: 28%; }
+        .explore-pin:nth-child(16) { top: 30%; left: 55%; }
+        .explore-pin:nth-child(17) { top: 62%; left: 52%; }
+
+        .explore-pin:nth-child(14) .explore-pin-dot::after { animation-delay: 0.5s; }
+        .explore-pin:nth-child(15) .explore-pin-dot::after { animation-delay: 1s; }
+        .explore-pin:nth-child(16) .explore-pin-dot::after { animation-delay: 1.5s; }
+        .explore-pin:nth-child(17) .explore-pin-dot::after { animation-delay: 2s; }
+
+        /* Connection arcs between pins (SVG) */
+        .explore-arcs {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+        }
+
+        .explore-arcs svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .explore-arc {
+            fill: none;
+            stroke: rgba(30, 41, 59, 0.12);
+            stroke-width: 1.5;
+            stroke-dasharray: 8 4;
+            animation: arcDash 4s linear infinite;
+        }
+
+        @keyframes arcDash {
+            to { stroke-dashoffset: -48; }
+        }
+
+        /* Globe shadow */
+        .explore-globe-shadow {
+            position: absolute;
+            bottom: -30px;
+            left: 15%;
+            right: 15%;
+            height: 30px;
+            background: radial-gradient(ellipse, rgba(30, 41, 59, 0.08) 0%, transparent 70%);
+            filter: blur(8px);
         }
 
         /* ===== SECTION 3: STORIES ===== */
         .stories-section {
             background: #ffffff;
             position: relative;
+        }
+
+        .stories-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
         }
 
         .stories-layout {
@@ -713,39 +852,116 @@
             display: flex;
             justify-content: center;
             position: relative;
+            perspective: 1000px;
         }
 
         .stories-phone-wrapper {
             position: relative;
             width: 320px;
+            transform: rotateY(-5deg) rotateX(2deg);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stories-phone-wrapper:hover {
+            transform: rotateY(0deg) rotateX(0deg);
         }
 
         .stories-phone-wrapper img {
             width: 100%;
             border-radius: 32px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.12), 0 16px 32px rgba(0, 0, 0, 0.08);
+            box-shadow:
+                0 40px 80px rgba(30, 41, 59, 0.1),
+                0 16px 32px rgba(30, 41, 59, 0.06),
+                0 0 0 1px rgba(30, 41, 59, 0.04);
             position: relative;
-            z-index: 2;
+            z-index: 3;
         }
 
         .stories-phone-bg {
             position: absolute;
-            top: -20px;
-            right: -20px;
+            top: -16px;
+            right: -16px;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
             border-radius: 36px;
             z-index: 1;
-            opacity: 0.15;
+            opacity: 0.5;
+        }
+
+        /* Floating story cards */
+        .story-card-float {
+            position: absolute;
+            width: 140px;
+            height: 180px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(30, 41, 59, 0.08), 0 0 0 1px rgba(30, 41, 59, 0.04);
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .story-card-float::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 65%;
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        }
+
+        .story-card-float::after {
+            content: '';
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            height: 8px;
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .story-card-float:nth-child(1) {
+            top: 10%;
+            left: -30px;
+            animation: storyFloat1 6s ease-in-out infinite;
+        }
+
+        .story-card-float:nth-child(2) {
+            bottom: 15%;
+            right: -20px;
+            animation: storyFloat2 7s ease-in-out infinite;
+            width: 120px;
+            height: 150px;
+        }
+
+        .story-card-float:nth-child(3) {
+            top: 50%;
+            left: -50px;
+            animation: storyFloat3 8s ease-in-out infinite;
+            width: 100px;
+            height: 130px;
+            opacity: 0.6;
+        }
+
+        @keyframes storyFloat1 {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-15px) rotate(-1deg); }
+        }
+
+        @keyframes storyFloat2 {
+            0%, 100% { transform: translateY(0) rotate(2deg); }
+            50% { transform: translateY(-12px) rotate(4deg); }
+        }
+
+        @keyframes storyFloat3 {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
         }
 
         .stories-text {
             color: #1e293b;
-        }
-
-        .stories-text .section-label {
-            color: #f59e0b;
         }
 
         .stories-text h2 {
@@ -757,7 +973,7 @@
         }
 
         .stories-text h2 .accent {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #1e293b, #475569);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -788,11 +1004,10 @@
             height: 44px;
             min-width: 44px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            background: #f1f5f9;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
         }
 
         .stories-feature-text h4 {
@@ -810,8 +1025,18 @@
 
         /* ===== SECTION 4: SOCIAL ===== */
         .social-section {
-            background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 50%, #fffbeb 100%);
+            background: #fafaf9;
             position: relative;
+        }
+
+        .social-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.06), transparent);
         }
 
         .social-layout {
@@ -836,7 +1061,7 @@
         }
 
         .social-text h2 .accent {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #1e293b, #475569);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -844,7 +1069,7 @@
 
         .social-text p {
             font-size: 18px;
-            color: #78716c;
+            color: #64748b;
             line-height: 1.7;
             max-width: 460px;
         }
@@ -861,16 +1086,16 @@
             align-items: center;
             gap: 16px;
             padding: 20px 24px;
-            background: rgba(255, 255, 255, 0.7);
+            background: #ffffff;
             border-radius: 16px;
-            border: 1px solid rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(30, 41, 59, 0.06);
             transition: all 0.3s ease;
         }
 
         .social-card:hover {
-            background: rgba(255, 255, 255, 0.95);
             transform: translateX(8px);
-            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.1);
+            box-shadow: 0 8px 24px rgba(30, 41, 59, 0.06);
+            border-color: rgba(30, 41, 59, 0.1);
         }
 
         .social-card-icon {
@@ -878,11 +1103,10 @@
             height: 48px;
             min-width: 48px;
             border-radius: 14px;
-            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            background: #1e293b;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
         }
 
         .social-card h4 {
@@ -915,19 +1139,100 @@
             z-index: 2;
         }
 
+        /* Floating avatar bubbles */
+        .social-avatar {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.1);
+            z-index: 3;
+            overflow: hidden;
+        }
+
+        .social-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        .social-avatar:nth-child(2) {
+            width: 44px; height: 44px;
+            top: 10%; right: 5%;
+            animation: avatarFloat 5s ease-in-out infinite;
+        }
+        .social-avatar:nth-child(2) .social-avatar-inner {
+            background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+        }
+
+        .social-avatar:nth-child(3) {
+            width: 36px; height: 36px;
+            top: 25%; left: -5%;
+            animation: avatarFloat 6s ease-in-out infinite 1s;
+        }
+        .social-avatar:nth-child(3) .social-avatar-inner {
+            background: linear-gradient(135deg, #cbd5e1, #64748b);
+        }
+
+        .social-avatar:nth-child(4) {
+            width: 40px; height: 40px;
+            bottom: 20%; right: 0%;
+            animation: avatarFloat 7s ease-in-out infinite 2s;
+        }
+        .social-avatar:nth-child(4) .social-avatar-inner {
+            background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+        }
+
+        .social-avatar:nth-child(5) {
+            width: 32px; height: 32px;
+            bottom: 35%; left: 2%;
+            animation: avatarFloat 5.5s ease-in-out infinite 0.5s;
+        }
+        .social-avatar:nth-child(5) .social-avatar-inner {
+            background: linear-gradient(135deg, #94a3b8, #475569);
+        }
+
+        @keyframes avatarFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Connection lines (SVG overlay) */
+        .social-connections {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .social-connections svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .social-conn-line {
+            stroke: rgba(30, 41, 59, 0.06);
+            stroke-width: 1;
+            stroke-dasharray: 4 4;
+            animation: connDash 6s linear infinite;
+        }
+
+        @keyframes connDash {
+            to { stroke-dashoffset: -48; }
+        }
+
         .social-phones-shadow {
             position: absolute;
             bottom: -20px;
             left: 10%;
             right: 10%;
             height: 60px;
-            background: radial-gradient(ellipse, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
-            filter: blur(20px);
+            background: radial-gradient(ellipse, rgba(30, 41, 59, 0.06) 0%, transparent 70%);
+            filter: blur(15px);
         }
 
         /* ===== SECTION 5: GAMES ===== */
         .games-section {
-            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 30%, #ec4899 70%, #f43f5e 100%);
+            background: #ffffff;
             position: relative;
             overflow: hidden;
         }
@@ -935,13 +1240,14 @@
         .games-section::before {
             content: '';
             position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 600px 600px at 20% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 400px 400px at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
         }
 
-        /* Animated background circles */
+        /* Floating geometric shapes */
         .games-bg-shapes {
             position: absolute;
             inset: 0;
@@ -949,53 +1255,46 @@
             pointer-events: none;
         }
 
-        .games-bg-circle {
+        .games-bg-shape {
             position: absolute;
+            border: 1px solid rgba(30, 41, 59, 0.04);
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: gameShapeDrift 20s ease-in-out infinite;
         }
 
-        .games-bg-circle:nth-child(1) {
-            width: 500px;
-            height: 500px;
-            top: -100px;
-            right: -100px;
-            animation: spinSlow 30s linear infinite;
+        .games-bg-shape:nth-child(1) {
+            width: 300px; height: 300px;
+            top: -50px; right: -50px;
+            animation-duration: 25s;
         }
 
-        .games-bg-circle:nth-child(2) {
-            width: 400px;
-            height: 400px;
-            bottom: -80px;
-            left: -80px;
-            animation: spinSlow 25s linear infinite reverse;
+        .games-bg-shape:nth-child(2) {
+            width: 200px; height: 200px;
+            bottom: -30px; left: -30px;
+            animation-duration: 20s;
+            animation-delay: -5s;
         }
 
-        .games-bg-circle:nth-child(3) {
-            width: 250px;
-            height: 250px;
-            top: 40%;
-            left: 50%;
-            animation: spinSlow 20s linear infinite;
+        .games-bg-shape:nth-child(3) {
+            width: 150px; height: 150px;
+            top: 40%; left: 60%;
+            border-radius: 20%;
+            animation-duration: 18s;
+            animation-delay: -8s;
         }
 
-        @keyframes spinSlow {
-            to { transform: rotate(360deg); }
+        @keyframes gameShapeDrift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(15px, -20px) rotate(5deg); }
+            50% { transform: translate(-10px, 10px) rotate(-3deg); }
+            75% { transform: translate(8px, 15px) rotate(2deg); }
         }
 
         .games-content {
             text-align: center;
             position: relative;
             z-index: 2;
-            color: #ffffff;
-        }
-
-        .games-content .section-label {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .games-content .section-label::before {
-            background: rgba(255, 255, 255, 0.6);
+            color: #1e293b;
         }
 
         .games-content h2 {
@@ -1003,11 +1302,12 @@
             font-weight: 700;
             letter-spacing: -0.03em;
             margin-bottom: 20px;
+            color: #0f172a;
         }
 
         .games-content > p {
             font-size: 20px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #64748b;
             max-width: 560px;
             margin: 0 auto 56px;
             line-height: 1.6;
@@ -1019,40 +1319,73 @@
             gap: 24px;
             max-width: 900px;
             margin: 0 auto;
+            perspective: 1000px;
         }
 
         .game-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #ffffff;
+            border: 1px solid rgba(30, 41, 59, 0.06);
             border-radius: 24px;
             padding: 40px 28px;
             text-align: center;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(30, 41, 59, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(30,41,59,0.08), transparent, rgba(30,41,59,0.04));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .game-card:hover {
-            background: rgba(255, 255, 255, 0.18);
-            transform: translateY(-8px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px) rotateX(2deg) rotateY(-1deg);
+            box-shadow: 0 20px 60px rgba(30, 41, 59, 0.08), 0 8px 24px rgba(30, 41, 59, 0.04);
+            border-color: rgba(30, 41, 59, 0.1);
         }
 
-        .game-card-emoji {
-            font-size: 48px;
-            margin-bottom: 20px;
-            display: block;
+        .game-card:hover::before {
+            opacity: 1;
+        }
+
+        .game-card-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 1px solid rgba(30, 41, 59, 0.06);
+        }
+
+        .game-card-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #1e293b;
         }
 
         .game-card h3 {
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 10px;
+            color: #0f172a;
         }
 
         .game-card p {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.65);
+            color: #94a3b8;
             line-height: 1.6;
         }
 
@@ -1060,16 +1393,17 @@
             display: inline-block;
             margin-top: 16px;
             padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.15);
+            background: #f1f5f9;
             border-radius: 100px;
             font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.05em;
+            color: #475569;
         }
 
         /* ===== SECTION 6: DOWNLOAD ===== */
         .download-section {
-            background: #0f172a;
+            background: #ffffff;
             position: relative;
             overflow: hidden;
         }
@@ -1077,17 +1411,46 @@
         .download-section::before {
             content: '';
             position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
+        }
+
+        /* Radial pulse background */
+        .download-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            pointer-events: none;
+        }
+
+        .download-pulse-ring {
+            position: absolute;
             inset: 0;
-            background:
-                radial-gradient(ellipse 600px 400px at 50% 40%, rgba(245, 158, 11, 0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 400px 300px at 30% 70%, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            border: 1px solid rgba(30, 41, 59, 0.03);
+            animation: downloadPulse 4s ease-out infinite;
+        }
+
+        .download-pulse-ring:nth-child(2) { animation-delay: 1s; }
+        .download-pulse-ring:nth-child(3) { animation-delay: 2s; }
+        .download-pulse-ring:nth-child(4) { animation-delay: 3s; }
+
+        @keyframes downloadPulse {
+            0% { transform: scale(0.3); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
         }
 
         .download-content {
             text-align: center;
             position: relative;
             z-index: 2;
-            color: #ffffff;
+            color: #1e293b;
         }
 
         .download-content h2 {
@@ -1096,10 +1459,11 @@
             letter-spacing: -0.03em;
             margin-bottom: 24px;
             line-height: 1.05;
+            color: #0f172a;
         }
 
         .download-content h2 .accent {
-            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            background: linear-gradient(135deg, #1e293b, #475569);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1107,7 +1471,7 @@
 
         .download-content > p {
             font-size: 20px;
-            color: rgba(255, 255, 255, 0.5);
+            color: #64748b;
             max-width: 520px;
             margin: 0 auto 48px;
             line-height: 1.6;
@@ -1127,8 +1491,8 @@
             align-items: center;
             gap: 16px;
             padding: 20px 44px;
-            background: #f59e0b;
-            color: #0f172a;
+            background: #1e293b;
+            color: #ffffff;
             border-radius: 18px;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
@@ -1139,9 +1503,9 @@
         }
 
         .btn-google-play-large:hover {
-            background: #fbbf24;
+            background: #334155;
             transform: translateY(-4px);
-            box-shadow: 0 16px 48px rgba(245, 158, 11, 0.35);
+            box-shadow: 0 16px 48px rgba(30, 41, 59, 0.2);
         }
 
         .btn-google-play-large img {
@@ -1157,7 +1521,7 @@
             font-size: 12px;
             font-weight: 400;
             font-family: 'Inter', sans-serif;
-            opacity: 0.6;
+            opacity: 0.5;
             display: block;
             margin-top: -2px;
         }
@@ -1167,9 +1531,9 @@
             align-items: center;
             gap: 14px;
             padding: 20px 40px;
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            color: rgba(30, 41, 59, 0.35);
+            border: 1px solid rgba(30, 41, 59, 0.12);
             border-radius: 18px;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 600;
@@ -1180,7 +1544,7 @@
         .btn-app-store-large svg {
             width: 26px;
             height: 26px;
-            opacity: 0.4;
+            opacity: 0.35;
         }
 
         .btn-app-store-large .btn-text {
@@ -1196,27 +1560,154 @@
             margin-top: -2px;
         }
 
+        /* Download visual — CSS phone frames with pin drop */
         .download-visual {
-            max-width: 480px;
+            max-width: 520px;
             margin: 0 auto;
             position: relative;
+            height: 400px;
         }
 
-        .download-visual img {
-            width: 100%;
-            position: relative;
+        .download-phone {
+            position: absolute;
+            width: 200px;
+            height: 380px;
+            border-radius: 32px;
+            background: #f8fafc;
+            border: 1px solid rgba(30, 41, 59, 0.08);
+            box-shadow: 0 20px 60px rgba(30, 41, 59, 0.08), 0 0 0 1px rgba(30,41,59,0.03);
+            overflow: hidden;
+        }
+
+        .download-phone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 24px;
+            background: #ffffff;
+            border-radius: 0 0 16px 16px;
             z-index: 2;
         }
 
-        .download-glow {
+        /* Phone screen content */
+        .download-phone-screen {
             position: absolute;
-            width: 60%;
-            height: 60%;
-            top: 20%;
-            left: 20%;
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
-            filter: blur(50px);
+            top: 24px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .download-phone:nth-child(1) {
+            left: 50%;
+            transform: translateX(-120%) rotate(-6deg);
+            animation: phoneBob1 5s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .download-phone:nth-child(1) .download-phone-screen {
+            background: linear-gradient(180deg, #e2e8f0 0%, #f1f5f9 100%);
+        }
+
+        .download-phone:nth-child(2) {
+            left: 50%;
+            transform: translateX(-10%) rotate(4deg);
+            animation: phoneBob2 5s ease-in-out infinite 0.5s;
             z-index: 1;
+        }
+
+        .download-phone:nth-child(2) .download-phone-screen {
+            background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        @keyframes phoneBob1 {
+            0%, 100% { transform: translateX(-120%) rotate(-6deg) translateY(0); }
+            50% { transform: translateX(-120%) rotate(-6deg) translateY(-10px); }
+        }
+
+        @keyframes phoneBob2 {
+            0%, 100% { transform: translateX(-10%) rotate(4deg) translateY(0); }
+            50% { transform: translateX(-10%) rotate(4deg) translateY(-8px); }
+        }
+
+        /* Phone screen pin icon */
+        .phone-pin-icon {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.15;
+        }
+
+        /* Pin drop animation elements */
+        .download-pin-drop {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            z-index: 5;
+        }
+
+        .download-pin-drop svg {
+            width: 100%;
+            height: 100%;
+            color: #1e293b;
+        }
+
+        .download-pin-drop:nth-child(3) {
+            top: 15%;
+            left: 30%;
+            animation: pinDrop 4s ease-in-out infinite;
+        }
+
+        .download-pin-drop:nth-child(4) {
+            top: 40%;
+            right: 20%;
+            animation: pinDrop 4s ease-in-out infinite 1.3s;
+        }
+
+        .download-pin-drop:nth-child(5) {
+            bottom: 30%;
+            left: 45%;
+            animation: pinDrop 4s ease-in-out infinite 2.6s;
+        }
+
+        @keyframes pinDrop {
+            0% { transform: translateY(-30px); opacity: 0; }
+            15% { transform: translateY(0); opacity: 1; }
+            30% { transform: translateY(-6px); opacity: 1; }
+            40% { transform: translateY(0); opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Floating app icon */
+        .download-app-icon {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(30, 41, 59, 0.12);
+            animation: iconBob 3s ease-in-out infinite;
+            z-index: 6;
+        }
+
+        .download-app-icon img {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes iconBob {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
         }
 
         /* ===== FOOTER ===== */
@@ -1264,7 +1755,7 @@
         }
 
         .footer-links a:hover {
-            color: #f59e0b;
+            color: #94a3b8;
         }
 
         .footer-right {
@@ -1345,8 +1836,9 @@
                 margin-top: 36px;
             }
 
-            .globe-image-wrapper {
-                max-width: 420px;
+            .explore-globe-wrapper {
+                width: 340px;
+                height: 340px;
                 margin: 0 auto;
             }
 
@@ -1420,6 +1912,25 @@
                 gap: 40px;
             }
 
+            .hero-globe-container {
+                width: 240px;
+                height: 240px;
+            }
+
+            .explore-globe-wrapper {
+                width: 260px;
+                height: 260px;
+            }
+
+            .download-visual {
+                height: 320px;
+            }
+
+            .download-phone {
+                width: 160px;
+                height: 300px;
+            }
+
             .footer-inner {
                 flex-direction: column;
                 text-align: center;
@@ -1438,6 +1949,10 @@
                 right: 20px;
                 padding: 14px 22px;
                 font-size: 14px;
+            }
+
+            .story-card-float {
+                display: none;
             }
         }
 
@@ -1463,6 +1978,25 @@
                 flex-direction: column;
                 gap: 20px;
                 align-items: center;
+            }
+
+            .hero-globe-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .explore-globe-wrapper {
+                width: 220px;
+                height: 220px;
+            }
+
+            .download-visual {
+                height: 260px;
+            }
+
+            .download-phone {
+                width: 140px;
+                height: 260px;
             }
         }
     </style>
@@ -1501,13 +2035,6 @@
 
     <!-- ===== SECTION 1: HERO ===== -->
     <section class="section hero" id="hero">
-        <div class="hero-shapes">
-            <div class="hero-shape"></div>
-            <div class="hero-shape"></div>
-            <div class="hero-shape"></div>
-            <div class="hero-shape"></div>
-        </div>
-
         <div class="section-inner hero-content">
             <img src="assets/pinr-logo.png" alt="Pinr Logo" class="hero-logo reveal reveal-delay-1">
 
@@ -1539,6 +2066,27 @@
                     </span>
                 </div>
             </div>
+
+            <!-- Hero Globe -->
+            <div class="hero-globe-container reveal from-scale reveal-delay-5">
+                <div class="hero-globe">
+                    <div class="hero-globe-pin"></div>
+                    <div class="hero-globe-pin"></div>
+                    <div class="hero-globe-pin"></div>
+                    <div class="hero-globe-pin"></div>
+                    <div class="hero-globe-pin"></div>
+                </div>
+                <!-- Floating travel icons -->
+                <div class="hero-float-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+                </div>
+                <div class="hero-float-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20M12 2a14.5 14.5 0 010 20M2 12h20"/></svg>
+                </div>
+                <div class="hero-float-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                </div>
+            </div>
         </div>
 
         <div class="scroll-indicator" onclick="scrollToSection('globe')">
@@ -1549,7 +2097,7 @@
         </div>
     </section>
 
-    <!-- ===== SECTION 2: GLOBE ===== -->
+    <!-- ===== SECTION 2: GLOBE / EXPLORE ===== -->
     <section class="section globe-section" id="globe">
         <div class="section-inner">
             <div class="globe-layout">
@@ -1579,9 +2127,38 @@
                     </div>
                 </div>
                 <div class="globe-visual reveal from-right reveal-delay-2">
-                    <div class="globe-image-wrapper" data-parallax data-speed="0.08">
-                        <div class="globe-glow"></div>
-                        <img src="assets/feature-base.png" alt="Pinr 3D Globe with pins and profile pictures">
+                    <div class="explore-globe-wrapper" data-parallax data-speed="0.06">
+                        <div class="explore-globe">
+                            <!-- Latitude lines -->
+                            <div class="explore-globe-line"></div>
+                            <div class="explore-globe-line"></div>
+                            <div class="explore-globe-line"></div>
+                            <div class="explore-globe-line"></div>
+                            <div class="explore-globe-line"></div>
+                            <div class="explore-globe-line"></div>
+                            <!-- Meridian lines -->
+                            <div class="explore-globe-meridian"></div>
+                            <div class="explore-globe-meridian"></div>
+                            <div class="explore-globe-meridian"></div>
+                            <div class="explore-globe-meridian"></div>
+                            <div class="explore-globe-meridian"></div>
+                            <div class="explore-globe-meridian"></div>
+                            <!-- Pins -->
+                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
+                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
+                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
+                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
+                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
+                        </div>
+                        <!-- Connection arcs -->
+                        <div class="explore-arcs">
+                            <svg viewBox="0 0 440 440">
+                                <path class="explore-arc" d="M154 97 Q220 60 299 167"/>
+                                <path class="explore-arc" d="M123 242 Q200 200 242 132" style="animation-delay: -1.5s"/>
+                                <path class="explore-arc" d="M242 132 Q300 180 229 272" style="animation-delay: -3s"/>
+                            </svg>
+                        </div>
+                        <div class="explore-globe-shadow"></div>
                     </div>
                 </div>
             </div>
@@ -1594,6 +2171,11 @@
             <div class="stories-layout">
                 <div class="stories-visual reveal from-left reveal-delay-1">
                     <div class="stories-phone-wrapper" data-parallax data-speed="0.06">
+                        <!-- Floating story cards -->
+                        <div class="story-card-float"></div>
+                        <div class="story-card-float"></div>
+                        <div class="story-card-float"></div>
+                        <!-- Phone bg -->
                         <div class="stories-phone-bg"></div>
                         <img src="assets/phone-final.png" alt="Pinr app showing Machu Picchu travel story">
                     </div>
@@ -1611,7 +2193,7 @@
                     <div class="stories-features">
                         <div class="stories-feature reveal reveal-delay-3">
                             <div class="stories-feature-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                             </div>
                             <div class="stories-feature-text">
                                 <h4>Add Photos</h4>
@@ -1620,7 +2202,7 @@
                         </div>
                         <div class="stories-feature reveal reveal-delay-4">
                             <div class="stories-feature-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                             </div>
                             <div class="stories-feature-text">
                                 <h4>Write Stories</h4>
@@ -1629,7 +2211,7 @@
                         </div>
                         <div class="stories-feature reveal reveal-delay-5">
                             <div class="stories-feature-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                             </div>
                             <div class="stories-feature-text">
                                 <h4>Share Globally</h4>
@@ -1659,7 +2241,7 @@
                     <div class="social-cards">
                         <div class="social-card reveal reveal-delay-3">
                             <div class="social-card-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
                             </div>
                             <div>
                                 <h4>Follow Friends</h4>
@@ -1668,7 +2250,7 @@
                         </div>
                         <div class="social-card reveal reveal-delay-4">
                             <div class="social-card-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                             </div>
                             <div>
                                 <h4>React &amp; Comment</h4>
@@ -1677,7 +2259,7 @@
                         </div>
                         <div class="social-card reveal reveal-delay-5">
                             <div class="social-card-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
                             </div>
                             <div>
                                 <h4>Discover Adventures</h4>
@@ -1688,6 +2270,20 @@
                 </div>
                 <div class="social-visual reveal from-right reveal-delay-2">
                     <div class="social-phones-wrapper" data-parallax data-speed="0.07">
+                        <!-- Social connection lines -->
+                        <div class="social-connections">
+                            <svg viewBox="0 0 520 600">
+                                <line class="social-conn-line" x1="470" y1="60" x2="260" y2="300"/>
+                                <line class="social-conn-line" x1="26" y1="150" x2="260" y2="300" style="animation-delay:-2s"/>
+                                <line class="social-conn-line" x1="500" y1="420" x2="260" y2="300" style="animation-delay:-4s"/>
+                                <line class="social-conn-line" x1="52" y1="480" x2="260" y2="300" style="animation-delay:-1s"/>
+                            </svg>
+                        </div>
+                        <!-- Floating avatars -->
+                        <div class="social-avatar"><div class="social-avatar-inner"></div></div>
+                        <div class="social-avatar"><div class="social-avatar-inner"></div></div>
+                        <div class="social-avatar"><div class="social-avatar-inner"></div></div>
+                        <div class="social-avatar"><div class="social-avatar-inner"></div></div>
                         <div class="social-phones-shadow"></div>
                         <img src="assets/landing-phones.png" alt="Two phones showing Pinr social features">
                     </div>
@@ -1699,9 +2295,9 @@
     <!-- ===== SECTION 5: GAMES ===== -->
     <section class="section games-section" id="games">
         <div class="games-bg-shapes">
-            <div class="games-bg-circle"></div>
-            <div class="games-bg-circle"></div>
-            <div class="games-bg-circle"></div>
+            <div class="games-bg-shape"></div>
+            <div class="games-bg-shape"></div>
+            <div class="games-bg-shape"></div>
         </div>
         <div class="section-inner games-content">
             <div class="section-label reveal">
@@ -1713,19 +2309,25 @@
             </p>
             <div class="games-grid">
                 <div class="game-card reveal reveal-delay-3">
-                    <span class="game-card-emoji">&#127988;</span>
+                    <div class="game-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                    </div>
                     <h3>Flag Dash</h3>
                     <p>Race to identify flags from around the world before time runs out.</p>
                     <span class="game-card-badge">Fast-paced</span>
                 </div>
                 <div class="game-card reveal reveal-delay-4">
-                    <span class="game-card-emoji">&#128205;</span>
+                    <div class="game-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
                     <h3>Pin Drop</h3>
                     <p>How accurately can you place locations on the globe? Test your precision.</p>
                     <span class="game-card-badge">Precision</span>
                 </div>
                 <div class="game-card reveal reveal-delay-5">
-                    <span class="game-card-emoji">&#9876;&#65039;</span>
+                    <div class="game-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/><path d="M14.5 6.5L21 3v3L9.5 17.5"/><path d="M5 14l4 4"/><path d="M7 17l-4 4"/></svg>
+                    </div>
                     <h3>Travel Battle</h3>
                     <p>Challenge friends head-to-head in geography trivia battles.</p>
                     <span class="game-card-badge">Multiplayer</span>
@@ -1736,6 +2338,14 @@
 
     <!-- ===== SECTION 6: DOWNLOAD ===== -->
     <section class="section download-section" id="download">
+        <!-- Pulse rings -->
+        <div class="download-pulse">
+            <div class="download-pulse-ring"></div>
+            <div class="download-pulse-ring"></div>
+            <div class="download-pulse-ring"></div>
+            <div class="download-pulse-ring"></div>
+        </div>
+
         <div class="section-inner download-content">
             <div class="section-label reveal">
                 <span>Get Started</span>
@@ -1763,8 +2373,35 @@
                 </div>
             </div>
             <div class="download-visual reveal from-scale reveal-delay-4">
-                <div class="download-glow"></div>
-                <img src="assets/landing-visual.png" alt="Pinr marketing visual with phones and store badges">
+                <!-- CSS Phone frames -->
+                <div class="download-phone">
+                    <div class="download-phone-screen">
+                        <div class="phone-pin-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="download-phone">
+                    <div class="download-phone-screen">
+                        <div class="phone-pin-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pin drop elements -->
+                <div class="download-pin-drop">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
+                </div>
+                <div class="download-pin-drop">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
+                </div>
+                <div class="download-pin-drop">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
+                </div>
+                <!-- Floating app icon -->
+                <div class="download-app-icon">
+                    <img src="assets/favicon-v4.png" alt="Pinr App Icon">
+                </div>
             </div>
         </div>
     </section>
@@ -1813,14 +2450,11 @@
             revealObserver.observe(el);
         });
 
-        // ===== SECTION OBSERVER - NAV + PROGRESS DOTS =====
+        // ===== SECTION OBSERVER - PROGRESS DOTS =====
         var sections = document.querySelectorAll('.section');
         var nav = document.getElementById('nav');
         var dots = document.querySelectorAll('.progress-dot');
         var floatingBtn = document.getElementById('floatingDownload');
-
-        // Sections where nav/dots should use light mode
-        var lightSections = { stories: true, social: true };
 
         var sectionObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
@@ -1830,21 +2464,9 @@
                     // Update progress dots
                     dots.forEach(function(dot) {
                         dot.classList.remove('active');
-                        if (lightSections[id]) {
-                            dot.classList.add('light-dot');
-                        } else {
-                            dot.classList.remove('light-dot');
-                        }
                     });
                     var activeDot = document.querySelector('.progress-dot[data-section="' + id + '"]');
                     if (activeDot) activeDot.classList.add('active');
-
-                    // Update nav
-                    if (lightSections[id]) {
-                        nav.classList.add('light-mode');
-                    } else {
-                        nav.classList.remove('light-mode');
-                    }
                 }
             });
         }, {
