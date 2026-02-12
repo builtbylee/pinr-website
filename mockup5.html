@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinr — Travel Made Social</title>
+    <link rel="icon" type="image/png" href="favicon-v4.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1e293b;
+            background: #0f172a;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.1;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav.scrolled {
+            padding: 12px 40px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav.light-mode {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .nav.light-mode.scrolled {
+            background: rgba(255, 255, 255, 0.92);
+        }
+
+        .nav-logo {
+            height: 36px;
+            filter: brightness(0) invert(1);
+            transition: filter 0.5s ease;
+        }
+
+        .nav.light-mode .nav-logo {
+            filter: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links a:hover {
+            color: #f59e0b;
+        }
+
+        .nav.light-mode .nav-links a {
+            color: rgba(30, 41, 59, 0.7);
+        }
+
+        .nav.light-mode .nav-links a:hover {
+            color: #f59e0b;
+        }
+
+        .nav-cta {
+            padding: 10px 24px;
+            background: #f59e0b;
+            color: #0f172a !important;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            opacity: 1 !important;
+        }
+
+        .nav-cta:hover {
+            background: #fbbf24;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+            color: #0f172a !important;
+        }
+
+        /* ===== PROGRESS DOTS ===== */
+        .progress-dots {
+            position: fixed;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .progress-dot:hover::after {
+            opacity: 1;
+        }
+
+        .progress-dot.active {
+            background: #f59e0b;
+            border-color: #f59e0b;
+            transform: scale(1.4);
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+        }
+
+        .progress-dot.light-dot {
+            background: rgba(30, 41, 59, 0.15);
+            border-color: rgba(30, 41, 59, 0.3);
+        }
+
+        .progress-dot.light-dot::after {
+            color: rgba(30, 41, 59, 0.5);
+        }
+
+        .progress-dot.light-dot.active {
+            background: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        /* ===== FLOATING DOWNLOAD BUTTON ===== */
+        .floating-download {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            z-index: 998;
+            background: #f59e0b;
+            color: #0f172a;
+            padding: 16px 28px;
+            border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .floating-download.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .floating-download:hover {
+            background: #fbbf24;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(245, 158, 11, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .floating-download svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ===== SECTION BASE ===== */
+        .section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .section-inner {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== REVEAL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.from-left {
+            transform: translateX(-80px);
+        }
+
+        .reveal.from-right {
+            transform: translateX(80px);
+        }
+
+        .reveal.from-scale {
+            transform: scale(0.85);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0) translateX(0) scale(1);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+        .reveal-delay-6 { transition-delay: 0.6s; }
+        .reveal-delay-7 { transition-delay: 0.7s; }
+
+        /* ===== SECTION 1: HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 600px 600px at 20% 30%, rgba(124, 58, 237, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 500px at 80% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 300px 300px at 60% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            animation: heroGlow 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Floating shapes */
+        .hero-shapes {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .hero-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.04;
+            animation: floatShape 20s ease-in-out infinite;
+        }
+
+        .hero-shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: #f59e0b;
+            top: 10%;
+            left: -5%;
+            animation-duration: 25s;
+        }
+
+        .hero-shape:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: #7c3aed;
+            top: 60%;
+            right: -3%;
+            animation-duration: 20s;
+            animation-delay: -5s;
+        }
+
+        .hero-shape:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            background: #3b82f6;
+            bottom: 20%;
+            left: 30%;
+            animation-duration: 18s;
+            animation-delay: -8s;
+        }
+
+        .hero-shape:nth-child(4) {
+            width: 150px;
+            height: 150px;
+            background: #ec4899;
+            top: 30%;
+            right: 25%;
+            animation-duration: 22s;
+            animation-delay: -3s;
+        }
+
+        @keyframes floatShape {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, -40px) rotate(5deg); }
+            50% { transform: translate(-20px, 20px) rotate(-3deg); }
+            75% { transform: translate(15px, 35px) rotate(4deg); }
+        }
+
+        /* Grid overlay */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            padding-top: 80px;
+        }
+
+        .hero-logo {
+            height: 48px;
+            margin: 0 auto 60px;
+            filter: brightness(0) invert(1);
+        }
+
+        .hero-tagline-pre {
+            font-size: 16px;
+            font-weight: 500;
+            color: #f59e0b;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: clamp(48px, 8vw, 112px);
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.03em;
+            margin-bottom: 32px;
+            line-height: 1.0;
+        }
+
+        .hero-title-word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: wordReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-title-word:nth-child(1) { animation-delay: 0.3s; }
+        .hero-title-word:nth-child(2) { animation-delay: 0.5s; }
+        .hero-title-word:nth-child(3) { animation-delay: 0.7s; }
+
+        @keyframes wordReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title .accent {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(16px, 2vw, 22px);
+            color: rgba(255, 255, 255, 0.55);
+            max-width: 540px;
+            margin: 0 auto 52px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-google-play {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 36px;
+            background: #ffffff;
+            color: #0f172a;
+            border-radius: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-google-play:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-google-play img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .btn-google-play .btn-sub {
+            font-size: 11px;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            color: rgba(15, 23, 42, 0.5);
+            display: block;
+            text-align: left;
+            margin-top: -2px;
+        }
+
+        .btn-app-store {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .btn-app-store svg {
+            width: 22px;
+            height: 22px;
+            opacity: 0.45;
+        }
+
+        .btn-app-store .btn-sub {
+            font-size: 11px;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            opacity: 0.7;
+            display: block;
+            text-align: left;
+            margin-top: -2px;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: scrollBounce 2.5s ease-in-out infinite;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .scroll-indicator span {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(12px); }
+        }
+
+        /* ===== SECTION 2: GLOBE ===== */
+        .globe-section {
+            background: #0f172a;
+            position: relative;
+        }
+
+        .globe-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 800px 800px at 50% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+        }
+
+        .globe-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .globe-text {
+            color: #ffffff;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #f59e0b;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: #f59e0b;
+            border-radius: 1px;
+        }
+
+        .globe-text h2 {
+            font-size: clamp(40px, 5vw, 72px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            line-height: 1.05;
+        }
+
+        .globe-text h2 .accent {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .globe-text p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.7;
+            max-width: 460px;
+        }
+
+        .globe-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .globe-stat {
+            text-align: left;
+        }
+
+        .globe-stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #f59e0b;
+            line-height: 1;
+        }
+
+        .globe-stat-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .globe-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .globe-image-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .globe-image-wrapper img {
+            width: 100%;
+            border-radius: 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .globe-glow {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: 1;
+            animation: globePulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes globePulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* ===== SECTION 3: STORIES ===== */
+        .stories-section {
+            background: #ffffff;
+            position: relative;
+        }
+
+        .stories-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .stories-visual {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .stories-phone-wrapper {
+            position: relative;
+            width: 320px;
+        }
+
+        .stories-phone-wrapper img {
+            width: 100%;
+            border-radius: 32px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.12), 0 16px 32px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 2;
+        }
+
+        .stories-phone-bg {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            border-radius: 36px;
+            z-index: 1;
+            opacity: 0.15;
+        }
+
+        .stories-text {
+            color: #1e293b;
+        }
+
+        .stories-text .section-label {
+            color: #f59e0b;
+        }
+
+        .stories-text h2 {
+            font-size: clamp(36px, 4.5vw, 64px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            color: #0f172a;
+        }
+
+        .stories-text h2 .accent {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stories-text p {
+            font-size: 18px;
+            color: #64748b;
+            line-height: 1.7;
+            max-width: 460px;
+        }
+
+        .stories-features {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 36px;
+        }
+
+        .stories-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .stories-feature-icon {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stories-feature-text h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .stories-feature-text p {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* ===== SECTION 4: SOCIAL ===== */
+        .social-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 50%, #fffbeb 100%);
+            position: relative;
+        }
+
+        .social-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .social-text {
+            color: #1e293b;
+        }
+
+        .social-text h2 {
+            font-size: clamp(36px, 4.5vw, 64px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            color: #0f172a;
+        }
+
+        .social-text h2 .accent {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .social-text p {
+            font-size: 18px;
+            color: #78716c;
+            line-height: 1.7;
+            max-width: 460px;
+        }
+
+        .social-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 36px;
+        }
+
+        .social-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            border: 1px solid rgba(245, 158, 11, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.1);
+        }
+
+        .social-card-icon {
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .social-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .social-card p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .social-visual {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .social-phones-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .social-phones-wrapper img {
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .social-phones-shadow {
+            position: absolute;
+            bottom: -20px;
+            left: 10%;
+            right: 10%;
+            height: 60px;
+            background: radial-gradient(ellipse, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+            filter: blur(20px);
+        }
+
+        /* ===== SECTION 5: GAMES ===== */
+        .games-section {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 30%, #ec4899 70%, #f43f5e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .games-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 600px 600px at 20% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 400px at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+        }
+
+        /* Animated background circles */
+        .games-bg-shapes {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .games-bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .games-bg-circle:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -100px;
+            right: -100px;
+            animation: spinSlow 30s linear infinite;
+        }
+
+        .games-bg-circle:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            bottom: -80px;
+            left: -80px;
+            animation: spinSlow 25s linear infinite reverse;
+        }
+
+        .games-bg-circle:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            top: 40%;
+            left: 50%;
+            animation: spinSlow 20s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            to { transform: rotate(360deg); }
+        }
+
+        .games-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+        }
+
+        .games-content .section-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .games-content .section-label::before {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .games-content h2 {
+            font-size: clamp(40px, 5vw, 72px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+        }
+
+        .games-content > p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 560px;
+            margin: 0 auto 56px;
+            line-height: 1.6;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 40px 28px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .game-card:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-card-emoji {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .game-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .game-card p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.6;
+        }
+
+        .game-card-badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== SECTION 6: DOWNLOAD ===== */
+        .download-section {
+            background: #0f172a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 600px 400px at 50% 40%, rgba(245, 158, 11, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 300px at 30% 70%, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+        }
+
+        .download-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+        }
+
+        .download-content h2 {
+            font-size: clamp(40px, 5.5vw, 80px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            line-height: 1.05;
+        }
+
+        .download-content h2 .accent {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .download-content > p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            max-width: 520px;
+            margin: 0 auto 48px;
+            line-height: 1.6;
+        }
+
+        .download-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 56px;
+        }
+
+        .btn-google-play-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 44px;
+            background: #f59e0b;
+            color: #0f172a;
+            border-radius: 18px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 19px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-google-play-large:hover {
+            background: #fbbf24;
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(245, 158, 11, 0.35);
+        }
+
+        .btn-google-play-large img {
+            width: 28px;
+            height: 28px;
+        }
+
+        .btn-google-play-large .btn-text {
+            text-align: left;
+        }
+
+        .btn-google-play-large .btn-sub {
+            font-size: 12px;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            opacity: 0.6;
+            display: block;
+            margin-top: -2px;
+        }
+
+        .btn-app-store-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: default;
+        }
+
+        .btn-app-store-large svg {
+            width: 26px;
+            height: 26px;
+            opacity: 0.4;
+        }
+
+        .btn-app-store-large .btn-text {
+            text-align: left;
+        }
+
+        .btn-app-store-large .btn-sub {
+            font-size: 12px;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            opacity: 0.7;
+            display: block;
+            margin-top: -2px;
+        }
+
+        .download-visual {
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .download-visual img {
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .download-glow {
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+            filter: blur(50px);
+            z-index: 1;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #0a0f1e;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px 40px 32px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .footer-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .footer-logo {
+            height: 28px;
+            filter: brightness(0) invert(1);
+            opacity: 0.5;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.35);
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #f59e0b;
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-signature {
+            height: 24px;
+            opacity: 0.4;
+            filter: brightness(0) invert(1);
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-signature:hover {
+            opacity: 0.7;
+        }
+
+        .footer-copyright {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-top: 24px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .globe-layout,
+            .stories-layout,
+            .social-layout {
+                grid-template-columns: 1fr;
+                gap: 60px;
+                text-align: center;
+                padding-top: 120px;
+                padding-bottom: 80px;
+            }
+
+            .globe-text,
+            .stories-text,
+            .social-text {
+                order: 1;
+            }
+
+            .globe-visual,
+            .stories-visual,
+            .social-visual {
+                order: 2;
+            }
+
+            .globe-text p,
+            .stories-text p,
+            .social-text p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .globe-stats {
+                justify-content: center;
+            }
+
+            .section-label {
+                justify-content: center;
+            }
+
+            .social-cards {
+                max-width: 480px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 36px;
+            }
+
+            .stories-features {
+                max-width: 480px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 36px;
+            }
+
+            .globe-image-wrapper {
+                max-width: 420px;
+                margin: 0 auto;
+            }
+
+            .stories-phone-wrapper {
+                margin: 0 auto;
+            }
+
+            .social-phones-wrapper {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 16px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section-inner {
+                padding: 0 20px;
+            }
+
+            .hero-logo {
+                height: 36px;
+            }
+
+            .hero-content {
+                padding-top: 60px;
+            }
+
+            .progress-dots {
+                display: none;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+                max-width: 380px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+            }
+
+            .btn-google-play,
+            .btn-app-store {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+
+            .btn-google-play-large,
+            .btn-app-store-large {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .globe-layout,
+            .stories-layout,
+            .social-layout {
+                padding-top: 100px;
+                padding-bottom: 60px;
+                gap: 40px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-left {
+                flex-direction: column;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+
+            .floating-download {
+                bottom: 20px;
+                right: 20px;
+                padding: 14px 22px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-subtitle {
+                font-size: 16px;
+            }
+
+            .globe-text h2,
+            .stories-text h2,
+            .social-text h2,
+            .games-content h2,
+            .download-content h2 {
+                font-size: 32px;
+            }
+
+            .games-content > p,
+            .download-content > p {
+                font-size: 16px;
+            }
+
+            .globe-stats {
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="nav" id="nav">
+        <a href="#">
+            <img src="assets/pinr-logo.png" alt="Pinr" class="nav-logo">
+        </a>
+        <ul class="nav-links">
+            <li><a href="#globe">Explore</a></li>
+            <li><a href="#stories">Stories</a></li>
+            <li><a href="#social">Social</a></li>
+            <li><a href="#games">Games</a></li>
+            <li><a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="nav-cta">Download</a></li>
+        </ul>
+    </nav>
+
+    <!-- ===== PROGRESS DOTS ===== -->
+    <div class="progress-dots" id="progressDots">
+        <div class="progress-dot active" data-section="hero" data-label="Home" onclick="scrollToSection('hero')"></div>
+        <div class="progress-dot" data-section="globe" data-label="Explore" onclick="scrollToSection('globe')"></div>
+        <div class="progress-dot" data-section="stories" data-label="Stories" onclick="scrollToSection('stories')"></div>
+        <div class="progress-dot" data-section="social" data-label="Social" onclick="scrollToSection('social')"></div>
+        <div class="progress-dot" data-section="games" data-label="Games" onclick="scrollToSection('games')"></div>
+        <div class="progress-dot" data-section="download" data-label="Download" onclick="scrollToSection('download')"></div>
+    </div>
+
+    <!-- ===== FLOATING DOWNLOAD BUTTON ===== -->
+    <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="floating-download" id="floatingDownload">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5v-17c0-.83.52-1.28 1.23-.89l14.54 8.5c.71.39.71 1.39 0 1.78l-14.54 8.5C3.52 21.78 3 21.33 3 20.5z"/></svg>
+        Get Pinr
+    </a>
+
+    <!-- ===== SECTION 1: HERO ===== -->
+    <section class="section hero" id="hero">
+        <div class="hero-shapes">
+            <div class="hero-shape"></div>
+            <div class="hero-shape"></div>
+            <div class="hero-shape"></div>
+            <div class="hero-shape"></div>
+        </div>
+
+        <div class="section-inner hero-content">
+            <img src="assets/pinr-logo.png" alt="Pinr Logo" class="hero-logo reveal reveal-delay-1">
+
+            <div class="hero-tagline-pre reveal reveal-delay-2">Explore. Share. Connect.</div>
+
+            <h1 class="hero-title">
+                <span class="hero-title-word">Travel</span>
+                <span class="hero-title-word">Made</span>
+                <span class="hero-title-word accent">Social.</span>
+            </h1>
+
+            <p class="hero-subtitle reveal reveal-delay-3">
+                Drop pins across the globe, capture your adventures in photo stories, and connect with travelers everywhere.
+            </p>
+
+            <div class="hero-buttons reveal reveal-delay-4">
+                <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="btn-google-play">
+                    <img src="assets/google-play-logo.png" alt="Google Play">
+                    <span>
+                        <span class="btn-sub">Now live on</span>
+                        Google Play
+                    </span>
+                </a>
+                <div class="btn-app-store">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    <span>
+                        <span class="btn-sub">Coming soon to</span>
+                        App Store
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator" onclick="scrollToSection('globe')">
+            <span>Scroll to explore</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 2: GLOBE ===== -->
+    <section class="section globe-section" id="globe">
+        <div class="section-inner">
+            <div class="globe-layout">
+                <div class="globe-text">
+                    <div class="section-label reveal">
+                        <span>The Globe</span>
+                    </div>
+                    <h2 class="reveal reveal-delay-1">
+                        Pin Your<br><span class="accent">World</span>
+                    </h2>
+                    <p class="reveal reveal-delay-2">
+                        Explore a stunning 3D globe and drop pins everywhere you have been or dream of going. Each pin becomes a memory, a story, a piece of your journey.
+                    </p>
+                    <div class="globe-stats reveal reveal-delay-3">
+                        <div class="globe-stat">
+                            <div class="globe-stat-number">195</div>
+                            <div class="globe-stat-label">Countries</div>
+                        </div>
+                        <div class="globe-stat">
+                            <div class="globe-stat-number">3D</div>
+                            <div class="globe-stat-label">Interactive Globe</div>
+                        </div>
+                        <div class="globe-stat">
+                            <div class="globe-stat-number">&infin;</div>
+                            <div class="globe-stat-label">Pins to Drop</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="globe-visual reveal from-right reveal-delay-2">
+                    <div class="globe-image-wrapper" data-parallax data-speed="0.08">
+                        <div class="globe-glow"></div>
+                        <img src="assets/feature-base.png" alt="Pinr 3D Globe with pins and profile pictures">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 3: STORIES ===== -->
+    <section class="section stories-section" id="stories">
+        <div class="section-inner">
+            <div class="stories-layout">
+                <div class="stories-visual reveal from-left reveal-delay-1">
+                    <div class="stories-phone-wrapper" data-parallax data-speed="0.06">
+                        <div class="stories-phone-bg"></div>
+                        <img src="assets/phone-final.png" alt="Pinr app showing Machu Picchu travel story">
+                    </div>
+                </div>
+                <div class="stories-text">
+                    <div class="section-label reveal">
+                        <span>Photo Stories</span>
+                    </div>
+                    <h2 class="reveal reveal-delay-1">
+                        Your Adventures,<br><span class="accent">Beautifully Told</span>
+                    </h2>
+                    <p class="reveal reveal-delay-2">
+                        Turn your travels into beautiful photo stories. Every pin becomes a visual diary entry that captures the magic of the moment.
+                    </p>
+                    <div class="stories-features">
+                        <div class="stories-feature reveal reveal-delay-3">
+                            <div class="stories-feature-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            </div>
+                            <div class="stories-feature-text">
+                                <h4>Add Photos</h4>
+                                <p>Upload your best shots to each pin location</p>
+                            </div>
+                        </div>
+                        <div class="stories-feature reveal reveal-delay-4">
+                            <div class="stories-feature-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            </div>
+                            <div class="stories-feature-text">
+                                <h4>Write Stories</h4>
+                                <p>Describe the sights, sounds, and feelings</p>
+                            </div>
+                        </div>
+                        <div class="stories-feature reveal reveal-delay-5">
+                            <div class="stories-feature-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                            </div>
+                            <div class="stories-feature-text">
+                                <h4>Share Globally</h4>
+                                <p>Let friends discover your journeys on the globe</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 4: SOCIAL ===== -->
+    <section class="section social-section" id="social">
+        <div class="section-inner">
+            <div class="social-layout">
+                <div class="social-text">
+                    <div class="section-label reveal">
+                        <span>Social</span>
+                    </div>
+                    <h2 class="reveal reveal-delay-1">
+                        Travel Is Better<br><span class="accent">Together</span>
+                    </h2>
+                    <p class="reveal reveal-delay-2">
+                        Connect with friends and fellow travelers. See where they have been, share recommendations, and plan your next adventure together.
+                    </p>
+                    <div class="social-cards">
+                        <div class="social-card reveal reveal-delay-3">
+                            <div class="social-card-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                            </div>
+                            <div>
+                                <h4>Follow Friends</h4>
+                                <p>See their pins appear on your globe in real time</p>
+                            </div>
+                        </div>
+                        <div class="social-card reveal reveal-delay-4">
+                            <div class="social-card-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                            </div>
+                            <div>
+                                <h4>React &amp; Comment</h4>
+                                <p>Share excitement about their latest discoveries</p>
+                            </div>
+                        </div>
+                        <div class="social-card reveal reveal-delay-5">
+                            <div class="social-card-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                            </div>
+                            <div>
+                                <h4>Discover Adventures</h4>
+                                <p>Get inspired by the global community of travelers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="social-visual reveal from-right reveal-delay-2">
+                    <div class="social-phones-wrapper" data-parallax data-speed="0.07">
+                        <div class="social-phones-shadow"></div>
+                        <img src="assets/landing-phones.png" alt="Two phones showing Pinr social features">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 5: GAMES ===== -->
+    <section class="section games-section" id="games">
+        <div class="games-bg-shapes">
+            <div class="games-bg-circle"></div>
+            <div class="games-bg-circle"></div>
+            <div class="games-bg-circle"></div>
+        </div>
+        <div class="section-inner games-content">
+            <div class="section-label reveal">
+                <span>Games</span>
+            </div>
+            <h2 class="reveal reveal-delay-1">Play the World</h2>
+            <p class="reveal reveal-delay-2">
+                Test your geography knowledge, challenge friends, and learn about the world in fun, competitive mini-games.
+            </p>
+            <div class="games-grid">
+                <div class="game-card reveal reveal-delay-3">
+                    <span class="game-card-emoji">&#127988;</span>
+                    <h3>Flag Dash</h3>
+                    <p>Race to identify flags from around the world before time runs out.</p>
+                    <span class="game-card-badge">Fast-paced</span>
+                </div>
+                <div class="game-card reveal reveal-delay-4">
+                    <span class="game-card-emoji">&#128205;</span>
+                    <h3>Pin Drop</h3>
+                    <p>How accurately can you place locations on the globe? Test your precision.</p>
+                    <span class="game-card-badge">Precision</span>
+                </div>
+                <div class="game-card reveal reveal-delay-5">
+                    <span class="game-card-emoji">&#9876;&#65039;</span>
+                    <h3>Travel Battle</h3>
+                    <p>Challenge friends head-to-head in geography trivia battles.</p>
+                    <span class="game-card-badge">Multiplayer</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 6: DOWNLOAD ===== -->
+    <section class="section download-section" id="download">
+        <div class="section-inner download-content">
+            <div class="section-label reveal">
+                <span>Get Started</span>
+            </div>
+            <h2 class="reveal reveal-delay-1">
+                Your Next Adventure<br>Starts <span class="accent">Here</span>
+            </h2>
+            <p class="reveal reveal-delay-2">
+                Join thousands of travelers already sharing their journeys on Pinr. Download now and start pinning your world.
+            </p>
+            <div class="download-buttons reveal reveal-delay-3">
+                <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="btn-google-play-large">
+                    <img src="assets/google-play-logo.png" alt="Google Play">
+                    <span class="btn-text">
+                        <span class="btn-sub">Now live on</span>
+                        Google Play
+                    </span>
+                </a>
+                <div class="btn-app-store-large">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    <span class="btn-text">
+                        <span class="btn-sub">Coming soon to</span>
+                        App Store
+                    </span>
+                </div>
+            </div>
+            <div class="download-visual reveal from-scale reveal-delay-4">
+                <div class="download-glow"></div>
+                <img src="assets/landing-visual.png" alt="Pinr marketing visual with phones and store badges">
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <img src="assets/pinr-logo.png" alt="Pinr" class="footer-logo">
+                <ul class="footer-links">
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-of-service.html">Terms of Service</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="mailto:lee@getpinr.com">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-right">
+                <a href="https://builtbylee.com" target="_blank" rel="noopener">
+                    <img src="assets/builtbylee-signature.png" alt="Built by Lee" class="footer-signature">
+                </a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 Pinr. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ===== INTERSECTION OBSERVER - REVEAL ON SCROLL =====
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -60px 0px'
+        });
+
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        // ===== SECTION OBSERVER - NAV + PROGRESS DOTS =====
+        var sections = document.querySelectorAll('.section');
+        var nav = document.getElementById('nav');
+        var dots = document.querySelectorAll('.progress-dot');
+        var floatingBtn = document.getElementById('floatingDownload');
+
+        // Sections where nav/dots should use light mode
+        var lightSections = { stories: true, social: true };
+
+        var sectionObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var id = entry.target.id;
+
+                    // Update progress dots
+                    dots.forEach(function(dot) {
+                        dot.classList.remove('active');
+                        if (lightSections[id]) {
+                            dot.classList.add('light-dot');
+                        } else {
+                            dot.classList.remove('light-dot');
+                        }
+                    });
+                    var activeDot = document.querySelector('.progress-dot[data-section="' + id + '"]');
+                    if (activeDot) activeDot.classList.add('active');
+
+                    // Update nav
+                    if (lightSections[id]) {
+                        nav.classList.add('light-mode');
+                    } else {
+                        nav.classList.remove('light-mode');
+                    }
+                }
+            });
+        }, {
+            threshold: 0.4
+        });
+
+        sections.forEach(function(section) {
+            sectionObserver.observe(section);
+        });
+
+        // ===== SCROLL LISTENER - PARALLAX + NAV SCROLL STATE + FLOATING BTN =====
+        var ticking = false;
+
+        function onScroll() {
+            var scrollY = window.scrollY;
+
+            // Nav scrolled state
+            if (scrollY > 60) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+
+            // Floating download button
+            var downloadSection = document.getElementById('download');
+            var downloadRect = downloadSection.getBoundingClientRect();
+
+            if (scrollY > window.innerHeight * 0.8 && downloadRect.top > window.innerHeight * 0.5) {
+                floatingBtn.classList.add('visible');
+            } else {
+                floatingBtn.classList.remove('visible');
+            }
+
+            // Parallax elements
+            document.querySelectorAll('[data-parallax]').forEach(function(el) {
+                var rect = el.getBoundingClientRect();
+                var centerY = rect.top + rect.height / 2;
+                var viewCenter = window.innerHeight / 2;
+                var offset = (centerY - viewCenter) * parseFloat(el.dataset.speed || 0.05);
+                el.style.transform = 'translateY(' + offset + 'px)';
+            });
+        }
+
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    onScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+
+        // Initial call
+        onScroll();
+
+        // ===== SMOOTH SCROLL TO SECTION =====
+        window.scrollToSection = function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        // ===== HERO REVEAL ON LOAD =====
+        setTimeout(function() {
+            document.querySelectorAll('.hero .reveal').forEach(function(el) {
+                el.classList.add('visible');
+            });
+        }, 200);
+
+    })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinr — Travel Made Social</title>
+    <link rel="icon" href="favicon-v4.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a1a; color: #ffffff; overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+
+        /* Starfield */
+        .starfield { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+        .star {
+            position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%;
+            animation: twinkle var(--duration, 4s) ease-in-out infinite;
+            opacity: 0;
+        }
+        .star.large { width: 3px; height: 3px; }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: var(--max-opacity, 0.5); }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 20px 40px; transition: all 0.4s ease;
+            background: transparent;
+        }
+        .navbar.scrolled {
+            background: rgba(10, 10, 26, 0.92); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1); padding: 14px 40px;
+        }
+        .navbar-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .navbar-logo img { height: 28px; filter: brightness(0) invert(1); }
+        .nav-links { list-style: none; display: flex; align-items: center; gap: 32px; }
+        .nav-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.875rem; font-weight: 400; transition: color 0.3s; }
+        .nav-links a:hover { color: #fff; }
+        .nav-cta {
+            background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 8px 18px; border-radius: 8px; color: #a5b4fc !important; font-weight: 500;
+            display: flex; align-items: center; gap: 6px; transition: all 0.3s;
+        }
+        .nav-cta:hover { background: rgba(99, 102, 241, 0.25); border-color: rgba(99, 102, 241, 0.5); }
+        .nav-cta svg { fill: currentColor; }
+        .mobile-menu-btn { display: none; background: none; border: none; color: #fff; cursor: pointer; padding: 4px; }
+        .mobile-menu { display: none; flex-direction: column; padding: 16px 40px 24px; gap: 16px; background: rgba(10, 10, 26, 0.95); backdrop-filter: blur(20px); }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 1rem; padding: 8px 0; }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative; min-height: 100vh; display: flex; align-items: center;
+            padding: 120px 40px 80px; overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; inset: 0; z-index: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+        }
+        .hero-inner {
+            max-width: 1200px; margin: 0 auto; width: 100%;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+            position: relative; z-index: 1;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 6px 16px; border-radius: 100px; font-size: 0.8rem; font-weight: 500;
+            color: #a5b4fc; margin-bottom: 24px; width: fit-content;
+        }
+        .pulse-dot {
+            width: 8px; height: 8px; background: #22c55e; border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 20px; }
+        .hero-subtitle { font-size: 1.1rem; line-height: 1.7; color: #94a3b8; max-width: 480px; margin-bottom: 36px; font-weight: 300; }
+        .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+        /* Store buttons */
+        .store-btn {
+            display: inline-flex; align-items: center; gap: 12px;
+            padding: 14px 24px; border-radius: 12px; text-decoration: none;
+            transition: all 0.3s; cursor: pointer; border: none; font-family: inherit;
+        }
+        .store-btn-google {
+            background: #fff; color: #0a0a1a;
+        }
+        .store-btn-google:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.15); }
+        .store-btn-apple {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.5); position: relative;
+        }
+        .store-icon { display: flex; align-items: center; }
+        .store-icon img { width: 22px; height: 22px; }
+        .store-icon svg { width: 22px; height: 22px; }
+        .store-btn-text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
+        .store-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; opacity: 0.7; margin-bottom: 2px; }
+        .store-name { font-size: 0.95rem; font-weight: 600; }
+        .coming-soon-tag {
+            position: absolute; top: -8px; right: -8px;
+            background: #6366f1; color: #fff; font-size: 0.6rem; font-weight: 700;
+            padding: 2px 8px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        /* Phone visual */
+        .hero-visual { display: flex; justify-content: center; align-items: center; position: relative; }
+        .phone-glow {
+            position: absolute; width: 300px; height: 300px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+            filter: blur(40px); z-index: 0;
+        }
+        .phone-container { position: relative; z-index: 1; }
+        .phone-container img { max-height: 560px; width: auto; filter: drop-shadow(0 20px 60px rgba(99, 102, 241, 0.2)); }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            color: rgba(255,255,255,0.3); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+        @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+        /* Section divider */
+        .section-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent); margin: 0 40px; }
+
+        /* Section commons */
+        .section-container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+        .section-header { text-align: center; margin-bottom: 64px; }
+        .section-tag {
+            display: inline-block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.12em; color: #6366f1; margin-bottom: 16px;
+        }
+        .section-title { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+        .section-subtitle { font-size: 1.05rem; color: #94a3b8; max-width: 560px; margin: 0 auto; line-height: 1.7; font-weight: 300; }
+
+        /* Reveal animations */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+        .reveal-delay-6 { transition-delay: 0.6s; }
+
+        /* Features */
+        .features-section { padding: 100px 0; position: relative; }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px; padding: 32px; transition: all 0.4s;
+            backdrop-filter: blur(10px); position: relative; overflow: hidden;
+        }
+        .feature-card::before {
+            content: ''; position: absolute; inset: 0; border-radius: 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(6, 182, 212, 0.05));
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card:hover { border-color: rgba(99, 102, 241, 0.15); transform: translateY(-4px); }
+        .feature-icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px; position: relative; z-index: 1;
+        }
+        .icon-globe { background: rgba(99, 102, 241, 0.1); }
+        .icon-stories { background: rgba(244, 63, 94, 0.1); }
+        .icon-friends { background: rgba(34, 197, 94, 0.1); }
+        .icon-games { background: rgba(251, 191, 36, 0.1); }
+        .icon-compete { background: rgba(168, 85, 247, 0.1); }
+        .icon-notify { background: rgba(6, 182, 212, 0.1); }
+        .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; position: relative; z-index: 1; }
+        .feature-card p { font-size: 0.9rem; color: #94a3b8; line-height: 1.6; position: relative; z-index: 1; }
+
+        /* Preview section */
+        .preview-section { padding: 100px 0; position: relative; }
+        .preview-content { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .globe-image { width: 100%; max-width: 500px; height: auto; border-radius: 16px; position: relative; z-index: 1; }
+        .globe-glow {
+            position: absolute; width: 400px; height: 400px; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            filter: blur(30px); z-index: 0;
+        }
+        .preview-images { position: relative; display: flex; justify-content: center; }
+        .preview-text h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
+        .preview-text p { font-size: 1rem; color: #94a3b8; line-height: 1.7; margin-bottom: 32px; font-weight: 300; }
+        .preview-stats { display: flex; gap: 40px; }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; }
+        .stat-number:first-child { color: #6366f1; }
+        .stat-label { font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+        /* Screenshots */
+        .screenshots-section { padding: 80px 0; }
+        .screenshots-showcase { display: flex; justify-content: center; align-items: center; padding-top: 40px; }
+        .screenshots-showcase img { max-height: 500px; width: auto; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.3)); }
+
+        /* CTA Section */
+        .cta-section { padding: 100px 0; }
+        .cta-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(6, 182, 212, 0.05));
+            border: 1px solid rgba(99, 102, 241, 0.12); border-radius: 32px;
+            padding: 64px; text-align: center;
+        }
+        .cta-title { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
+        .cta-subtitle { font-size: 1.05rem; color: #94a3b8; max-width: 480px; margin: 0 auto 36px; line-height: 1.7; font-weight: 300; }
+        .cta-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+
+        /* Footer */
+        .footer { padding: 48px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; }
+        .footer-left { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; }
+        .footer-logo img { height: 24px; filter: brightness(0) invert(1); }
+        .footer-links { list-style: none; display: flex; gap: 24px; flex-wrap: wrap; }
+        .footer-links a { color: #64748b; text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .footer-signature img { height: 24px; opacity: 0.4; filter: brightness(0) invert(1); transition: opacity 0.3s; }
+        .footer-signature img:hover { opacity: 0.7; }
+        .footer-copy { font-size: 0.75rem; color: #4b5563; }
+
+        /* Hero animations */
+        .hero-content > * {
+            opacity: 0; transform: translateY(20px);
+            animation: heroReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .hero-content .hero-badge { animation-delay: 0.2s; }
+        .hero-content .hero-title { animation-delay: 0.4s; }
+        .hero-content .hero-subtitle { animation-delay: 0.6s; }
+        .hero-content .hero-buttons { animation-delay: 0.8s; }
+        .hero-visual { opacity: 0; transform: translateY(30px) scale(0.97); animation: heroVisReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: 0.5s; }
+        @keyframes heroReveal { to { opacity: 1; transform: translateY(0); } }
+        @keyframes heroVisReveal { to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .preview-content { grid-template-columns: 1fr; text-align: center; }
+            .preview-stats { justify-content: center; }
+            .preview-images { order: -1; }
+        }
+        @media (max-width: 768px) {
+            .hero { padding: 100px 20px 60px; }
+            .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+            .hero-subtitle { margin-left: auto; margin-right: auto; }
+            .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
+            .hero-visual { order: -1; }
+            .phone-container img { max-height: 400px; }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .features-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+            .section-container { padding: 0 20px; }
+            .cta-card { padding: 40px 24px; border-radius: 24px; }
+            .footer-content { flex-direction: column; text-align: center; }
+            .footer-left { flex-direction: column; }
+            .footer-right { align-items: center; }
+            .store-btn { width: 100%; max-width: 260px; justify-content: center; }
+            .scroll-indicator { display: none; }
+            .navbar { padding: 16px 20px; }
+            .navbar.scrolled { padding: 12px 20px; }
+            .mobile-menu { padding: 16px 20px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="starfield" id="starfield"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="navbar-logo"><img src="assets/pinr-logo.png" alt="Pinr"></a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#preview">Preview</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="mailto:lee@getpinr.com">Support</a></li>
+                <li><a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" class="nav-cta" target="_blank" rel="noopener">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 0 1 0 1.38l-2.302 2.302L15.196 12l2.502-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302L5.864 2.658z"/></svg>
+                    Download
+                </a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#features">Features</a>
+            <a href="#preview">Preview</a>
+            <a href="faq.html">FAQ</a>
+            <a href="mailto:lee@getpinr.com">Support</a>
+            <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener">Download on Google Play</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-inner">
+            <div class="hero-content">
+                <div class="hero-badge"><span class="pulse-dot"></span>Now Live on Google Play</div>
+                <h1 class="hero-title">Travel Made<br><span class="gradient-text">Social.</span></h1>
+                <p class="hero-subtitle">Pin your adventures on an interactive 3D globe. Create photo stories, connect with friends, and challenge the world in geography games.</p>
+                <div class="hero-buttons">
+                    <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="store-btn store-btn-google">
+                        <span class="store-icon"><img src="assets/google-play-logo.png" alt="Google Play"></span>
+                        <span class="store-btn-text"><span class="store-label">Get it on</span><span class="store-name">Google Play</span></span>
+                    </a>
+                    <span class="store-btn store-btn-apple">
+                        <span class="store-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg></span>
+                        <span class="store-btn-text"><span class="store-label">Coming soon on</span><span class="store-name">App Store</span></span>
+                        <span class="coming-soon-tag">Soon</span>
+                    </span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-glow"></div>
+                <div class="phone-container"><img src="assets/phone-final.png" alt="Pinr app showing a travel story at Machu Picchu"></div>
+            </div>
+        </div>
+        <div class="scroll-indicator"><span>Scroll</span><div class="scroll-line"></div></div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- FEATURES -->
+    <section class="features-section" id="features">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-tag">Features</span>
+                <h2 class="section-title">Everything You Need to<br><span class="gradient-text">Explore the World</span></h2>
+                <p class="section-subtitle">From pinning your travels to competing with friends, Pinr is the ultimate companion for adventurers.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon icon-globe">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <h3>Interactive 3D Globe</h3>
+                    <p>Pin every destination on a beautiful, spinnable 3D globe. Watch your travel map come alive.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon icon-stories">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <h3>Photo Stories</h3>
+                    <p>Create rich photo stories linking multiple destinations. Relive your journeys in stunning visual narratives.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-3">
+                    <div class="feature-icon icon-friends">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Connect with Friends</h3>
+                    <p>Follow friends and see their adventures unfold in real time. Discover new places through people you trust.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-4">
+                    <div class="feature-icon icon-games">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <h3>Geography Games</h3>
+                    <p>Flag Dash, Pin Drop, Travel Battle. Test your world knowledge in fast-paced, addictive game modes.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-5">
+                    <div class="feature-icon icon-compete">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                    </div>
+                    <h3>Compete & Climb</h3>
+                    <p>Challenge friends head-to-head, earn streaks, and climb the global leaderboard.</p>
+                </div>
+                <div class="feature-card reveal reveal-delay-6">
+                    <div class="feature-icon icon-notify">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <h3>Stay in the Loop</h3>
+                    <p>Push notifications keep you updated on friend activity, game invites, and challenges.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PREVIEW -->
+    <section class="preview-section" id="preview">
+        <div class="section-container">
+            <div class="preview-content reveal">
+                <div class="preview-images">
+                    <div class="globe-glow"></div>
+                    <img src="assets/feature-base.png" alt="Pinr 3D globe with travel pins" class="globe-image">
+                </div>
+                <div class="preview-text">
+                    <span class="section-tag">Your World, Your Map</span>
+                    <h2>A Globe That Tells<br><span class="gradient-text">Your Story</span></h2>
+                    <p>Every pin is a memory. Every story is an adventure. Pinr transforms the way you document and share your travels with an immersive 3D globe that is uniquely yours.</p>
+                    <div class="preview-stats">
+                        <div class="stat-item"><span class="stat-number gradient-text">195</span><span class="stat-label">Countries</span></div>
+                        <div class="stat-item"><span class="stat-number gradient-text">3</span><span class="stat-label">Game Modes</span></div>
+                        <div class="stat-item"><span class="stat-number gradient-text">&infin;</span><span class="stat-label">Memories</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREENSHOTS -->
+    <section class="screenshots-section">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-tag">Screenshots</span>
+                <h2 class="section-title">See It in Action</h2>
+                <p class="section-subtitle">From stunning travel stories to competitive geography games, every screen is designed with care.</p>
+            </div>
+            <div class="screenshots-showcase reveal">
+                <img src="assets/landing-phones.png" alt="Pinr app screenshots">
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- CTA -->
+    <section class="cta-section" id="download">
+        <div class="section-container">
+            <div class="cta-card reveal">
+                <span class="section-tag">Start Your Journey</span>
+                <h2 class="cta-title">Ready to Pin<br><span class="gradient-text">Your World?</span></h2>
+                <p class="cta-subtitle">Download Pinr today and start mapping your adventures. Your globe is waiting.</p>
+                <div class="cta-buttons">
+                    <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="store-btn store-btn-google">
+                        <span class="store-icon"><img src="assets/google-play-logo.png" alt="Google Play"></span>
+                        <span class="store-btn-text"><span class="store-label">Get it on</span><span class="store-name">Google Play</span></span>
+                    </a>
+                    <span class="store-btn store-btn-apple">
+                        <span class="store-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg></span>
+                        <span class="store-btn-text"><span class="store-label">Coming soon on</span><span class="store-name">App Store</span></span>
+                        <span class="coming-soon-tag">Soon</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <a href="#" class="footer-logo"><img src="assets/pinr-logo.png" alt="Pinr"></a>
+                    <ul class="footer-links">
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-of-service.html">Terms</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="mailto:lee@getpinr.com">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-right">
+                    <a href="#" class="footer-signature"><img src="assets/builtbylee-signature.png" alt="Built by Lee"></a>
+                    <span class="footer-copy">&copy; 2025 Pinr. All rights reserved.</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Starfield
+        (function() {
+            const sf = document.getElementById('starfield'), count = 120, frag = document.createDocumentFragment();
+            for (let i = 0; i < count; i++) {
+                const s = document.createElement('div');
+                s.className = 'star' + (Math.random() > 0.85 ? ' large' : '');
+                s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+                const d = 3 + Math.random() * 6;
+                s.style.setProperty('--duration', d + 's');
+                s.style.setProperty('--max-opacity', (0.3 + Math.random() * 0.5).toFixed(2));
+                s.style.animationDelay = (Math.random() * d) + 's';
+                frag.appendChild(s);
+            }
+            sf.appendChild(frag);
+        })();
+        // Navbar scroll
+        (function() {
+            const nb = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                requestAnimationFrame(function() { nb.classList.toggle('scrolled', window.scrollY > 50); });
+            }, { passive: true });
+        })();
+        // Mobile menu
+        (function() {
+            const btn = document.getElementById('mobileMenuBtn'), menu = document.getElementById('mobileMenu');
+            let open = false;
+            btn.addEventListener('click', function() {
+                open = !open; menu.classList.toggle('active', open);
+                btn.innerHTML = open
+                    ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+                    : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
+            });
+            menu.querySelectorAll('a').forEach(function(l) { l.addEventListener('click', function() { open = false; menu.classList.remove('active'); }); });
+        })();
+        // Reveal on scroll
+        (function() {
+            const obs = new IntersectionObserver(function(e) {
+                e.forEach(function(en) { if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+        })();
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+            a.addEventListener('click', function(e) { const t = document.querySelector(this.getAttribute('href')); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); } });
+        });
+    </script>
+</body>
+</html>

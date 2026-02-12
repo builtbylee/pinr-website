@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinr — Travel Made Social</title>
+    <link rel="icon" href="favicon-v4.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: #ffffff; color: #1e293b; overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        /* Blobs */
+        .blob {
+            position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0;
+        }
+        .blob-orange { background: rgba(249, 115, 22, 0.08); }
+        .blob-violet { background: rgba(139, 92, 246, 0.06); }
+        .blob-cyan { background: rgba(6, 182, 212, 0.06); }
+
+        /* Nav */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent; transition: all 0.3s;
+            padding: 16px 40px;
+        }
+        .nav.scrolled { border-bottom-color: rgba(0,0,0,0.06); box-shadow: 0 1px 12px rgba(0,0,0,0.04); }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .nav-logo img { height: 28px; }
+        .nav-links { list-style: none; display: flex; align-items: center; gap: 32px; }
+        .nav-links a { color: #64748b; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #1e293b; }
+        .nav-cta {
+            background: #0f172a; color: #fff !important; padding: 8px 20px; border-radius: 10px;
+            display: flex; align-items: center; gap: 6px; font-weight: 600; transition: all 0.3s;
+        }
+        .nav-cta:hover { background: #1e293b; transform: translateY(-1px); }
+        .nav-cta svg { fill: currentColor; }
+        .nav-mobile-toggle {
+            display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px;
+        }
+        .nav-mobile-toggle span { display: block; width: 22px; height: 2px; background: #1e293b; border-radius: 2px; transition: all 0.3s; }
+
+        /* Containers */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+        /* Labels */
+        .section-label {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+            color: #f97316; margin-bottom: 16px; display: block;
+        }
+        .section-title { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; color: #0f172a; margin-bottom: 16px; }
+        .section-subtitle { font-size: 1.05rem; color: #64748b; max-width: 560px; line-height: 1.7; font-weight: 400; }
+        .highlight { color: #f97316; }
+
+        /* Animate */
+        .animate-on-scroll { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; } .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; } .delay-6 { transition-delay: 0.6s; }
+
+        /* Store buttons */
+        .btn-google-play {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: #0f172a; color: #fff; padding: 14px 24px; border-radius: 14px;
+            text-decoration: none; transition: all 0.3s; border: none; font-family: inherit;
+        }
+        .btn-google-play:hover { background: #1e293b; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15); }
+        .btn-google-play .play-icon { width: 22px; height: 22px; filter: brightness(10); }
+        .btn-text { display: flex; flex-direction: column; line-height: 1; }
+        .btn-text-small { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.7; margin-bottom: 2px; font-weight: 500; }
+        .btn-text-large { font-size: 0.95rem; font-weight: 600; }
+        .btn-app-store {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: #f1f5f9; color: #94a3b8; padding: 14px 24px; border-radius: 14px;
+            border: 1px solid #e2e8f0; font-family: inherit;
+        }
+        .btn-app-store .apple-icon { width: 20px; height: 20px; opacity: 0.5; }
+        .btn-app-store .btn-text-small { color: #94a3b8; }
+
+        /* Hero */
+        .hero {
+            position: relative; min-height: 100vh; display: flex; align-items: center;
+            padding: 120px 0 80px; overflow: hidden;
+        }
+        .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; z-index: 1; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #fff7ed; border: 1px solid #fed7aa; padding: 6px 16px; border-radius: 100px;
+            font-size: 0.8rem; font-weight: 600; color: #ea580c; margin-bottom: 24px; width: fit-content;
+        }
+        .hero-badge-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 20px; color: #0f172a; }
+        .hero-subtitle { font-size: 1.1rem; line-height: 1.7; color: #64748b; max-width: 440px; margin-bottom: 36px; font-weight: 400; }
+        .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-visual { display: flex; justify-content: center; position: relative; }
+        .hero-glow {
+            position: absolute; width: 350px; height: 350px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, transparent 70%);
+            top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0;
+        }
+        .hero-phone-wrapper { position: relative; z-index: 1; }
+        .hero-phone-wrapper img {
+            max-height: 560px; width: auto;
+            filter: drop-shadow(0 20px 60px rgba(0,0,0,0.1));
+            border-radius: 0;
+        }
+
+        /* Features */
+        .features { padding: 100px 0; position: relative; background: #fafbff; }
+        .features-header { text-align: center; margin-bottom: 64px; }
+        .features-header .section-subtitle { margin: 0 auto; }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .feature-card {
+            background: #fff; border: 1px solid #f1f5f9; border-radius: 20px; padding: 32px;
+            transition: all 0.3s; position: relative;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); border-color: #e2e8f0; }
+        .feature-card::before {
+            content: ''; position: absolute; top: 0; left: 24px; right: 24px; height: 3px;
+            border-radius: 0 0 3px 3px; opacity: 0.7;
+        }
+        .feature-card:nth-child(1)::before { background: #f97316; }
+        .feature-card:nth-child(2)::before { background: #ec4899; }
+        .feature-card:nth-child(3)::before { background: #22c55e; }
+        .feature-card:nth-child(4)::before { background: #eab308; }
+        .feature-card:nth-child(5)::before { background: #8b5cf6; }
+        .feature-card:nth-child(6)::before { background: #06b6d4; }
+        .feature-icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+        }
+        .feature-card:nth-child(1) .feature-icon { background: #fff7ed; }
+        .feature-card:nth-child(2) .feature-icon { background: #fdf2f8; }
+        .feature-card:nth-child(3) .feature-icon { background: #f0fdf4; }
+        .feature-card:nth-child(4) .feature-icon { background: #fefce8; }
+        .feature-card:nth-child(5) .feature-icon { background: #f5f3ff; }
+        .feature-card:nth-child(6) .feature-icon { background: #ecfeff; }
+        .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: #0f172a; }
+        .feature-card p { font-size: 0.9rem; color: #64748b; line-height: 1.6; }
+
+        /* Globe */
+        .globe-section { padding: 100px 0; position: relative; overflow: hidden; }
+        .globe-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .globe-visual img { width: 100%; max-width: 480px; height: auto; }
+        .globe-content .section-subtitle { margin-bottom: 32px; }
+        .globe-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .stat-item {
+            background: #fafbff; border: 1px solid #f1f5f9; border-radius: 16px; padding: 20px; text-align: center;
+        }
+        .stat-icon { margin-bottom: 8px; }
+        .stat-label { font-size: 0.9rem; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+        .stat-desc { font-size: 0.75rem; color: #94a3b8; }
+
+        /* Phones showcase */
+        .phones-section { padding: 100px 0; background: #fafbff; text-align: center; position: relative; }
+        .phones-inner { display: flex; flex-direction: column; align-items: center; }
+        .phones-inner .section-subtitle { margin: 0 auto 48px; }
+        .phones-image-wrapper img { max-height: 500px; width: auto; filter: drop-shadow(0 20px 50px rgba(0,0,0,0.08)); }
+
+        /* CTA */
+        .cta-section { padding: 100px 0; position: relative; overflow: hidden; }
+        .cta-card {
+            background: linear-gradient(135deg, #fff7ed, #fdf2f8, #f0fdf4);
+            border: 1px solid #fde68a; border-radius: 32px; padding: 64px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .cta-content { position: relative; z-index: 1; }
+        .cta-emoji { font-size: 3rem; display: block; margin-bottom: 16px; }
+        .cta-title { font-size: clamp(1.8rem, 3.5vw, 2.4rem); font-weight: 800; line-height: 1.2; margin-bottom: 16px; color: #0f172a; }
+        .cta-subtitle { font-size: 1.05rem; color: #64748b; max-width: 480px; margin: 0 auto 36px; line-height: 1.7; }
+        .cta-buttons { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+        /* Footer */
+        .footer { padding: 60px 0 40px; border-top: 1px solid #f1f5f9; }
+        .footer-inner { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; margin-bottom: 40px; }
+        .footer-brand { max-width: 300px; }
+        .footer-logo { height: 28px; margin-bottom: 16px; }
+        .footer-brand p { font-size: 0.9rem; color: #64748b; line-height: 1.6; margin-bottom: 20px; }
+        .footer-signature img { height: 28px; opacity: 0.4; transition: opacity 0.3s; }
+        .footer-signature img:hover { opacity: 0.7; }
+        .footer-col h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #1e293b; margin-bottom: 16px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 10px; }
+        .footer-col a { color: #64748b; text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+        .footer-col a:hover { color: #f97316; }
+        .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid #f1f5f9; }
+        .footer-bottom p { font-size: 0.8rem; color: #94a3b8; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .globe-inner { gap: 48px; }
+        }
+        @media (max-width: 768px) {
+            .nav { padding: 14px 20px; }
+            .nav-links { display: none; position: fixed; top: 60px; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(20px); flex-direction: column; padding: 24px; gap: 16px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+            .nav-links.open { display: flex; }
+            .nav-mobile-toggle { display: flex; }
+            .hero { padding: 100px 0 60px; min-height: auto; }
+            .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+            .hero-subtitle { margin-left: auto; margin-right: auto; }
+            .hero-buttons { justify-content: center; flex-direction: column; align-items: center; }
+            .hero-phone-wrapper img { max-height: 400px; }
+            .features { padding: 80px 0; }
+            .features-grid { grid-template-columns: 1fr; }
+            .globe-inner { grid-template-columns: 1fr; text-align: center; }
+            .globe-visual { order: -1; }
+            .globe-stats { max-width: 400px; margin: 0 auto; }
+            .phones-section { padding: 80px 0; }
+            .cta-card { padding: 48px 24px; border-radius: 24px; }
+            .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+            .container { padding: 0 20px; }
+            .btn-google-play, .btn-app-store { width: 100%; max-width: 260px; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo"><img src="assets/pinr-logo.png" alt="Pinr"></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#globe">Explore</a></li>
+                <li><a href="#download">Download</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="nav-cta">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.302 2.302a1 1 0 0 1 0 1.38l-2.302 2.302L15.196 12l2.502-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302L5.864 2.658z"/></svg>
+                    Get the App
+                </a></li>
+            </ul>
+            <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="blob blob-orange" style="width:500px;height:500px;top:-100px;right:-100px;"></div>
+        <div class="blob blob-violet" style="width:400px;height:400px;bottom:0;left:-80px;"></div>
+        <div class="container">
+            <div class="hero-inner">
+                <div class="hero-content">
+                    <div class="hero-badge"><span class="hero-badge-dot"></span>Now Live on Google Play</div>
+                    <h1 class="hero-title">Travel Made<br><span class="highlight">Social.</span></h1>
+                    <p class="hero-subtitle">Pin your adventures on a 3D globe, share photo stories from every destination, and connect with friends who love to explore.</p>
+                    <div class="hero-buttons">
+                        <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="btn-google-play">
+                            <img src="assets/google-play-logo.png" alt="Google Play" class="play-icon">
+                            <span class="btn-text"><span class="btn-text-small">GET IT ON</span><span class="btn-text-large">Google Play</span></span>
+                        </a>
+                        <div class="btn-app-store">
+                            <svg class="apple-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                            <span class="btn-text"><span class="btn-text-small">COMING SOON TO</span><span class="btn-text-large">App Store</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-glow"></div>
+                    <div class="hero-phone-wrapper"><img src="assets/landing-phones.png" alt="Pinr app screenshots"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="blob blob-cyan" style="width:400px;height:400px;top:-100px;left:50%;transform:translateX(-50%);"></div>
+        <div class="container">
+            <div class="features-header animate-on-scroll">
+                <span class="section-label">Features</span>
+                <h2 class="section-title">Everything you need to<br>share your adventures</h2>
+                <p class="section-subtitle">From pinning destinations to challenging friends in geography games, Pinr makes every trip unforgettable.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card animate-on-scroll delay-1">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <h3>Interactive 3D Globe</h3>
+                    <p>Drop pins on a beautifully rendered 3D globe to mark every place you have visited.</p>
+                </div>
+                <div class="feature-card animate-on-scroll delay-2">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <h3>Photo Stories</h3>
+                    <p>Create rich photo stories that link multiple destinations. Relive your journeys beautifully.</p>
+                </div>
+                <div class="feature-card animate-on-scroll delay-3">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Connect with Friends</h3>
+                    <p>Follow your friends' adventures in real time. See where they have been and explore together.</p>
+                </div>
+                <div class="feature-card animate-on-scroll delay-4">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <h3>Geography Games</h3>
+                    <p>Flag Dash, Pin Drop, and Travel Battle. Fun, fast-paced games that sharpen your skills.</p>
+                </div>
+                <div class="feature-card animate-on-scroll delay-5">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                    </div>
+                    <h3>Leaderboards</h3>
+                    <p>Challenge friends head-to-head and climb the global leaderboards. Who knows the world best?</p>
+                </div>
+                <div class="feature-card animate-on-scroll delay-6">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <h3>Smart Notifications</h3>
+                    <p>Stay in the loop with push notifications for friend activity, game invites, and stories.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GLOBE -->
+    <section class="globe-section" id="globe">
+        <div class="blob blob-orange" style="width:500px;height:500px;top:0;right:-100px;"></div>
+        <div class="container">
+            <div class="globe-inner">
+                <div class="globe-visual animate-on-scroll"><img src="assets/feature-base.png" alt="Pinr 3D globe"></div>
+                <div class="globe-content animate-on-scroll delay-2">
+                    <span class="section-label">Your World, Visualized</span>
+                    <h2 class="section-title">A Globe That<br>Tells <span class="highlight">Your Story</span></h2>
+                    <p class="section-subtitle">Every pin is a memory. Every story is an adventure. Watch your personal globe fill up with the places that shaped you.</p>
+                    <div class="globe-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                            <div class="stat-label">Drop Pins</div>
+                            <div class="stat-desc">Mark your spots</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                            <div class="stat-label">Add Photos</div>
+                            <div class="stat-desc">Capture moments</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
+                            <div class="stat-label">Tell Stories</div>
+                            <div class="stat-desc">Share journeys</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHONES -->
+    <section class="phones-section">
+        <div class="container">
+            <div class="phones-inner">
+                <span class="section-label animate-on-scroll">See It In Action</span>
+                <h2 class="section-title animate-on-scroll">Designed for<br><span class="highlight">Wanderers</span></h2>
+                <p class="section-subtitle animate-on-scroll">A beautiful, intuitive experience crafted for travelers who want to remember every step.</p>
+                <div class="phones-image-wrapper animate-on-scroll delay-2"><img src="assets/phone-final.png" alt="Pinr app"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="download">
+        <div class="blob blob-violet" style="width:400px;height:400px;top:-100px;right:10%;"></div>
+        <div class="container">
+            <div class="cta-card animate-on-scroll">
+                <div class="cta-content">
+                    <span class="cta-emoji">&#127757;</span>
+                    <h2 class="cta-title">Start Pinning Your Adventures</h2>
+                    <p class="cta-subtitle">Join travelers around the world mapping their journeys, sharing stories, and competing in geography games.</p>
+                    <div class="cta-buttons">
+                        <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="btn-google-play">
+                            <img src="assets/google-play-logo.png" alt="Google Play" class="play-icon">
+                            <span class="btn-text"><span class="btn-text-small">GET IT ON</span><span class="btn-text-large">Google Play</span></span>
+                        </a>
+                        <div class="btn-app-store">
+                            <svg class="apple-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                            <span class="btn-text"><span class="btn-text-small">COMING SOON TO</span><span class="btn-text-large">App Store</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <img src="assets/pinr-logo.png" alt="Pinr" class="footer-logo">
+                    <p>Pin your travels, share your stories, and connect with fellow explorers. The world is waiting.</p>
+                    <div class="footer-signature"><img src="assets/builtbylee-signature.png" alt="Built by Lee"></div>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul><li><a href="#features">Features</a></li><li><a href="#globe">Explore</a></li><li><a href="#download">Download</a></li><li><a href="faq.html">FAQ</a></li></ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal & Support</h4>
+                    <ul><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="terms-of-service.html">Terms of Service</a></li><li><a href="mailto:lee@getpinr.com">Contact Support</a></li></ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Pinr. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+        const navToggle = document.getElementById('navToggle'), navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+            const spans = navToggle.querySelectorAll('span');
+            if (navLinks.classList.contains('open')) { spans[0].style.transform='rotate(45deg) translate(5px,5px)'; spans[1].style.opacity='0'; spans[2].style.transform='rotate(-45deg) translate(5px,-5px)'; }
+            else { spans[0].style.transform='none'; spans[1].style.opacity='1'; spans[2].style.transform='none'; }
+        });
+        navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', () => { navLinks.classList.remove('open'); const s=navToggle.querySelectorAll('span'); s[0].style.transform='none'; s[1].style.opacity='1'; s[2].style.transform='none'; }));
+        const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+        document.querySelectorAll('.animate-on-scroll').forEach(el => obs.observe(el));
+        document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', function(e) { const t = document.querySelector(this.getAttribute('href')); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); } }); });
+    </script>
+</body>
+</html>

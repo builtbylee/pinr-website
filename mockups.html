@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinr — Landing Page Mockups</title>
+    <link rel="icon" href="favicon-v4.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            padding: 60px 24px 20px;
+        }
+        .header img {
+            height: 48px;
+            filter: brightness(0) invert(1);
+            margin-bottom: 16px;
+        }
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            color: #e5e7eb;
+            margin-bottom: 8px;
+        }
+        .header p {
+            font-size: 0.95rem;
+            color: #6b7280;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px 80px;
+        }
+        .card {
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: #333;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .card-preview {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-preview .number {
+            font-size: 6rem;
+            font-weight: 700;
+            opacity: 0.08;
+            position: absolute;
+        }
+        /* Each card gets a unique gradient */
+        .card:nth-child(1) .card-preview {
+            background: linear-gradient(135deg, #0a0a1a, #1a1a3e, #111128);
+        }
+        .card:nth-child(1) .tag { background: #6366f1; }
+
+        .card:nth-child(2) .card-preview {
+            background: linear-gradient(135deg, #fafbff, #fff5f5, #f0fdf4);
+        }
+        .card:nth-child(2) .card-preview .number { color: #000; }
+        .card:nth-child(2) .tag { background: #f97316; }
+
+        .card:nth-child(3) .card-preview {
+            background: linear-gradient(135deg, #ff6b35, #f72585, #7209b7);
+        }
+        .card:nth-child(3) .tag { background: #f72585; }
+
+        .card:nth-child(4) .card-preview {
+            background: linear-gradient(135deg, #ffffff, #fafafa, #f5f5f5);
+        }
+        .card:nth-child(4) .card-preview .number { color: #000; }
+        .card:nth-child(4) .tag { background: #dc2626; }
+
+        .card:nth-child(5) .card-preview {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b, #7c3aed);
+        }
+        .card:nth-child(5) .tag { background: #f59e0b; }
+
+        .card-body {
+            padding: 20px 24px 24px;
+        }
+        .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 4px 10px;
+            border-radius: 100px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .card-body h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+        .card-body p {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+        .card-preview .preview-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            z-index: 1;
+        }
+        .card:nth-child(2) .card-preview .preview-label,
+        .card:nth-child(4) .card-preview .preview-label {
+            color: #000;
+        }
+        .footer {
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid #1a1a1a;
+            color: #4b5563;
+            font-size: 0.8rem;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-top: 20px;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="assets/pinr-logo.png" alt="Pinr">
+        <h1>Landing Page Redesign Concepts</h1>
+        <p>5 distinct design directions for the new Pinr landing page. Click any card to view the full mockup.</p>
+        <a href="index.html" class="back-link">&larr; Back to current site</a>
+    </div>
+
+    <div class="grid">
+        <a href="mockup1.html" class="card">
+            <div class="card-preview">
+                <span class="number">01</span>
+                <span class="preview-label">Preview Mockup</span>
+            </div>
+            <div class="card-body">
+                <span class="tag">Concept 1</span>
+                <h2>Dark Mode Cinematic</h2>
+                <p>Deep dark backgrounds, dramatic lighting, glowing accents, animated starfield. Cinematic and immersive — like a movie trailer for a travel app.</p>
+            </div>
+        </a>
+
+        <a href="mockup2.html" class="card">
+            <div class="card-preview">
+                <span class="number">02</span>
+                <span class="preview-label">Preview Mockup</span>
+            </div>
+            <div class="card-body">
+                <span class="tag">Concept 2</span>
+                <h2>Light & Airy</h2>
+                <p>Clean white spaces, soft pastel accents, generous whitespace. Apple-inspired minimalism meets travel wanderlust. Warm and inviting.</p>
+            </div>
+        </a>
+
+        <a href="mockup3.html" class="card">
+            <div class="card-preview">
+                <span class="number">03</span>
+                <span class="preview-label">Preview Mockup</span>
+            </div>
+            <div class="card-body">
+                <span class="tag">Concept 3</span>
+                <h2>Bold & Colorful</h2>
+                <p>Vibrant gradients, bold typography, energetic and playful. Dynamic shapes, gradient text, colorful feature cards. Fun and unforgettable.</p>
+            </div>
+        </a>
+
+        <a href="mockup4.html" class="card">
+            <div class="card-preview">
+                <span class="number">04</span>
+                <span class="preview-label">Preview Mockup</span>
+            </div>
+            <div class="card-body">
+                <span class="tag">Concept 4</span>
+                <h2>Minimal Elegant</h2>
+                <p>Refined restraint, perfect typography, monochromatic with a single red accent. Every pixel intentional. Understated luxury.</p>
+            </div>
+        </a>
+
+        <a href="mockup5.html" class="card">
+            <div class="card-preview">
+                <span class="number">05</span>
+                <span class="preview-label">Preview Mockup</span>
+            </div>
+            <div class="card-body">
+                <span class="tag">Concept 5</span>
+                <h2>Immersive Parallax</h2>
+                <p>Full-screen sections, scroll-driven animations, parallax storytelling. Each scroll reveals a new chapter. A guided tour through the app.</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 Pinr &middot; BuiltByLee
+    </div>
+</body>
+</html>
