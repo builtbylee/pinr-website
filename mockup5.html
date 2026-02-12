@@ -434,120 +434,129 @@
             margin-top: -2px;
         }
 
-        /* ===== HERO GLOBE ===== */
-        .hero-globe-container {
+        /* ===== GLOBE CANVAS (shared hero + explore) ===== */
+        .globe-canvas-container {
             position: relative;
-            width: 320px;
-            height: 320px;
             margin: 0 auto;
-            perspective: 1000px;
         }
 
-        .hero-globe {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
+        .globe-canvas-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .hero-globe-wrap {
+            width: 340px;
+            height: 340px;
+            margin: 0 auto;
+        }
+
+        .explore-globe-wrap {
+            width: 480px;
+            height: 480px;
+        }
+
+        /* Globe shadow beneath */
+        .globe-shadow {
+            position: absolute;
+            bottom: -15px;
+            left: 15%;
+            right: 15%;
+            height: 30px;
+            background: radial-gradient(ellipse, rgba(30, 41, 59, 0.08) 0%, transparent 70%);
+            filter: blur(10px);
+        }
+
+        /* ===== FLOATING MAP PIN MARKERS ===== */
+        .pin-marker {
+            position: absolute;
+            z-index: 10;
+            animation: pinFloat 6s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+        }
+
+        .pin-marker-body {
+            width: 48px;
+            height: 48px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            transform-style: preserve-3d;
-            animation: heroGlobeRotate 30s linear infinite;
-            background: radial-gradient(circle at 35% 35%, #e2e8f0 0%, #cbd5e1 40%, #94a3b8 80%, #64748b 100%);
-            box-shadow:
-                inset -40px -20px 60px rgba(15, 23, 42, 0.15),
-                0 20px 60px rgba(30, 41, 59, 0.1),
-                0 0 0 1px rgba(30, 41, 59, 0.05);
         }
 
-        /* Globe grid lines */
-        .hero-globe::before {
-            content: '';
-            position: absolute;
-            inset: 0;
+        .pin-marker-photo {
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            background:
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 48px,
-                    rgba(30, 41, 59, 0.08) 48px,
-                    rgba(30, 41, 59, 0.08) 49px
-                ),
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 48px,
-                    rgba(30, 41, 59, 0.06) 48px,
-                    rgba(30, 41, 59, 0.06) 49px
-                );
-            mask-image: radial-gradient(circle, black 48%, transparent 50%);
-            -webkit-mask-image: radial-gradient(circle, black 48%, transparent 50%);
-            animation: heroGlobeRotate 30s linear infinite;
+            transform: rotate(45deg);
+            border: 2.5px solid #ffffff;
+            overflow: hidden;
         }
 
-        /* Globe highlight */
-        .hero-globe::after {
-            content: '';
-            position: absolute;
-            top: 8%;
-            left: 12%;
-            width: 35%;
-            height: 25%;
-            background: radial-gradient(ellipse, rgba(255,255,255,0.6) 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(8px);
+        /* Pin color variants */
+        .pin-marker--dark .pin-marker-body { background: #1e293b; }
+        .pin-marker--slate .pin-marker-body { background: #475569; }
+        .pin-marker--stone .pin-marker-body { background: #78716c; }
+        .pin-marker--cool .pin-marker-body { background: #64748b; }
+
+        /* Fake profile photo gradients */
+        .pin-photo-1 { background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 50%, #d97706 100%); }
+        .pin-photo-2 { background: linear-gradient(135deg, #93c5fd 0%, #3b82f6 50%, #1d4ed8 100%); }
+        .pin-photo-3 { background: linear-gradient(135deg, #86efac 0%, #22c55e 50%, #15803d 100%); }
+        .pin-photo-4 { background: linear-gradient(135deg, #fda4af 0%, #f43f5e 50%, #be123c 100%); }
+        .pin-photo-5 { background: linear-gradient(135deg, #c4b5fd 0%, #8b5cf6 50%, #6d28d9 100%); }
+
+        /* Camera icon pin (no photo) */
+        .pin-marker-camera {
+            width: 30px;
+            height: 30px;
+            transform: rotate(45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        @keyframes heroGlobeRotate {
-            0% { transform: rotateY(0deg) rotateX(-8deg); }
-            100% { transform: rotateY(360deg) rotateX(-8deg); }
+        .pin-marker-camera svg {
+            width: 18px;
+            height: 18px;
+            color: #ffffff;
         }
 
-        /* Globe pins */
-        .hero-globe-pin {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #1e293b;
-            box-shadow: 0 0 8px rgba(30, 41, 59, 0.4);
-            z-index: 5;
+        /* Hero pin positions */
+        .hero-globe-wrap .pin-marker:nth-child(2) { top: 5%; left: -15%; animation-duration: 5.5s; }
+        .hero-globe-wrap .pin-marker:nth-child(3) { top: 15%; right: -20%; animation-duration: 7s; animation-delay: -1s; }
+        .hero-globe-wrap .pin-marker:nth-child(4) { bottom: 25%; left: -25%; animation-duration: 6s; animation-delay: -2s; }
+        .hero-globe-wrap .pin-marker:nth-child(5) { bottom: 10%; right: -10%; animation-duration: 8s; animation-delay: -3s; }
+
+        /* Explore pin positions */
+        .explore-globe-wrap .pin-marker:nth-child(2) { top: 0%; left: -10%; animation-duration: 6s; }
+        .explore-globe-wrap .pin-marker:nth-child(3) { top: 8%; right: -12%; animation-duration: 7s; animation-delay: -1s; }
+        .explore-globe-wrap .pin-marker:nth-child(4) { top: 45%; left: -18%; animation-duration: 5.5s; animation-delay: -2.5s; }
+        .explore-globe-wrap .pin-marker:nth-child(5) { bottom: 20%; right: -15%; animation-duration: 8s; animation-delay: -1.5s; }
+        .explore-globe-wrap .pin-marker:nth-child(6) { bottom: 5%; left: 5%; animation-duration: 6.5s; animation-delay: -3s; }
+
+        @keyframes pinFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
         }
 
-        .hero-globe-pin::after {
-            content: '';
-            position: absolute;
-            inset: 2px;
-            border-radius: 50%;
-            background: #475569;
+        /* Small pin variant */
+        .pin-marker--sm .pin-marker-body {
+            width: 38px;
+            height: 38px;
         }
 
-        .hero-globe-pin:nth-child(1) { top: 25%; left: 30%; animation: pinPulse 3s ease-in-out infinite; }
-        .hero-globe-pin:nth-child(2) { top: 40%; left: 65%; animation: pinPulse 3s ease-in-out infinite 0.5s; }
-        .hero-globe-pin:nth-child(3) { top: 60%; left: 40%; animation: pinPulse 3s ease-in-out infinite 1s; }
-        .hero-globe-pin:nth-child(4) { top: 35%; left: 50%; animation: pinPulse 3s ease-in-out infinite 1.5s; }
-        .hero-globe-pin:nth-child(5) { top: 55%; left: 25%; animation: pinPulse 3s ease-in-out infinite 2s; }
-
-        @keyframes pinPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.7; }
+        .pin-marker--sm .pin-marker-photo,
+        .pin-marker--sm .pin-marker-camera {
+            width: 24px;
+            height: 24px;
         }
 
-        /* Floating travel icons around globe */
-        .hero-float-icon {
-            position: absolute;
-            color: #94a3b8;
-            opacity: 0.35;
-            animation: floatDrift 8s ease-in-out infinite;
-        }
-
-        .hero-float-icon:nth-child(1) { top: -20px; right: -60px; animation-duration: 7s; }
-        .hero-float-icon:nth-child(2) { bottom: -10px; left: -50px; animation-duration: 9s; animation-delay: -3s; }
-        .hero-float-icon:nth-child(3) { top: 30%; right: -70px; animation-duration: 11s; animation-delay: -5s; }
-
-        @keyframes floatDrift {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-12px) rotate(5deg); }
-            50% { transform: translateY(8px) rotate(-3deg); }
-            75% { transform: translateY(-6px) rotate(2deg); }
+        .pin-marker--sm .pin-marker-camera svg {
+            width: 14px;
+            height: 14px;
         }
 
         /* Scroll indicator */
@@ -590,7 +599,6 @@
             position: relative;
         }
 
-        /* Subtle top border */
         .globe-section::before {
             content: '';
             position: absolute;
@@ -667,160 +675,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* CSS 3D Globe for Explore Section */
-        .explore-globe-wrapper {
-            position: relative;
-            width: 440px;
-            height: 440px;
-            perspective: 1200px;
-        }
-
-        .explore-globe {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: exploreGlobeRotate 25s linear infinite;
-            background: radial-gradient(circle at 30% 30%, #f1f5f9 0%, #e2e8f0 30%, #cbd5e1 60%, #94a3b8 100%);
-            box-shadow:
-                inset -50px -30px 80px rgba(15, 23, 42, 0.12),
-                0 30px 80px rgba(30, 41, 59, 0.08),
-                0 0 0 1px rgba(30, 41, 59, 0.04);
-        }
-
-        /* Latitude lines */
-        .explore-globe-line {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(30, 41, 59, 0.08);
-            left: 50%;
-            top: 50%;
-        }
-
-        .explore-globe-line:nth-child(1) { width: 100%; height: 30%; transform: translate(-50%, -50%) rotateX(75deg); }
-        .explore-globe-line:nth-child(2) { width: 100%; height: 60%; transform: translate(-50%, -50%) rotateX(60deg); }
-        .explore-globe-line:nth-child(3) { width: 100%; height: 85%; transform: translate(-50%, -50%) rotateX(40deg); }
-        .explore-globe-line:nth-child(4) { width: 100%; height: 100%; transform: translate(-50%, -50%) rotateX(0deg); }
-        .explore-globe-line:nth-child(5) { width: 100%; height: 85%; transform: translate(-50%, -50%) rotateX(-40deg); }
-        .explore-globe-line:nth-child(6) { width: 100%; height: 60%; transform: translate(-50%, -50%) rotateX(-60deg); }
-
-        /* Meridian lines */
-        .explore-globe-meridian {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 1px solid rgba(30, 41, 59, 0.06);
-            top: 0;
-            left: 0;
-        }
-
-        .explore-globe-meridian:nth-child(7) { transform: rotateY(0deg); }
-        .explore-globe-meridian:nth-child(8) { transform: rotateY(30deg); }
-        .explore-globe-meridian:nth-child(9) { transform: rotateY(60deg); }
-        .explore-globe-meridian:nth-child(10) { transform: rotateY(90deg); }
-        .explore-globe-meridian:nth-child(11) { transform: rotateY(120deg); }
-        .explore-globe-meridian:nth-child(12) { transform: rotateY(150deg); }
-
-        /* Globe highlight */
-        .explore-globe::after {
-            content: '';
-            position: absolute;
-            top: 8%;
-            left: 10%;
-            width: 40%;
-            height: 30%;
-            background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(12px);
-            z-index: 3;
-        }
-
-        @keyframes exploreGlobeRotate {
-            0% { transform: rotateY(0deg) rotateX(-12deg) rotateZ(3deg); }
-            100% { transform: rotateY(360deg) rotateX(-12deg) rotateZ(3deg); }
-        }
-
-        /* Explore Globe Pins */
-        .explore-pin {
-            position: absolute;
-            z-index: 5;
-        }
-
-        .explore-pin-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #1e293b;
-            border: 2px solid #ffffff;
-            box-shadow: 0 2px 8px rgba(30, 41, 59, 0.3);
-            position: relative;
-        }
-
-        .explore-pin-dot::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(30, 41, 59, 0.15);
-            animation: pingRing 3s ease-out infinite;
-        }
-
-        @keyframes pingRing {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2.5); opacity: 0; }
-        }
-
-        .explore-pin:nth-child(13) { top: 22%; left: 35%; }
-        .explore-pin:nth-child(14) { top: 38%; left: 68%; }
-        .explore-pin:nth-child(15) { top: 55%; left: 28%; }
-        .explore-pin:nth-child(16) { top: 30%; left: 55%; }
-        .explore-pin:nth-child(17) { top: 62%; left: 52%; }
-
-        .explore-pin:nth-child(14) .explore-pin-dot::after { animation-delay: 0.5s; }
-        .explore-pin:nth-child(15) .explore-pin-dot::after { animation-delay: 1s; }
-        .explore-pin:nth-child(16) .explore-pin-dot::after { animation-delay: 1.5s; }
-        .explore-pin:nth-child(17) .explore-pin-dot::after { animation-delay: 2s; }
-
-        /* Connection arcs between pins (SVG) */
-        .explore-arcs {
-            position: absolute;
-            inset: 0;
-            z-index: 4;
-        }
-
-        .explore-arcs svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .explore-arc {
-            fill: none;
-            stroke: rgba(30, 41, 59, 0.12);
-            stroke-width: 1.5;
-            stroke-dasharray: 8 4;
-            animation: arcDash 4s linear infinite;
-        }
-
-        @keyframes arcDash {
-            to { stroke-dashoffset: -48; }
-        }
-
-        /* Globe shadow */
-        .explore-globe-shadow {
-            position: absolute;
-            bottom: -30px;
-            left: 15%;
-            right: 15%;
-            height: 30px;
-            background: radial-gradient(ellipse, rgba(30, 41, 59, 0.08) 0%, transparent 70%);
-            filter: blur(8px);
         }
 
         /* ===== SECTION 3: STORIES ===== */
@@ -1133,7 +987,7 @@
             max-width: 520px;
         }
 
-        .social-phones-wrapper img {
+        .social-phones-wrapper > img {
             width: 100%;
             position: relative;
             z-index: 2;
@@ -1155,69 +1009,45 @@
             border-radius: 50%;
         }
 
-        .social-avatar:nth-child(2) {
+        .social-avatar:nth-child(1) {
             width: 44px; height: 44px;
             top: 10%; right: 5%;
             animation: avatarFloat 5s ease-in-out infinite;
         }
-        .social-avatar:nth-child(2) .social-avatar-inner {
+        .social-avatar:nth-child(1) .social-avatar-inner {
             background: linear-gradient(135deg, #e2e8f0, #94a3b8);
         }
 
-        .social-avatar:nth-child(3) {
+        .social-avatar:nth-child(2) {
             width: 36px; height: 36px;
             top: 25%; left: -5%;
             animation: avatarFloat 6s ease-in-out infinite 1s;
         }
-        .social-avatar:nth-child(3) .social-avatar-inner {
+        .social-avatar:nth-child(2) .social-avatar-inner {
             background: linear-gradient(135deg, #cbd5e1, #64748b);
         }
 
-        .social-avatar:nth-child(4) {
+        .social-avatar:nth-child(3) {
             width: 40px; height: 40px;
             bottom: 20%; right: 0%;
             animation: avatarFloat 7s ease-in-out infinite 2s;
         }
-        .social-avatar:nth-child(4) .social-avatar-inner {
+        .social-avatar:nth-child(3) .social-avatar-inner {
             background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
         }
 
-        .social-avatar:nth-child(5) {
+        .social-avatar:nth-child(4) {
             width: 32px; height: 32px;
             bottom: 35%; left: 2%;
             animation: avatarFloat 5.5s ease-in-out infinite 0.5s;
         }
-        .social-avatar:nth-child(5) .social-avatar-inner {
+        .social-avatar:nth-child(4) .social-avatar-inner {
             background: linear-gradient(135deg, #94a3b8, #475569);
         }
 
         @keyframes avatarFloat {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
-        }
-
-        /* Connection lines (SVG overlay) */
-        .social-connections {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .social-connections svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .social-conn-line {
-            stroke: rgba(30, 41, 59, 0.06);
-            stroke-width: 1;
-            stroke-dasharray: 4 4;
-            animation: connDash 6s linear infinite;
-        }
-
-        @keyframes connDash {
-            to { stroke-dashoffset: -48; }
         }
 
         .social-phones-shadow {
@@ -1334,28 +1164,10 @@
             overflow: hidden;
         }
 
-        .game-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(30,41,59,0.08), transparent, rgba(30,41,59,0.04));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
         .game-card:hover {
             transform: translateY(-8px) rotateX(2deg) rotateY(-1deg);
             box-shadow: 0 20px 60px rgba(30, 41, 59, 0.08), 0 8px 24px rgba(30, 41, 59, 0.04);
             border-color: rgba(30, 41, 59, 0.1);
-        }
-
-        .game-card:hover::before {
-            opacity: 1;
         }
 
         .game-card-icon {
@@ -1416,34 +1228,6 @@
             right: 10%;
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
-        }
-
-        /* Radial pulse background */
-        .download-pulse {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
-            pointer-events: none;
-        }
-
-        .download-pulse-ring {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            border: 1px solid rgba(30, 41, 59, 0.03);
-            animation: downloadPulse 4s ease-out infinite;
-        }
-
-        .download-pulse-ring:nth-child(2) { animation-delay: 1s; }
-        .download-pulse-ring:nth-child(3) { animation-delay: 2s; }
-        .download-pulse-ring:nth-child(4) { animation-delay: 3s; }
-
-        @keyframes downloadPulse {
-            0% { transform: scale(0.3); opacity: 1; }
-            100% { transform: scale(1.5); opacity: 0; }
         }
 
         .download-content {
@@ -1560,154 +1344,27 @@
             margin-top: -2px;
         }
 
-        /* Download visual — CSS phone frames with pin drop */
         .download-visual {
             max-width: 520px;
             margin: 0 auto;
             position: relative;
-            height: 400px;
         }
 
-        .download-phone {
-            position: absolute;
-            width: 200px;
-            height: 380px;
-            border-radius: 32px;
-            background: #f8fafc;
-            border: 1px solid rgba(30, 41, 59, 0.08);
-            box-shadow: 0 20px 60px rgba(30, 41, 59, 0.08), 0 0 0 1px rgba(30,41,59,0.03);
-            overflow: hidden;
-        }
-
-        .download-phone::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 24px;
-            background: #ffffff;
-            border-radius: 0 0 16px 16px;
+        .download-visual img {
+            width: 100%;
+            position: relative;
             z-index: 2;
         }
 
-        /* Phone screen content */
-        .download-phone-screen {
+        .download-glow {
             position: absolute;
-            top: 24px;
-            left: 8px;
-            right: 8px;
-            bottom: 8px;
-            border-radius: 24px;
-            overflow: hidden;
-        }
-
-        .download-phone:nth-child(1) {
-            left: 50%;
-            transform: translateX(-120%) rotate(-6deg);
-            animation: phoneBob1 5s ease-in-out infinite;
-            z-index: 2;
-        }
-
-        .download-phone:nth-child(1) .download-phone-screen {
-            background: linear-gradient(180deg, #e2e8f0 0%, #f1f5f9 100%);
-        }
-
-        .download-phone:nth-child(2) {
-            left: 50%;
-            transform: translateX(-10%) rotate(4deg);
-            animation: phoneBob2 5s ease-in-out infinite 0.5s;
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            background: radial-gradient(circle, rgba(30, 41, 59, 0.06) 0%, transparent 70%);
+            filter: blur(40px);
             z-index: 1;
-        }
-
-        .download-phone:nth-child(2) .download-phone-screen {
-            background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
-        }
-
-        @keyframes phoneBob1 {
-            0%, 100% { transform: translateX(-120%) rotate(-6deg) translateY(0); }
-            50% { transform: translateX(-120%) rotate(-6deg) translateY(-10px); }
-        }
-
-        @keyframes phoneBob2 {
-            0%, 100% { transform: translateX(-10%) rotate(4deg) translateY(0); }
-            50% { transform: translateX(-10%) rotate(4deg) translateY(-8px); }
-        }
-
-        /* Phone screen pin icon */
-        .phone-pin-icon {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.15;
-        }
-
-        /* Pin drop animation elements */
-        .download-pin-drop {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            z-index: 5;
-        }
-
-        .download-pin-drop svg {
-            width: 100%;
-            height: 100%;
-            color: #1e293b;
-        }
-
-        .download-pin-drop:nth-child(3) {
-            top: 15%;
-            left: 30%;
-            animation: pinDrop 4s ease-in-out infinite;
-        }
-
-        .download-pin-drop:nth-child(4) {
-            top: 40%;
-            right: 20%;
-            animation: pinDrop 4s ease-in-out infinite 1.3s;
-        }
-
-        .download-pin-drop:nth-child(5) {
-            bottom: 30%;
-            left: 45%;
-            animation: pinDrop 4s ease-in-out infinite 2.6s;
-        }
-
-        @keyframes pinDrop {
-            0% { transform: translateY(-30px); opacity: 0; }
-            15% { transform: translateY(0); opacity: 1; }
-            30% { transform: translateY(-6px); opacity: 1; }
-            40% { transform: translateY(0); opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        /* Floating app icon */
-        .download-app-icon {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(30, 41, 59, 0.12);
-            animation: iconBob 3s ease-in-out infinite;
-            z-index: 6;
-        }
-
-        .download-app-icon img {
-            width: 100%;
-            height: 100%;
-        }
-
-        @keyframes iconBob {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-8px); }
         }
 
         /* ===== FOOTER ===== */
@@ -1836,9 +1493,9 @@
                 margin-top: 36px;
             }
 
-            .explore-globe-wrapper {
-                width: 340px;
-                height: 340px;
+            .explore-globe-wrap {
+                width: 380px;
+                height: 380px;
                 margin: 0 auto;
             }
 
@@ -1912,23 +1569,14 @@
                 gap: 40px;
             }
 
-            .hero-globe-container {
-                width: 240px;
-                height: 240px;
-            }
-
-            .explore-globe-wrapper {
+            .hero-globe-wrap {
                 width: 260px;
                 height: 260px;
             }
 
-            .download-visual {
-                height: 320px;
-            }
-
-            .download-phone {
-                width: 160px;
-                height: 300px;
+            .explore-globe-wrap {
+                width: 280px;
+                height: 280px;
             }
 
             .footer-inner {
@@ -1952,6 +1600,10 @@
             }
 
             .story-card-float {
+                display: none;
+            }
+
+            .pin-marker {
                 display: none;
             }
         }
@@ -1980,23 +1632,14 @@
                 align-items: center;
             }
 
-            .hero-globe-container {
-                width: 200px;
-                height: 200px;
-            }
-
-            .explore-globe-wrapper {
+            .hero-globe-wrap {
                 width: 220px;
                 height: 220px;
             }
 
-            .download-visual {
-                height: 260px;
-            }
-
-            .download-phone {
-                width: 140px;
-                height: 260px;
+            .explore-globe-wrap {
+                width: 240px;
+                height: 240px;
             }
         }
     </style>
@@ -2067,25 +1710,23 @@
                 </div>
             </div>
 
-            <!-- Hero Globe -->
-            <div class="hero-globe-container reveal from-scale reveal-delay-5">
-                <div class="hero-globe">
-                    <div class="hero-globe-pin"></div>
-                    <div class="hero-globe-pin"></div>
-                    <div class="hero-globe-pin"></div>
-                    <div class="hero-globe-pin"></div>
-                    <div class="hero-globe-pin"></div>
+            <!-- Hero Globe (WebGL via cobe) -->
+            <div class="globe-canvas-container hero-globe-wrap reveal from-scale reveal-delay-5">
+                <canvas id="heroGlobe"></canvas>
+                <!-- Floating pin markers -->
+                <div class="pin-marker pin-marker--dark">
+                    <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-1"></div></div>
                 </div>
-                <!-- Floating travel icons -->
-                <div class="hero-float-icon">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+                <div class="pin-marker pin-marker--slate pin-marker--sm">
+                    <div class="pin-marker-body"><div class="pin-marker-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div></div>
                 </div>
-                <div class="hero-float-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20M12 2a14.5 14.5 0 010 20M2 12h20"/></svg>
+                <div class="pin-marker pin-marker--stone">
+                    <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-2"></div></div>
                 </div>
-                <div class="hero-float-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                <div class="pin-marker pin-marker--cool pin-marker--sm">
+                    <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-3"></div></div>
                 </div>
+                <div class="globe-shadow"></div>
             </div>
         </div>
 
@@ -2127,38 +1768,25 @@
                     </div>
                 </div>
                 <div class="globe-visual reveal from-right reveal-delay-2">
-                    <div class="explore-globe-wrapper" data-parallax data-speed="0.06">
-                        <div class="explore-globe">
-                            <!-- Latitude lines -->
-                            <div class="explore-globe-line"></div>
-                            <div class="explore-globe-line"></div>
-                            <div class="explore-globe-line"></div>
-                            <div class="explore-globe-line"></div>
-                            <div class="explore-globe-line"></div>
-                            <div class="explore-globe-line"></div>
-                            <!-- Meridian lines -->
-                            <div class="explore-globe-meridian"></div>
-                            <div class="explore-globe-meridian"></div>
-                            <div class="explore-globe-meridian"></div>
-                            <div class="explore-globe-meridian"></div>
-                            <div class="explore-globe-meridian"></div>
-                            <div class="explore-globe-meridian"></div>
-                            <!-- Pins -->
-                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
-                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
-                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
-                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
-                            <div class="explore-pin"><div class="explore-pin-dot"></div></div>
+                    <div class="globe-canvas-container explore-globe-wrap" data-parallax data-speed="0.04">
+                        <canvas id="exploreGlobe"></canvas>
+                        <!-- Floating pin markers with profile photos -->
+                        <div class="pin-marker pin-marker--dark">
+                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-1"></div></div>
                         </div>
-                        <!-- Connection arcs -->
-                        <div class="explore-arcs">
-                            <svg viewBox="0 0 440 440">
-                                <path class="explore-arc" d="M154 97 Q220 60 299 167"/>
-                                <path class="explore-arc" d="M123 242 Q200 200 242 132" style="animation-delay: -1.5s"/>
-                                <path class="explore-arc" d="M242 132 Q300 180 229 272" style="animation-delay: -3s"/>
-                            </svg>
+                        <div class="pin-marker pin-marker--slate">
+                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-4"></div></div>
                         </div>
-                        <div class="explore-globe-shadow"></div>
+                        <div class="pin-marker pin-marker--dark pin-marker--sm">
+                            <div class="pin-marker-body"><div class="pin-marker-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div></div>
+                        </div>
+                        <div class="pin-marker pin-marker--stone">
+                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-5"></div></div>
+                        </div>
+                        <div class="pin-marker pin-marker--cool pin-marker--sm">
+                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-2"></div></div>
+                        </div>
+                        <div class="globe-shadow"></div>
                     </div>
                 </div>
             </div>
@@ -2270,15 +1898,6 @@
                 </div>
                 <div class="social-visual reveal from-right reveal-delay-2">
                     <div class="social-phones-wrapper" data-parallax data-speed="0.07">
-                        <!-- Social connection lines -->
-                        <div class="social-connections">
-                            <svg viewBox="0 0 520 600">
-                                <line class="social-conn-line" x1="470" y1="60" x2="260" y2="300"/>
-                                <line class="social-conn-line" x1="26" y1="150" x2="260" y2="300" style="animation-delay:-2s"/>
-                                <line class="social-conn-line" x1="500" y1="420" x2="260" y2="300" style="animation-delay:-4s"/>
-                                <line class="social-conn-line" x1="52" y1="480" x2="260" y2="300" style="animation-delay:-1s"/>
-                            </svg>
-                        </div>
                         <!-- Floating avatars -->
                         <div class="social-avatar"><div class="social-avatar-inner"></div></div>
                         <div class="social-avatar"><div class="social-avatar-inner"></div></div>
@@ -2338,14 +1957,6 @@
 
     <!-- ===== SECTION 6: DOWNLOAD ===== -->
     <section class="section download-section" id="download">
-        <!-- Pulse rings -->
-        <div class="download-pulse">
-            <div class="download-pulse-ring"></div>
-            <div class="download-pulse-ring"></div>
-            <div class="download-pulse-ring"></div>
-            <div class="download-pulse-ring"></div>
-        </div>
-
         <div class="section-inner download-content">
             <div class="section-label reveal">
                 <span>Get Started</span>
@@ -2373,35 +1984,8 @@
                 </div>
             </div>
             <div class="download-visual reveal from-scale reveal-delay-4">
-                <!-- CSS Phone frames -->
-                <div class="download-phone">
-                    <div class="download-phone-screen">
-                        <div class="phone-pin-icon">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="download-phone">
-                    <div class="download-phone-screen">
-                        <div class="phone-pin-icon">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                        </div>
-                    </div>
-                </div>
-                <!-- Pin drop elements -->
-                <div class="download-pin-drop">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
-                </div>
-                <div class="download-pin-drop">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
-                </div>
-                <div class="download-pin-drop">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
-                </div>
-                <!-- Floating app icon -->
-                <div class="download-app-icon">
-                    <img src="assets/favicon-v4.png" alt="Pinr App Icon">
-                </div>
+                <div class="download-glow"></div>
+                <img src="assets/landing-visual.png" alt="Pinr marketing visual with phones and store badges">
             </div>
         </div>
     </section>
@@ -2429,7 +2013,7 @@
         </div>
     </footer>
 
-    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ===== JAVASCRIPT (main) ===== -->
     <script>
     (function() {
         'use strict';
@@ -2460,8 +2044,6 @@
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
                     var id = entry.target.id;
-
-                    // Update progress dots
                     dots.forEach(function(dot) {
                         dot.classList.remove('active');
                     });
@@ -2483,14 +2065,12 @@
         function onScroll() {
             var scrollY = window.scrollY;
 
-            // Nav scrolled state
             if (scrollY > 60) {
                 nav.classList.add('scrolled');
             } else {
                 nav.classList.remove('scrolled');
             }
 
-            // Floating download button
             var downloadSection = document.getElementById('download');
             var downloadRect = downloadSection.getBoundingClientRect();
 
@@ -2500,7 +2080,6 @@
                 floatingBtn.classList.remove('visible');
             }
 
-            // Parallax elements
             document.querySelectorAll('[data-parallax]').forEach(function(el) {
                 var rect = el.getBoundingClientRect();
                 var centerY = rect.top + rect.height / 2;
@@ -2520,7 +2099,6 @@
             }
         }, { passive: true });
 
-        // Initial call
         onScroll();
 
         // ===== SMOOTH SCROLL TO SECTION =====
@@ -2538,6 +2116,102 @@
             });
         }, 200);
 
+    })();
+    </script>
+
+    <!-- ===== COBE 3D GLOBE (ES Module) ===== -->
+    <script type="module">
+    import createGlobe from 'https://cdn.jsdelivr.net/npm/cobe@0.6.3/+esm';
+
+    // ===== HERO GLOBE =====
+    (function() {
+        var heroCanvas = document.getElementById('heroGlobe');
+        if (!heroCanvas) return;
+
+        var container = heroCanvas.parentElement;
+        var size = container.offsetWidth;
+
+        heroCanvas.width = size * 2;
+        heroCanvas.height = size * 2;
+        heroCanvas.style.width = size + 'px';
+        heroCanvas.style.height = size + 'px';
+
+        var heroPhi = 0;
+        createGlobe(heroCanvas, {
+            devicePixelRatio: 2,
+            width: size * 2,
+            height: size * 2,
+            phi: 0,
+            theta: 0.25,
+            dark: 0,
+            diffuse: 3,
+            mapSamples: 30000,
+            mapBrightness: 1.8,
+            baseColor: [0.55, 0.78, 0.94],
+            markerColor: [0.35, 0.65, 0.42],
+            glowColor: [0.96, 0.96, 1],
+            markers: [
+                { location: [48.8566, 2.3522], size: 0.06 },
+                { location: [35.6762, 139.6503], size: 0.06 },
+                { location: [-13.1631, -72.5450], size: 0.06 },
+                { location: [40.7128, -74.0060], size: 0.06 },
+                { location: [-33.8688, 151.2093], size: 0.05 },
+                { location: [51.5074, -0.1278], size: 0.06 },
+                { location: [1.3521, 103.8198], size: 0.05 },
+            ],
+            onRender: function(state) {
+                state.phi = heroPhi;
+                heroPhi += 0.003;
+            }
+        });
+    })();
+
+    // ===== EXPLORE SECTION GLOBE =====
+    (function() {
+        var exploreCanvas = document.getElementById('exploreGlobe');
+        if (!exploreCanvas) return;
+
+        var container = exploreCanvas.parentElement;
+        var size = container.offsetWidth;
+
+        exploreCanvas.width = size * 2;
+        exploreCanvas.height = size * 2;
+        exploreCanvas.style.width = size + 'px';
+        exploreCanvas.style.height = size + 'px';
+
+        var explorePhi = 0;
+        createGlobe(exploreCanvas, {
+            devicePixelRatio: 2,
+            width: size * 2,
+            height: size * 2,
+            phi: 0,
+            theta: 0.2,
+            dark: 0,
+            diffuse: 2.5,
+            mapSamples: 40000,
+            mapBrightness: 2,
+            baseColor: [0.55, 0.78, 0.94],
+            markerColor: [0.35, 0.65, 0.42],
+            glowColor: [0.96, 0.96, 1],
+            markers: [
+                { location: [48.8566, 2.3522], size: 0.08 },
+                { location: [35.6762, 139.6503], size: 0.08 },
+                { location: [-13.1631, -72.5450], size: 0.08 },
+                { location: [40.7128, -74.0060], size: 0.08 },
+                { location: [-33.8688, 151.2093], size: 0.07 },
+                { location: [51.5074, -0.1278], size: 0.08 },
+                { location: [1.3521, 103.8198], size: 0.07 },
+                { location: [55.7558, 37.6173], size: 0.06 },
+                { location: [-22.9068, -43.1729], size: 0.07 },
+                { location: [28.6139, 77.2090], size: 0.07 },
+                { location: [30.0444, 31.2357], size: 0.06 },
+                { location: [37.5665, 126.9780], size: 0.06 },
+            ],
+            onRender: function(state) {
+                state.phi = explorePhi;
+                explorePhi += 0.002;
+            }
+        });
     })();
     </script>
 
