@@ -697,7 +697,7 @@
             border: 1px solid rgba(30, 41, 59, 0.08);
             box-shadow: 0 12px 40px rgba(30, 41, 59, 0.08), 0 4px 12px rgba(30, 41, 59, 0.04);
             overflow: hidden;
-            animation: cardFloat 6s ease-in-out infinite;
+            cursor: pointer;
         }
 
         .explore-card-header {
@@ -755,41 +755,53 @@
             height: 12px;
         }
 
-        /* Card 1: front, center */
+        .explore-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Default: stacked on top of each other */
         .explore-card:nth-child(1) {
             top: 50px;
-            left: 50px;
+            left: 60px;
             z-index: 3;
-            animation-delay: 0s;
         }
 
-        /* Card 2: behind-right */
         .explore-card:nth-child(2) {
-            top: 15px;
-            left: 80px;
+            top: 50px;
+            left: 60px;
             z-index: 2;
-            transform: rotate(4deg) scale(0.95);
-            opacity: 0.85;
-            animation-delay: -2s;
+            transform: rotate(2deg) scale(0.97);
+            opacity: 0;
         }
 
-        /* Card 3: behind-left */
         .explore-card:nth-child(3) {
-            top: 80px;
-            left: 15px;
+            top: 50px;
+            left: 60px;
             z-index: 1;
-            transform: rotate(-5deg) scale(0.90);
-            opacity: 0.65;
-            animation-delay: -4s;
+            transform: rotate(-2deg) scale(0.94);
+            opacity: 0;
         }
 
-        @keyframes cardFloat {
-            0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)) scale(var(--s, 1)); }
-            50% { transform: translateY(-8px) rotate(var(--r, 0deg)) scale(var(--s, 1)); }
+        /* Hover: fan out to reveal all 3 */
+        .explore-cards-stack:hover .explore-card:nth-child(1) {
+            top: 50px;
+            left: 60px;
+            transform: rotate(0deg) scale(1);
         }
-        .explore-card:nth-child(1) { --r: 0deg; --s: 1; }
-        .explore-card:nth-child(2) { --r: 4deg; --s: 0.95; }
-        .explore-card:nth-child(3) { --r: -5deg; --s: 0.90; }
+
+        .explore-cards-stack:hover .explore-card:nth-child(2) {
+            top: 10px;
+            left: 120px;
+            transform: rotate(6deg) scale(0.95);
+            opacity: 0.9;
+        }
+
+        .explore-cards-stack:hover .explore-card:nth-child(3) {
+            top: 90px;
+            left: 0px;
+            transform: rotate(-6deg) scale(0.92);
+            opacity: 0.8;
+        }
 
         /* ===== SECTION 3: STORIES ===== */
         .stories-section {
