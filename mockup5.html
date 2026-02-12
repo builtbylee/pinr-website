@@ -2198,25 +2198,27 @@
         renderer.setPixelRatio(2);
         renderer.setClearColor(0x000000, 0);
 
-        // Earth sphere with custom stylized shader
+        // Earth sphere
         var geometry = new THREE.SphereGeometry(1, 64, 64);
 
-        // Load topology heightmap to distinguish land from ocean
+        // Load water mask (clean binary land/water boundaries)
         var textureLoader = new THREE.TextureLoader();
         textureLoader.crossOrigin = 'anonymous';
 
-        var topoTexture = textureLoader.load(
-            'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-topology.png'
+        var waterMask = textureLoader.load(
+            'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-water.png'
         );
 
-        // Custom shader: light blue oceans + smooth green continents
+        // Custom shader: bright sky blue oceans + vivid green continents
+        // Colors matched to getpinr.com reference globe
         var material = new THREE.ShaderMaterial({
             uniforms: {
-                topo: { value: topoTexture },
-                oceanColor: { value: new THREE.Color(0.557, 0.776, 0.925) },
-                landColor: { value: new THREE.Color(0.376, 0.714, 0.463) },
-                landHighlight: { value: new THREE.Color(0.455, 0.784, 0.537) },
-                lightDir: { value: new THREE.Vector3(5, 3, 5).normalize() }
+                uWaterMask: { value: waterMask },
+                uOceanColor: { value: new THREE.Color(0.490, 0.827, 0.910) },      // #7DD3E8 bright sky blue
+                uOceanDeep: { value: new THREE.Color(0.400, 0.745, 0.855) },        // slightly deeper blue
+                uLandColor: { value: new THREE.Color(0.494, 0.851, 0.341) },        // #7ED957 vivid green
+                uLandLight: { value: new THREE.Color(0.565, 0.898, 0.424) },        // #90E56C lighter green
+                uLightDir: { value: new THREE.Vector3(5, 3, 5).normalize() }
             },
             vertexShader: [
                 'varying vec2 vUv;',
@@ -2231,89 +2233,100 @@
                 '}'
             ].join('\n'),
             fragmentShader: [
-                'uniform sampler2D topo;',
-                'uniform vec3 oceanColor;',
-                'uniform vec3 landColor;',
-                'uniform vec3 landHighlight;',
-                'uniform vec3 lightDir;',
+                'uniform sampler2D uWaterMask;',
+                'uniform vec3 uOceanColor;',
+                'uniform vec3 uOceanDeep;',
+                'uniform vec3 uLandColor;',
+                'uniform vec3 uLandLight;',
+                'uniform vec3 uLightDir;',
                 'varying vec2 vUv;',
                 'varying vec3 vNormal;',
                 'varying vec3 vViewDir;',
+                '',
                 'void main() {',
-                '    float height = texture2D(topo, vUv).r;',
-                '    bool isLand = height > 0.05;',
-                '    vec3 baseColor;',
-                '    if (isLand) {',
-                '        float t = smoothstep(0.05, 0.6, height);',
-                '        baseColor = mix(landColor, landHighlight, t);',
-                '    } else {',
-                '        float depth = smoothstep(0.0, 0.05, height);',
-                '        vec3 deepOcean = oceanColor * 0.85;',
-                '        baseColor = mix(deepOcean, oceanColor, depth);',
+                '    // Sample water mask - determine land vs ocean',
+                '    float mask = texture2D(uWaterMask, vUv).r;',
+                '',
+                '    // Diffuse lighting (gentle, high ambient for illustrated look)',
+                '    float diff = max(dot(vNormal, uLightDir), 0.0);',
+                '    float ambient = 0.72;',
+                '    float lighting = ambient + diff * 0.32;',
+                '',
+                '    // Base color from mask',
+                '    // Try both interpretations: water mask may have water=bright or water=dark',
+                '    // We handle it by checking which gives more ocean coverage',
+                '    float waterFactor = mask;',
+                '',
+                '    // Smooth land color with subtle light variation',
+                '    vec3 land = mix(uLandColor, uLandLight, diff * 0.5);',
+                '',
+                '    // Ocean with subtle depth',
+                '    vec3 ocean = mix(uOceanDeep, uOceanColor, 0.5 + diff * 0.5);',
+                '',
+                '    // Subtle specular on water only',
+                '    float spec = 0.0;',
+                '    if (waterFactor > 0.5) {',
+                '        vec3 halfDir = normalize(uLightDir + vViewDir);',
+                '        spec = pow(max(dot(vNormal, halfDir), 0.0), 60.0) * 0.12;',
                 '    }',
                 '',
-                '    // Diffuse lighting',
-                '    float diff = max(dot(vNormal, lightDir), 0.0);',
-                '    float ambient = 0.5;',
-                '    float lighting = ambient + diff * 0.55;',
+                '    // Mix land and ocean',
+                '    vec3 baseColor = mix(land, ocean, smoothstep(0.4, 0.6, waterFactor));',
                 '',
-                '    // Subtle specular on ocean',
-                '    if (!isLand) {',
-                '        vec3 halfDir = normalize(lightDir + vViewDir);',
-                '        float spec = pow(max(dot(vNormal, halfDir), 0.0), 40.0);',
-                '        lighting += spec * 0.15;',
-                '    }',
+                '    // Apply lighting + specular',
+                '    vec3 litColor = baseColor * lighting + vec3(1.0) * spec;',
                 '',
-                '    // Atmosphere fresnel rim',
-                '    float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 3.5);',
-                '    vec3 rimColor = vec3(0.75, 0.88, 1.0);',
+                '    // Soft fresnel rim (white atmosphere edge)',
+                '    float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 3.0);',
+                '    litColor += vec3(0.85, 0.92, 1.0) * fresnel * 0.25;',
                 '',
-                '    vec3 finalColor = baseColor * lighting + rimColor * fresnel * 0.2;',
-                '    gl_FragColor = vec4(finalColor, 1.0);',
+                '    gl_FragColor = vec4(litColor, 1.0);',
                 '}'
             ].join('\n')
         });
 
         var globe = new THREE.Mesh(geometry, material);
-        // Tilt the globe slightly
         globe.rotation.x = 0.15;
         scene.add(globe);
 
-        // Atmosphere glow (outer shell)
-        var atmosphereGeometry = new THREE.SphereGeometry(1.025, 64, 64);
+        // Stemkoski-style atmosphere glow (BackSide + AdditiveBlending)
+        var atmosphereGeometry = new THREE.SphereGeometry(1, 64, 64);
         var atmosphereMaterial = new THREE.ShaderMaterial({
-            uniforms: {},
+            uniforms: {
+                c: { value: 0.45 },
+                p: { value: 4.5 },
+                glowColor: { value: new THREE.Color(0.9, 0.95, 1.0) }
+            },
             vertexShader: [
                 'varying vec3 vNormal;',
-                'varying vec3 vViewDir;',
                 'void main() {',
                 '    vNormal = normalize(normalMatrix * normal);',
-                '    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);',
-                '    vViewDir = normalize(-mvPos.xyz);',
-                '    gl_Position = projectionMatrix * mvPos;',
+                '    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
                 '}'
             ].join('\n'),
             fragmentShader: [
+                'uniform float c;',
+                'uniform float p;',
+                'uniform vec3 glowColor;',
                 'varying vec3 vNormal;',
-                'varying vec3 vViewDir;',
                 'void main() {',
-                '    float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 2.5);',
-                '    vec3 atmColor = vec3(0.58, 0.80, 1.0);',
-                '    gl_FragColor = vec4(atmColor, fresnel * 0.25);',
+                '    float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);',
+                '    gl_FragColor = vec4(glowColor, 1.0) * intensity;',
                 '}'
             ].join('\n'),
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
             transparent: true,
-            side: THREE.FrontSide,
             depthWrite: false
         });
         var atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+        atmosphere.scale.set(1.18, 1.18, 1.18);
         scene.add(atmosphere);
 
         // Animation
         function animate() {
             requestAnimationFrame(animate);
             globe.rotation.y += 0.002;
-            atmosphere.rotation.y += 0.002;
             renderer.render(scene, camera);
         }
 
