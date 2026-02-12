@@ -1577,120 +1577,339 @@
 
         /* Download buttons reuse hero .btn-google-play / .btn-app-store classes */
 
-        /* Download: Animated pin drop onto mini map */
-        .download-visual {
-            max-width: 400px;
-            height: 260px;
-            margin: 0 auto;
-            position: relative;
+        /* ===== DOWNLOAD VISUAL OPTIONS (showing all 3 for comparison) ===== */
+        .dl-options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+            margin-top: 20px;
         }
 
-        /* Mini map silhouette (simplified world outline) */
-        .pin-drop-map {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 320px;
-            height: 160px;
+        .dl-option {
+            text-align: center;
+        }
+
+        .dl-option-label {
+            display: inline-block;
+            padding: 6px 16px;
             background: #f1f5f9;
-            border-radius: 80px / 40px;
+            border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            letter-spacing: 0.05em;
+            margin-bottom: 32px;
+        }
+
+        /* ===== OPTION A: Phone Showcase ===== */
+        .phone-showcase {
+            max-width: 300px;
+            margin: 0 auto;
+            perspective: 800px;
+        }
+
+        .phone-showcase-frame {
+            width: 240px;
+            height: 440px;
+            margin: 0 auto;
+            background: #0f172a;
+            border-radius: 36px;
+            padding: 12px;
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.18), 0 8px 24px rgba(15, 23, 42, 0.1);
+            animation: phoneTilt 8s ease-in-out infinite;
+            position: relative;
             overflow: hidden;
         }
 
-        .pin-drop-map::before {
+        .phone-showcase-frame::before {
             content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 22px;
+            background: #0f172a;
+            border-radius: 0 0 14px 14px;
+            z-index: 10;
+        }
+
+        .phone-showcase-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .phone-map-bg {
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(ellipse 60px 30px at 30% 40%, #e2e8f0 0%, transparent 100%),
-                radial-gradient(ellipse 50px 40px at 55% 35%, #e2e8f0 0%, transparent 100%),
-                radial-gradient(ellipse 30px 50px at 70% 55%, #e2e8f0 0%, transparent 100%),
-                radial-gradient(ellipse 25px 20px at 45% 65%, #e2e8f0 0%, transparent 100%);
+                radial-gradient(ellipse 120px 60px at 35% 45%, #dcfce7 0%, transparent 70%),
+                radial-gradient(ellipse 80px 50px at 65% 35%, #dcfce7 0%, transparent 70%),
+                radial-gradient(ellipse 60px 80px at 50% 65%, #dcfce7 0%, transparent 70%),
+                linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 40%, #f8fafc 100%);
         }
 
-        /* Grid lines on map */
-        .pin-drop-map::after {
+        .phone-map-bg::after {
             content: '';
             position: absolute;
             inset: 0;
             background-image:
-                linear-gradient(rgba(30, 41, 59, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(30, 41, 59, 0.03) 1px, transparent 1px);
-            background-size: 32px 32px;
+                linear-gradient(rgba(30, 41, 59, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.04) 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
-        /* Individual dropping pins */
-        .drop-pin {
+        .phone-pin {
             position: absolute;
-            width: 20px;
+            width: 28px;
             height: 28px;
-            z-index: 3;
-        }
-
-        .drop-pin-head {
-            width: 20px;
-            height: 20px;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 3;
         }
 
-        .drop-pin-head::after {
+        .phone-pin::after {
             content: '';
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: #ffffff;
+            background: #fff;
             transform: rotate(45deg);
         }
 
-        .drop-pin-ripple {
+        .phone-pin:nth-child(1) { top: 25%; left: 20%; background: #dc2626; animation: phonePinAppear 4s ease-out 0.5s both infinite; }
+        .phone-pin:nth-child(2) { top: 40%; left: 55%; background: #2563eb; animation: phonePinAppear 4s ease-out 1.2s both infinite; }
+        .phone-pin:nth-child(3) { top: 60%; left: 35%; background: #16a34a; animation: phonePinAppear 4s ease-out 1.9s both infinite; }
+        .phone-pin:nth-child(4) { top: 30%; left: 70%; background: #ea580c; animation: phonePinAppear 4s ease-out 2.6s both infinite; }
+
+        .phone-pin-pulse {
             position: absolute;
-            bottom: -2px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 16px;
-            height: 6px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: rgba(30, 41, 59, 0.1);
+            transform: translate(-50%, -50%) rotate(45deg);
+            z-index: 2;
         }
 
-        /* Pin positions and animations */
-        .drop-pin:nth-child(1) { left: 22%; bottom: 70px; animation: pinDrop 3s ease-out 0.2s both infinite; }
-        .drop-pin:nth-child(1) .drop-pin-head { background: #dc2626; }
-        .drop-pin:nth-child(1) .drop-pin-ripple { animation: pinRipple 3s ease-out 0.6s both infinite; }
+        .phone-pin:nth-child(1) .phone-pin-pulse { background: rgba(220, 38, 38, 0.15); animation: pinPulseGrow 4s ease-out 0.8s both infinite; }
+        .phone-pin:nth-child(2) .phone-pin-pulse { background: rgba(37, 99, 235, 0.15); animation: pinPulseGrow 4s ease-out 1.5s both infinite; }
+        .phone-pin:nth-child(3) .phone-pin-pulse { background: rgba(22, 163, 74, 0.15); animation: pinPulseGrow 4s ease-out 2.2s both infinite; }
+        .phone-pin:nth-child(4) .phone-pin-pulse { background: rgba(234, 88, 12, 0.15); animation: pinPulseGrow 4s ease-out 2.9s both infinite; }
 
-        .drop-pin:nth-child(2) { left: 42%; bottom: 85px; animation: pinDrop 3s ease-out 0.8s both infinite; }
-        .drop-pin:nth-child(2) .drop-pin-head { background: #2563eb; }
-        .drop-pin:nth-child(2) .drop-pin-ripple { animation: pinRipple 3s ease-out 1.2s both infinite; }
-
-        .drop-pin:nth-child(3) { left: 60%; bottom: 65px; animation: pinDrop 3s ease-out 1.4s both infinite; }
-        .drop-pin:nth-child(3) .drop-pin-head { background: #16a34a; }
-        .drop-pin:nth-child(3) .drop-pin-ripple { animation: pinRipple 3s ease-out 1.8s both infinite; }
-
-        .drop-pin:nth-child(4) { left: 78%; bottom: 78px; animation: pinDrop 3s ease-out 2.0s both infinite; }
-        .drop-pin:nth-child(4) .drop-pin-head { background: #ea580c; }
-        .drop-pin:nth-child(4) .drop-pin-ripple { animation: pinRipple 3s ease-out 2.4s both infinite; }
-
-        @keyframes pinDrop {
-            0% { transform: translateY(-120px); opacity: 0; }
-            15% { opacity: 1; }
-            25% { transform: translateY(0); }
-            30% { transform: translateY(-12px); }
-            35% { transform: translateY(0); }
-            38% { transform: translateY(-4px); }
-            42%, 85% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(0); opacity: 0; }
+        .phone-bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 16px;
+            z-index: 5;
         }
 
-        @keyframes pinRipple {
-            0%, 20% { transform: translateX(-50%) scale(0); opacity: 0; }
-            30% { transform: translateX(-50%) scale(1); opacity: 0.4; }
-            50% { transform: translateX(-50%) scale(2.5); opacity: 0; }
-            100% { transform: translateX(-50%) scale(0); opacity: 0; }
+        .phone-bar-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: #e2e8f0;
+        }
+
+        .phone-bar-icon.active {
+            background: #1e293b;
+        }
+
+        @keyframes phoneTilt {
+            0%, 100% { transform: rotateY(-4deg) rotateX(2deg); }
+            50% { transform: rotateY(4deg) rotateX(-2deg); }
+        }
+
+        @keyframes phonePinAppear {
+            0% { transform: rotate(-45deg) scale(0) translateY(-20px); opacity: 0; }
+            15% { transform: rotate(-45deg) scale(1.2) translateY(0); opacity: 1; }
+            20% { transform: rotate(-45deg) scale(1); }
+            80% { transform: rotate(-45deg) scale(1); opacity: 1; }
+            100% { transform: rotate(-45deg) scale(1); opacity: 0; }
+        }
+
+        @keyframes pinPulseGrow {
+            0%, 10% { transform: translate(-50%, -50%) rotate(45deg) scale(0); opacity: 0; }
+            20% { transform: translate(-50%, -50%) rotate(45deg) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) rotate(45deg) scale(3); opacity: 0; }
+            100% { transform: translate(-50%, -50%) rotate(45deg) scale(0); opacity: 0; }
+        }
+
+        /* ===== OPTION B: Notification Stack ===== */
+        .notif-stack {
+            max-width: 380px;
+            height: 260px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notif-card {
+            position: absolute;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid rgba(30, 41, 59, 0.06);
+            box-shadow: 0 4px 16px rgba(30, 41, 59, 0.06), 0 1px 4px rgba(30, 41, 59, 0.04);
+            opacity: 0;
+        }
+
+        .notif-card:nth-child(1) { animation: notifSlide 12s ease-in-out 0s infinite; }
+        .notif-card:nth-child(2) { animation: notifSlide 12s ease-in-out 3s infinite; }
+        .notif-card:nth-child(3) { animation: notifSlide 12s ease-in-out 6s infinite; }
+        .notif-card:nth-child(4) { animation: notifSlide 12s ease-in-out 9s infinite; }
+
+        .notif-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .notif-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notif-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #1e293b;
+            line-height: 1.4;
+        }
+
+        .notif-text strong {
+            font-weight: 700;
+        }
+
+        .notif-time {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+
+        .notif-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        @keyframes notifSlide {
+            0% { transform: translateX(60px) translateY(0); opacity: 0; }
+            3% { transform: translateX(0) translateY(0); opacity: 1; }
+            20% { transform: translateX(0) translateY(0); opacity: 1; }
+            25% { transform: translateX(0) translateY(-8px); opacity: 0.6; }
+            28% { transform: translateX(0) translateY(-16px); opacity: 0; }
+            100% { transform: translateX(0) translateY(-16px); opacity: 0; }
+        }
+
+        /* ===== OPTION C: Travel Stats Counter ===== */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-ring {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+            position: relative;
+        }
+
+        .stat-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .stat-ring-bg {
+            fill: none;
+            stroke: #f1f5f9;
+            stroke-width: 4;
+        }
+
+        .stat-ring-fill {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 251;
+            stroke-dashoffset: 251;
+            animation: ringFill 2s ease-out 0.5s forwards;
+        }
+
+        .stat-ring-fill.ring-1 { stroke: #dc2626; animation-delay: 0.3s; }
+        .stat-ring-fill.ring-2 { stroke: #2563eb; animation-delay: 0.8s; }
+        .stat-ring-fill.ring-3 { stroke: #16a34a; animation-delay: 1.3s; }
+
+        .stat-ring-fill.ring-1 { stroke-dashoffset: 50; }
+        .stat-ring-fill.ring-2 { stroke-dashoffset: 100; }
+        .stat-ring-fill.ring-3 { stroke-dashoffset: 75; }
+
+        .stat-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 32px;
+            height: 32px;
+            color: #475569;
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        @keyframes ringFill {
+            from { stroke-dashoffset: 251; }
         }
 
         /* ===== FOOTER ===== */
@@ -2439,24 +2658,124 @@
                     </span>
                 </div>
             </div>
-            <div class="download-visual reveal from-scale reveal-delay-4">
-                <div class="pin-drop-map"></div>
-                <div class="drop-pin">
-                    <div class="drop-pin-head"></div>
-                    <div class="drop-pin-ripple"></div>
+            <!-- === ALL 3 OPTIONS SHOWN FOR COMPARISON === -->
+            <div class="dl-options-grid">
+
+                <!-- OPTION A: Phone Showcase -->
+                <div class="dl-option reveal from-scale reveal-delay-4">
+                    <div class="dl-option-label">OPTION A: Phone Showcase</div>
+                    <div class="phone-showcase">
+                        <div class="phone-showcase-frame">
+                            <div class="phone-showcase-screen">
+                                <div class="phone-map-bg"></div>
+                                <div class="phone-pin">
+                                    <div class="phone-pin-pulse"></div>
+                                </div>
+                                <div class="phone-pin">
+                                    <div class="phone-pin-pulse"></div>
+                                </div>
+                                <div class="phone-pin">
+                                    <div class="phone-pin-pulse"></div>
+                                </div>
+                                <div class="phone-pin">
+                                    <div class="phone-pin-pulse"></div>
+                                </div>
+                                <div class="phone-bottom-bar">
+                                    <div class="phone-bar-icon active"></div>
+                                    <div class="phone-bar-icon"></div>
+                                    <div class="phone-bar-icon"></div>
+                                    <div class="phone-bar-icon"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="drop-pin">
-                    <div class="drop-pin-head"></div>
-                    <div class="drop-pin-ripple"></div>
+
+                <!-- OPTION B: Notification Stack -->
+                <div class="dl-option reveal from-scale reveal-delay-4">
+                    <div class="dl-option-label">OPTION B: Notification Stack</div>
+                    <div class="notif-stack">
+                        <div class="notif-card">
+                            <div class="notif-avatar" style="background-image: url('https://i.pravatar.cc/88?img=12');"></div>
+                            <div class="notif-body">
+                                <div class="notif-text"><strong>Sarah</strong> pinned <strong>Tokyo Tower</strong></div>
+                                <div class="notif-time">2 min ago</div>
+                            </div>
+                            <div class="notif-icon" style="background: #fef2f2; color: #dc2626;">&#128205;</div>
+                        </div>
+                        <div class="notif-card">
+                            <div class="notif-avatar" style="background-image: url('https://i.pravatar.cc/88?img=33');"></div>
+                            <div class="notif-body">
+                                <div class="notif-text"><strong>Jake</strong> shared a story from <strong>Bali</strong></div>
+                                <div class="notif-time">5 min ago</div>
+                            </div>
+                            <div class="notif-icon" style="background: #eff6ff; color: #2563eb;">&#128247;</div>
+                        </div>
+                        <div class="notif-card">
+                            <div class="notif-avatar" style="background-image: url('https://i.pravatar.cc/88?img=47');"></div>
+                            <div class="notif-body">
+                                <div class="notif-text"><strong>Emma</strong> won <strong>Flag Dash Champion</strong></div>
+                                <div class="notif-time">12 min ago</div>
+                            </div>
+                            <div class="notif-icon" style="background: #f0fdf4; color: #16a34a;">&#127942;</div>
+                        </div>
+                        <div class="notif-card">
+                            <div class="notif-avatar" style="background-image: url('https://i.pravatar.cc/88?img=5');"></div>
+                            <div class="notif-body">
+                                <div class="notif-text"><strong>Marco</strong> pinned <strong>Colosseum, Rome</strong></div>
+                                <div class="notif-time">18 min ago</div>
+                            </div>
+                            <div class="notif-icon" style="background: #fff7ed; color: #ea580c;">&#128205;</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="drop-pin">
-                    <div class="drop-pin-head"></div>
-                    <div class="drop-pin-ripple"></div>
+
+                <!-- OPTION C: Travel Stats Counter -->
+                <div class="dl-option reveal from-scale reveal-delay-4">
+                    <div class="dl-option-label">OPTION C: Travel Stats Counter</div>
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-ring">
+                                <svg viewBox="0 0 88 88">
+                                    <circle class="stat-ring-bg" cx="44" cy="44" r="40"/>
+                                    <circle class="stat-ring-fill ring-1" cx="44" cy="44" r="40"/>
+                                </svg>
+                                <div class="stat-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                </div>
+                            </div>
+                            <div class="stat-number">12,400+</div>
+                            <div class="stat-label">Pins Dropped</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-ring">
+                                <svg viewBox="0 0 88 88">
+                                    <circle class="stat-ring-bg" cx="44" cy="44" r="40"/>
+                                    <circle class="stat-ring-fill ring-2" cx="44" cy="44" r="40"/>
+                                </svg>
+                                <div class="stat-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                                </div>
+                            </div>
+                            <div class="stat-number">84</div>
+                            <div class="stat-label">Countries</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-ring">
+                                <svg viewBox="0 0 88 88">
+                                    <circle class="stat-ring-bg" cx="44" cy="44" r="40"/>
+                                    <circle class="stat-ring-fill ring-3" cx="44" cy="44" r="40"/>
+                                </svg>
+                                <div class="stat-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                </div>
+                            </div>
+                            <div class="stat-number">3,200+</div>
+                            <div class="stat-label">Stories Shared</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="drop-pin">
-                    <div class="drop-pin-head"></div>
-                    <div class="drop-pin-ripple"></div>
-                </div>
+
             </div>
         </div>
     </section>
