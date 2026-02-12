@@ -479,17 +479,21 @@
             filter: blur(10px);
         }
 
-        /* ===== FLOATING MAP PIN MARKERS ===== */
+        /* ===== MAP PIN MARKERS (projected onto globe) ===== */
         .pin-marker {
             position: absolute;
             z-index: 10;
-            animation: pinFloat 6s ease-in-out infinite;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            will-change: transform, opacity;
+            left: 0;
+            top: 0;
         }
 
         .pin-marker-body {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
             display: flex;
@@ -499,11 +503,11 @@
         }
 
         .pin-marker-photo {
-            width: 30px;
-            height: 30px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             transform: rotate(45deg);
-            border: 2.5px solid #ffffff;
+            border: 2px solid #ffffff;
             overflow: hidden;
         }
 
@@ -537,17 +541,7 @@
             color: #ffffff;
         }
 
-        /* Hero pin positions */
-        .hero-globe-wrap .pin-marker:nth-child(2) { top: 2%; left: -12%; animation-duration: 5.5s; }
-        .hero-globe-wrap .pin-marker:nth-child(3) { top: 12%; right: -16%; animation-duration: 7s; animation-delay: -1s; }
-        .hero-globe-wrap .pin-marker:nth-child(4) { bottom: 25%; left: -20%; animation-duration: 6s; animation-delay: -2s; }
-        .hero-globe-wrap .pin-marker:nth-child(5) { bottom: 8%; right: -8%; animation-duration: 8s; animation-delay: -3s; }
-        .hero-globe-wrap .pin-marker:nth-child(6) { top: 45%; left: -18%; animation-duration: 6.5s; animation-delay: -1.5s; }
-
-        @keyframes pinFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
+        /* Pins are now positioned via JS projection — no static positions */
 
         /* Small pin variant */
         .pin-marker--sm .pin-marker-body {
@@ -1770,20 +1764,20 @@
                 <div class="hero-globe-col">
                     <div class="globe-canvas-container hero-globe-wrap reveal from-right reveal-delay-3">
                         <canvas id="heroGlobe"></canvas>
-                        <!-- Floating pin markers -->
-                        <div class="pin-marker pin-marker--dark">
+                        <!-- Pin markers pinned to globe locations -->
+                        <div class="pin-marker pin-marker--dark" data-lat="48.86" data-lng="2.35">
                             <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-1"></div></div>
                         </div>
-                        <div class="pin-marker pin-marker--red pin-marker--sm">
+                        <div class="pin-marker pin-marker--red" data-lat="40.71" data-lng="-74.01">
                             <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-4"></div></div>
                         </div>
-                        <div class="pin-marker pin-marker--blue">
+                        <div class="pin-marker pin-marker--blue" data-lat="35.68" data-lng="139.69">
                             <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-2"></div></div>
                         </div>
-                        <div class="pin-marker pin-marker--green pin-marker--sm">
+                        <div class="pin-marker pin-marker--green" data-lat="-33.92" data-lng="18.42">
                             <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-3"></div></div>
                         </div>
-                        <div class="pin-marker pin-marker--orange pin-marker--sm">
+                        <div class="pin-marker pin-marker--orange" data-lat="-22.91" data-lng="-43.17">
                             <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-5"></div></div>
                         </div>
                         <div class="globe-shadow"></div>
@@ -2350,18 +2344,78 @@
         atmosphere.scale.set(1.18, 1.18, 1.18);
         scene.add(atmosphere);
 
+        // Collect pin elements and their lat/lng
+        var pinEls = container.querySelectorAll('.pin-marker');
+        var pins = [];
+        pinEls.forEach(function(el) {
+            var lat = parseFloat(el.dataset.lat);
+            var lng = parseFloat(el.dataset.lng);
+            var phi = (90 - lat) * Math.PI / 180;
+            var theta = (lng + 180) * Math.PI / 180;
+            var r = 1.06; // slightly above displaced land surface
+            pins.push({
+                el: el,
+                // 3D position on sphere surface (local to globe)
+                pos: new THREE.Vector3(
+                    -r * Math.sin(phi) * Math.cos(theta),
+                    r * Math.cos(phi),
+                    r * Math.sin(phi) * Math.sin(theta)
+                )
+            });
+        });
+
+        var projected = new THREE.Vector3();
+
         // Animation
         function animate() {
             requestAnimationFrame(animate);
-            globe.rotation.y += 0.002;
+            globe.rotation.y += 0.0006; // slow rotation
             renderer.render(scene, camera);
+
+            // Project pins onto screen
+            var halfW = size / 2;
+            var halfH = size / 2;
+
+            for (var i = 0; i < pins.length; i++) {
+                var pin = pins[i];
+
+                // Transform pin position by globe's world matrix
+                projected.copy(pin.pos);
+                globe.localToWorld(projected);
+
+                // Check if pin faces camera (front side of globe)
+                var dir = projected.clone().sub(globe.position).normalize();
+                var camDir = new THREE.Vector3(0, 0, 1); // camera looks along -Z, so front-facing normals point +Z
+                var facing = dir.dot(camDir);
+
+                if (facing < 0.05) {
+                    // Behind the globe — hide
+                    pin.el.style.opacity = '0';
+                } else {
+                    // Project to screen coordinates
+                    var screenPos = projected.clone().project(camera);
+                    var x = (screenPos.x * 0.5 + 0.5) * size;
+                    var y = (-screenPos.y * 0.5 + 0.5) * size;
+
+                    // Fade in near edges
+                    var opacity = facing < 0.25 ? (facing - 0.05) / 0.2 : 1.0;
+                    // Scale slightly based on facing angle for depth
+                    var s = 0.6 + facing * 0.4;
+
+                    pin.el.style.opacity = String(opacity);
+                    pin.el.style.transform = 'translate(' + x + 'px, ' + y + 'px) translate(-50%, -100%) scale(' + s.toFixed(2) + ')';
+                }
+            }
         }
 
         animate();
 
         // Handle resize
+        var currentSize = size;
         window.addEventListener('resize', function() {
             var newSize = container.offsetWidth;
+            currentSize = newSize;
+            size = newSize;
             canvas.width = newSize * 2;
             canvas.height = newSize * 2;
             canvas.style.width = newSize + 'px';
