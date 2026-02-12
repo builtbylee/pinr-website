@@ -2198,8 +2198,8 @@
         renderer.setPixelRatio(2);
         renderer.setClearColor(0x000000, 0);
 
-        // Earth sphere
-        var geometry = new THREE.SphereGeometry(1, 64, 64);
+        // Earth sphere — high resolution for smooth shading
+        var geometry = new THREE.SphereGeometry(1, 128, 128);
 
         // Load water mask + topology bump map
         var textureLoader = new THREE.TextureLoader();
@@ -2212,17 +2212,18 @@
             'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-topology.png'
         );
 
-        // Custom shader: bright sky blue oceans + vivid green 3D continents
-        // Water mask for color, topology for bump/depth on land
+        // Custom shader: bright sky blue oceans + vivid 3D green continents
+        // Uses half-Lambert wrap lighting, strong bump mapping, hemisphere ambient,
+        // land specular, and coastal ambient occlusion for premium 3D depth
         var material = new THREE.ShaderMaterial({
             uniforms: {
                 uWaterMask: { value: waterMask },
                 uTopoMap: { value: topoMap },
                 uOceanColor: { value: new THREE.Color(0.490, 0.827, 0.910) },      // #7DD3E8
-                uOceanDeep: { value: new THREE.Color(0.380, 0.710, 0.840) },        // deeper blue
+                uOceanDeep: { value: new THREE.Color(0.360, 0.690, 0.830) },        // deeper blue
                 uLandColor: { value: new THREE.Color(0.440, 0.780, 0.310) },        // #70C74F base green
-                uLandLight: { value: new THREE.Color(0.565, 0.898, 0.424) },        // #90E56C highlight green
-                uLandDark: { value: new THREE.Color(0.300, 0.580, 0.220) },         // #4D9438 shadow green
+                uLandLight: { value: new THREE.Color(0.580, 0.910, 0.440) },        // highlight green
+                uLandDark: { value: new THREE.Color(0.220, 0.440, 0.150) },         // deep shadow green
                 uLightDir: { value: new THREE.Vector3(5, 3, 5).normalize() },
                 uTexelSize: { value: new THREE.Vector2(1.0 / 2048.0, 1.0 / 1024.0) }
             },
@@ -2233,10 +2234,12 @@
                 'varying vec3 vWorldNormal;',
                 'varying vec3 vTangent;',
                 'varying vec3 vBitangent;',
+                'varying vec3 vWorldPos;',
                 'void main() {',
                 '    vUv = uv;',
                 '    vNormal = normalize(normalMatrix * normal);',
                 '    vWorldNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);',
+                '    vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;',
                 '    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);',
                 '    vViewDir = normalize(-mvPos.xyz);',
                 '',
@@ -2265,6 +2268,7 @@
                 'varying vec3 vViewDir;',
                 'varying vec3 vTangent;',
                 'varying vec3 vBitangent;',
+                'varying vec3 vWorldPos;',
                 '',
                 'void main() {',
                 '    // Sample water mask',
@@ -2273,55 +2277,84 @@
                 '',
                 '    // Sample topology for bump mapping on land',
                 '    float topoC = texture2D(uTopoMap, vUv).r;',
-                '    float topoR = texture2D(uTopoMap, vUv + vec2(uTexelSize.x * 2.0, 0.0)).r;',
-                '    float topoU = texture2D(uTopoMap, vUv + vec2(0.0, uTexelSize.y * 2.0)).r;',
+                '    float topoR = texture2D(uTopoMap, vUv + vec2(uTexelSize.x * 2.5, 0.0)).r;',
+                '    float topoU = texture2D(uTopoMap, vUv + vec2(0.0, uTexelSize.y * 2.5)).r;',
+                '    float topoL = texture2D(uTopoMap, vUv - vec2(uTexelSize.x * 2.5, 0.0)).r;',
+                '    float topoD = texture2D(uTopoMap, vUv - vec2(0.0, uTexelSize.y * 2.5)).r;',
                 '',
-                '    // Compute perturbed normal from topology (only for land)',
+                '    // Compute perturbed normal from topology (central differences, land only)',
                 '    vec3 N = vNormal;',
                 '    if (!isWater) {',
-                '        float bumpStrength = 1.8;',
-                '        float dX = (topoR - topoC) * bumpStrength;',
-                '        float dY = (topoU - topoC) * bumpStrength;',
+                '        float bumpStrength = 3.2;',
+                '        float dX = (topoR - topoL) * 0.5 * bumpStrength;',
+                '        float dY = (topoU - topoD) * 0.5 * bumpStrength;',
                 '        N = normalize(vNormal + dX * vTangent + dY * vBitangent);',
                 '    }',
                 '',
-                '    // Diffuse lighting using perturbed normal',
-                '    float diff = max(dot(N, uLightDir), 0.0);',
+                '    // Half-Lambert wrap lighting: softer, more gradual shading',
+                '    float rawDot = dot(N, uLightDir);',
+                '    float halfLambert = rawDot * 0.5 + 0.5;',
+                '    halfLambert = halfLambert * halfLambert;',
+                '    float diff = max(rawDot, 0.0);',
+                '',
+                '    // Hemisphere ambient: sky-colored from above, darker from below',
+                '    vec3 skyAmbient = vec3(0.75, 0.85, 0.95);',
+                '    vec3 groundAmbient = vec3(0.30, 0.35, 0.30);',
+                '    float hemiMix = N.y * 0.5 + 0.5;',
+                '    vec3 hemiColor = mix(groundAmbient, skyAmbient, hemiMix);',
                 '',
                 '    vec3 finalColor;',
                 '',
                 '    if (isWater) {',
-                '        // Ocean: high ambient, subtle depth + specular',
-                '        float oceanAmbient = 0.72;',
-                '        float oceanLighting = oceanAmbient + diff * 0.32;',
-                '        vec3 ocean = mix(uOceanDeep, uOceanColor, 0.4 + diff * 0.6);',
+                '        // Ocean: smooth hemisphere shading + specular',
+                '        float oceanLight = 0.55 + halfLambert * 0.45;',
+                '        vec3 ocean = mix(uOceanDeep, uOceanColor, 0.3 + halfLambert * 0.7);',
+                '        ocean *= mix(vec3(oceanLight), hemiColor * oceanLight, 0.3);',
                 '',
+                '        // Specular highlight',
                 '        vec3 halfDir = normalize(uLightDir + vViewDir);',
-                '        float spec = pow(max(dot(N, halfDir), 0.0), 60.0) * 0.10;',
+                '        float spec = pow(max(dot(N, halfDir), 0.0), 80.0) * 0.12;',
                 '',
-                '        finalColor = ocean * oceanLighting + vec3(1.0) * spec;',
+                '        finalColor = ocean + vec3(1.0) * spec;',
                 '    } else {',
-                '        // Land: stronger lighting contrast for 3D embossed look',
-                '        float landAmbient = 0.55;',
-                '        float landLighting = landAmbient + diff * 0.50;',
+                '        // Land: rich 3D shading with wrap lighting + bump depth',
                 '',
-                '        // Use topology for color variation (higher = lighter green)',
-                '        float elevation = smoothstep(0.0, 0.5, topoC);',
-                '        vec3 landBase = mix(uLandColor, uLandLight, elevation * 0.4);',
+                '        // Elevation color variation',
+                '        float elevation = smoothstep(0.0, 0.55, topoC);',
+                '        vec3 landBase = mix(uLandColor, uLandLight, elevation * 0.5);',
                 '',
-                '        // Apply lighting to create 3D depth',
-                '        vec3 litLand = mix(uLandDark, landBase, landLighting);',
+                '        // Apply half-Lambert wrap lighting for soft 3D curvature',
+                '        float landShading = 0.35 + halfLambert * 0.65;',
                 '',
-                '        // Subtle coastline darkening (edge detection)',
-                '        float coastDist = smoothstep(0.4, 0.55, waterFactor);',
-                '        litLand = mix(litLand, uLandDark * 0.85, coastDist * 0.3);',
+                '        // Three-tone shading: shadow / base / highlight',
+                '        vec3 litLand = mix(uLandDark, landBase, smoothstep(0.25, 0.75, landShading));',
+                '',
+                '        // Add highlight boost on bright-facing surfaces',
+                '        float highlight = smoothstep(0.7, 1.0, landShading);',
+                '        litLand = mix(litLand, uLandLight * 1.1, highlight * 0.4);',
+                '',
+                '        // Hemisphere ambient tint',
+                '        litLand *= mix(vec3(1.0), hemiColor, 0.15);',
+                '',
+                '        // Land specular for polished 3D look',
+                '        vec3 halfDir = normalize(uLightDir + vViewDir);',
+                '        float landSpec = pow(max(dot(N, halfDir), 0.0), 25.0) * 0.08;',
+                '        litLand += vec3(0.95, 1.0, 0.90) * landSpec;',
+                '',
+                '        // Coastal ambient occlusion: darken at land/ocean edges',
+                '        float coastProx = smoothstep(0.55, 0.48, waterFactor);',
+                '        litLand = mix(litLand, uLandDark * 0.7, (1.0 - coastProx) * 0.35 * step(0.35, waterFactor));',
                 '',
                 '        finalColor = litLand;',
                 '    }',
                 '',
-                '    // Soft fresnel rim (white atmosphere edge)',
-                '    float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 3.0);',
-                '    finalColor += vec3(0.85, 0.92, 1.0) * fresnel * 0.25;',
+                '    // Soft fresnel rim (white atmosphere edge, stronger effect)',
+                '    float fresnel = pow(1.0 - max(dot(vNormal, vViewDir), 0.0), 2.5);',
+                '    finalColor = mix(finalColor, vec3(0.85, 0.93, 1.0), fresnel * 0.35);',
+                '',
+                '    // Subtle terminator darkening on the shadow side',
+                '    float terminator = smoothstep(-0.1, 0.25, dot(vNormal, uLightDir));',
+                '    finalColor *= mix(0.65, 1.0, terminator);',
                 '',
                 '    gl_FragColor = vec4(finalColor, 1.0);',
                 '}'
@@ -2336,9 +2369,9 @@
         var atmosphereGeometry = new THREE.SphereGeometry(1, 64, 64);
         var atmosphereMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                c: { value: 0.45 },
-                p: { value: 4.5 },
-                glowColor: { value: new THREE.Color(0.9, 0.95, 1.0) }
+                c: { value: 0.50 },
+                p: { value: 3.8 },
+                glowColor: { value: new THREE.Color(0.75, 0.88, 1.0) }
             },
             vertexShader: [
                 'varying vec3 vNormal;',
