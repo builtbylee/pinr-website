@@ -2200,19 +2200,23 @@
         // Earth sphere — high resolution for smooth shading
         var geometry = new THREE.SphereGeometry(1, 128, 128);
 
-        // Water mask only — clean illustrated globe style (no terrain textures)
+        // Load earth-day.jpg for terrain detail + water mask for ocean/land separation
         var textureLoader = new THREE.TextureLoader();
         textureLoader.crossOrigin = 'anonymous';
 
+        var dayMap = textureLoader.load(
+            'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-day.jpg'
+        );
         var waterMask = textureLoader.load(
             'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-water.png'
         );
 
-        // Illustrated globe with VERTEX DISPLACEMENT:
-        // Land vertices are pushed outward so continents physically protrude
-        // above the ocean surface, matching the getpinr.com reference
+        // Globe with vertex displacement + earth-day.jpg terrain detail
+        // Ocean replaced with bright cyan via water mask
+        // Continents physically protrude above ocean surface
         var material = new THREE.ShaderMaterial({
             uniforms: {
+                uDayMap: { value: dayMap },
                 uWaterMask: { value: waterMask },
                 uLightDir: { value: new THREE.Vector3(4, 3, 5).normalize() },
                 uLandHeight: { value: 0.035 }
@@ -2223,7 +2227,6 @@
                 'varying vec2 vUv;',
                 'varying vec3 vNormal;',
                 'varying vec3 vViewDir;',
-                'varying float vLandFactor;',
                 '',
                 'void main() {',
                 '    vUv = uv;',
@@ -2231,7 +2234,6 @@
                 '    // Sample water mask: 1.0 = water, 0.0 = land',
                 '    float w = texture2D(uWaterMask, uv).r;',
                 '    float landFactor = 1.0 - smoothstep(0.4, 0.6, w);',
-                '    vLandFactor = landFactor;',
                 '',
                 '    // DISPLACE land vertices outward along normal',
                 '    vec3 displaced = position + normal * landFactor * uLandHeight;',
@@ -2243,18 +2245,19 @@
                 '}'
             ].join('\n'),
             fragmentShader: [
+                'uniform sampler2D uDayMap;',
                 'uniform sampler2D uWaterMask;',
                 'uniform vec3 uLightDir;',
                 'varying vec2 vUv;',
                 'varying vec3 vNormal;',
                 'varying vec3 vViewDir;',
-                'varying float vLandFactor;',
                 '',
                 'void main() {',
+                '    vec3 dayColor = texture2D(uDayMap, vUv).rgb;',
                 '    float w = texture2D(uWaterMask, vUv).r;',
                 '    bool isWater = w > 0.5;',
                 '',
-                '    // Soft wrap lighting for the sphere curvature',
+                '    // Wrap lighting for smooth sphere shading',
                 '    float NdotL = dot(vNormal, uLightDir);',
                 '    float diff = max(NdotL, 0.0);',
                 '    float wrap = NdotL * 0.5 + 0.5;',
@@ -2262,40 +2265,47 @@
                 '    vec3 color;',
                 '',
                 '    if (isWater) {',
-                '        // Bright sky blue ocean',
-                '        vec3 oceanLight = vec3(0.38, 0.80, 0.95);',
-                '        vec3 oceanMid   = vec3(0.30, 0.70, 0.90);',
-                '        vec3 oceanShade = vec3(0.22, 0.55, 0.78);',
+                '        // Replace ocean with bright cyan',
+                '        vec3 oceanLight = vec3(0.40, 0.82, 0.96);',
+                '        vec3 oceanMid   = vec3(0.30, 0.72, 0.91);',
+                '        vec3 oceanShade = vec3(0.20, 0.55, 0.80);',
                 '',
                 '        color = mix(oceanShade, oceanMid, wrap);',
                 '        color = mix(color, oceanLight, diff * 0.7);',
                 '',
-                '        // Coastline shadow: darken ocean near land edges',
-                '        float coastDist = smoothstep(0.5, 0.75, w);',
-                '        color *= mix(0.72, 1.0, coastDist);',
+                '        // Coastline shadow from raised land',
+                '        float coastDist = smoothstep(0.5, 0.78, w);',
+                '        color *= mix(0.70, 1.0, coastDist);',
                 '',
-                '        // Subtle specular glint',
+                '        // Specular glint',
                 '        vec3 h = normalize(uLightDir + vViewDir);',
                 '        float spec = pow(max(dot(vNormal, h), 0.0), 60.0);',
                 '        color += vec3(1.0) * spec * 0.10;',
                 '    } else {',
-                '        // Bright yellow-green land',
-                '        vec3 landLight = vec3(0.65, 0.82, 0.35);',
-                '        vec3 landMid   = vec3(0.55, 0.75, 0.28);',
-                '        vec3 landShade = vec3(0.38, 0.58, 0.18);',
+                '        // Land: use day texture, brighten and boost green',
+                '        vec3 land = dayColor;',
                 '',
-                '        color = mix(landShade, landMid, wrap);',
-                '        color = mix(color, landLight, diff * 0.6);',
+                '        // Brighten',
+                '        land = pow(land, vec3(0.65));',
                 '',
-                '        // Subtle edge darkening at coastlines on the land side',
+                '        // Boost green saturation, shift toward vibrant green',
+                '        land.g *= 1.15;',
+                '        land.r *= 0.90;',
+                '        land.b *= 0.80;',
+                '',
+                '        // Apply sphere lighting',
+                '        float landLight = 0.55 + wrap * 0.45;',
+                '        color = land * landLight;',
+                '',
+                '        // Coastline darkening on land side',
                 '        float landEdge = smoothstep(0.3, 0.5, 1.0 - w);',
-                '        color *= mix(0.82, 1.0, landEdge);',
+                '        color *= mix(0.80, 1.0, landEdge);',
                 '    }',
                 '',
-                '    // Atmosphere rim — white glow at edges',
+                '    // Atmosphere rim',
                 '    float fresnel = 1.0 - max(dot(vNormal, vViewDir), 0.0);',
                 '    float rim = pow(fresnel, 2.5);',
-                '    color = mix(color, vec3(0.88, 0.94, 1.0), rim * 0.5);',
+                '    color = mix(color, vec3(0.88, 0.94, 1.0), rim * 0.45);',
                 '',
                 '    gl_FragColor = vec4(color, 1.0);',
                 '}'
