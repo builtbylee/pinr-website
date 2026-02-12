@@ -1005,87 +1005,158 @@
         .social-visual {
             display: flex;
             justify-content: center;
+            align-items: center;
             position: relative;
         }
 
-        .social-phones-wrapper {
+        /* ===== Social Orbit Visualization ===== */
+        .social-orbit {
             position: relative;
-            width: 100%;
-            max-width: 520px;
+            width: 420px;
+            height: 420px;
         }
 
-        .social-phones-wrapper > img {
-            width: 100%;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Floating avatar bubbles */
-        .social-avatar {
+        /* Orbit rings */
+        .orbit-ring {
             position: absolute;
             border-radius: 50%;
-            border: 2px solid #ffffff;
-            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.1);
-            z-index: 3;
-            overflow: hidden;
+            border: 1px solid rgba(30, 41, 59, 0.07);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .orbit-ring--1 { width: 200px; height: 200px; }
+        .orbit-ring--2 { width: 310px; height: 310px; }
+        .orbit-ring--3 { width: 400px; height: 400px; border-style: dashed; border-color: rgba(30, 41, 59, 0.04); }
+
+        /* Center hub — main user profile */
+        .orbit-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            box-shadow: 0 8px 32px rgba(30, 41, 59, 0.2), 0 0 0 4px rgba(30, 41, 59, 0.08);
+        }
+        .orbit-center img {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            object-fit: cover;
+        }
+        .orbit-center svg {
+            width: 36px;
+            height: 36px;
+            color: #ffffff;
         }
 
-        .social-avatar-inner {
+        /* Orbiting avatars */
+        .orbit-avatar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            z-index: 4;
+        }
+        .orbit-avatar-inner {
+            position: absolute;
+            border-radius: 50%;
+            border: 2.5px solid #ffffff;
+            box-shadow: 0 4px 16px rgba(30, 41, 59, 0.12);
+            overflow: hidden;
+            transform: translate(-50%, -50%);
+        }
+        .orbit-avatar-inner img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            object-fit: cover;
         }
 
-        .social-avatar:nth-child(1) {
-            width: 44px; height: 44px;
-            top: 10%; right: 5%;
-            animation: avatarFloat 5s ease-in-out infinite;
-        }
-        .social-avatar:nth-child(1) .social-avatar-inner {
-            background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+        /* Orbit 1 avatars (inner ring, 100px radius) */
+        .orbit-avatar--1 { animation: orbit1a 18s linear infinite; }
+        .orbit-avatar--2 { animation: orbit1b 18s linear infinite; }
+        .orbit-avatar--1 .orbit-avatar-inner,
+        .orbit-avatar--2 .orbit-avatar-inner {
+            width: 46px; height: 46px;
         }
 
-        .social-avatar:nth-child(2) {
+        /* Orbit 2 avatars (middle ring, 155px radius) */
+        .orbit-avatar--3 { animation: orbit2a 25s linear infinite; }
+        .orbit-avatar--4 { animation: orbit2b 25s linear infinite; }
+        .orbit-avatar--3 .orbit-avatar-inner,
+        .orbit-avatar--4 .orbit-avatar-inner {
+            width: 42px; height: 42px;
+        }
+
+        /* Orbit 3 avatars (outer ring, 200px radius) */
+        .orbit-avatar--5 { animation: orbit3a 35s linear infinite; }
+        .orbit-avatar--6 { animation: orbit3b 35s linear infinite; }
+        .orbit-avatar--5 .orbit-avatar-inner,
+        .orbit-avatar--6 .orbit-avatar-inner {
             width: 36px; height: 36px;
-            top: 25%; left: -5%;
-            animation: avatarFloat 6s ease-in-out infinite 1s;
-        }
-        .social-avatar:nth-child(2) .social-avatar-inner {
-            background: linear-gradient(135deg, #cbd5e1, #64748b);
         }
 
-        .social-avatar:nth-child(3) {
-            width: 40px; height: 40px;
-            bottom: 20%; right: 0%;
-            animation: avatarFloat 7s ease-in-out infinite 2s;
+        @keyframes orbit1a {
+            from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+            to   { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
         }
-        .social-avatar:nth-child(3) .social-avatar-inner {
-            background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+        @keyframes orbit1b {
+            from { transform: rotate(180deg) translateX(100px) rotate(-180deg); }
+            to   { transform: rotate(540deg) translateX(100px) rotate(-540deg); }
+        }
+        @keyframes orbit2a {
+            from { transform: rotate(45deg) translateX(155px) rotate(-45deg); }
+            to   { transform: rotate(405deg) translateX(155px) rotate(-405deg); }
+        }
+        @keyframes orbit2b {
+            from { transform: rotate(200deg) translateX(155px) rotate(-200deg); }
+            to   { transform: rotate(560deg) translateX(155px) rotate(-560deg); }
+        }
+        @keyframes orbit3a {
+            from { transform: rotate(90deg) translateX(200px) rotate(-90deg); }
+            to   { transform: rotate(450deg) translateX(200px) rotate(-450deg); }
+        }
+        @keyframes orbit3b {
+            from { transform: rotate(270deg) translateX(200px) rotate(-270deg); }
+            to   { transform: rotate(630deg) translateX(200px) rotate(-630deg); }
         }
 
-        .social-avatar:nth-child(4) {
-            width: 32px; height: 32px;
-            bottom: 35%; left: 2%;
-            animation: avatarFloat 5.5s ease-in-out infinite 0.5s;
-        }
-        .social-avatar:nth-child(4) .social-avatar-inner {
-            background: linear-gradient(135deg, #94a3b8, #475569);
-        }
-
-        @keyframes avatarFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .social-phones-shadow {
+        /* Pulse on center */
+        .orbit-center::after {
+            content: '';
             position: absolute;
-            bottom: -20px;
-            left: 10%;
-            right: 10%;
-            height: 60px;
-            background: radial-gradient(ellipse, rgba(30, 41, 59, 0.06) 0%, transparent 70%);
-            filter: blur(15px);
+            inset: -8px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(30, 41, 59, 0.1);
+            animation: orbitPulse 3s ease-in-out infinite;
         }
+        @keyframes orbitPulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.15); opacity: 0; }
+        }
+
+        /* Connection dot on rings */
+        .orbit-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(30, 41, 59, 0.1);
+            top: 50%;
+            left: 50%;
+        }
+        .orbit-dot--1 { animation: orbit1a 18s linear infinite; }
+        .orbit-dot--2 { animation: orbit2a 25s linear infinite reverse; }
+        .orbit-dot--3 { animation: orbit3a 35s linear infinite; }
 
         /* ===== SECTION 5: GAMES ===== */
         .games-section {
@@ -1547,6 +1618,11 @@
                 margin-top: 36px;
             }
 
+            .social-orbit {
+                width: 320px;
+                height: 320px;
+            }
+
             .stories-features {
                 max-width: 480px;
                 margin-left: auto;
@@ -1937,14 +2013,45 @@
                     </div>
                 </div>
                 <div class="social-visual reveal from-right reveal-delay-2">
-                    <div class="social-phones-wrapper" data-parallax data-speed="0.07">
-                        <!-- Floating avatars -->
-                        <div class="social-avatar"><div class="social-avatar-inner"></div></div>
-                        <div class="social-avatar"><div class="social-avatar-inner"></div></div>
-                        <div class="social-avatar"><div class="social-avatar-inner"></div></div>
-                        <div class="social-avatar"><div class="social-avatar-inner"></div></div>
-                        <div class="social-phones-shadow"></div>
-                        <img src="assets/landing-phones.png" alt="Two phones showing Pinr social features">
+                    <div class="social-orbit">
+                        <!-- Orbit rings -->
+                        <div class="orbit-ring orbit-ring--1"></div>
+                        <div class="orbit-ring orbit-ring--2"></div>
+                        <div class="orbit-ring orbit-ring--3"></div>
+
+                        <!-- Center hub -->
+                        <div class="orbit-center">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+
+                        <!-- Small connection dots -->
+                        <div class="orbit-dot orbit-dot--1"></div>
+                        <div class="orbit-dot orbit-dot--2"></div>
+                        <div class="orbit-dot orbit-dot--3"></div>
+
+                        <!-- Orbit 1: inner ring avatars -->
+                        <div class="orbit-avatar orbit-avatar--1">
+                            <div class="orbit-avatar-inner"><img src="https://i.pravatar.cc/96?img=3" alt="Traveler"></div>
+                        </div>
+                        <div class="orbit-avatar orbit-avatar--2">
+                            <div class="orbit-avatar-inner"><img src="https://i.pravatar.cc/96?img=8" alt="Traveler"></div>
+                        </div>
+
+                        <!-- Orbit 2: middle ring avatars -->
+                        <div class="orbit-avatar orbit-avatar--3">
+                            <div class="orbit-avatar-inner"><img src="https://i.pravatar.cc/96?img=11" alt="Traveler"></div>
+                        </div>
+                        <div class="orbit-avatar orbit-avatar--4">
+                            <div class="orbit-avatar-inner"><img src="https://i.pravatar.cc/96?img=20" alt="Traveler"></div>
+                        </div>
+
+                        <!-- Orbit 3: outer ring avatars -->
+                        <div class="orbit-avatar orbit-avatar--5">
+                            <div class="orbit-avatar-inner"><img src="https://i.pravatar.cc/96?img=25" alt="Traveler"></div>
+                        </div>
+                        <div class="orbit-avatar orbit-avatar--6">
+                            <div class="orbit-avatar-inner"><img src="https://i.pravatar.cc/96?img=33" alt="Traveler"></div>
+                        </div>
                     </div>
                 </div>
             </div>
