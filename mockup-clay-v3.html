@@ -2037,17 +2037,14 @@
     </a>
 
     <!-- ===== MOCKUP PREVIEW LINKS (temporary) ===== -->
-    <div id="mockup-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#1e293b;color:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;padding:10px 16px;font-family:Inter,sans-serif;font-size:0.8rem;">
-        <span style="opacity:0.7;">Clay (Veo match):</span>
-        <a href="mockup-clay-v1.html" style="color:#f59e0b;text-decoration:none;font-weight:600;">V1 Oren-Nayar</a>
-        <a href="mockup-clay-v2.html" style="color:#f59e0b;text-decoration:none;font-weight:600;">V2 Embossed</a>
-        <a href="mockup-clay-v3.html" style="color:#f59e0b;text-decoration:none;font-weight:600;">V3 Bright Pastel</a>
+    <div id="mockup-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#1e293b;color:#fff;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px;font-family:Inter,sans-serif;font-size:0.85rem;">
+        <span style="opacity:0.7;">Globe video mockups:</span>
+        <a href="mockup-24fps.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">24fps Original</a>
         <span style="opacity:0.3;">|</span>
-        <span style="opacity:0.7;">Premium:</span>
-        <a href="mockup-premium-v1.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">V1 PBR</a>
-        <a href="mockup-premium-v2.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">V2 Toon</a>
-        <a href="mockup-premium-v3.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">V3 Dark Luxe</a>
-        <button onclick="document.getElementById('mockup-banner').remove()" style="margin-left:8px;background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">&times;</button>
+        <a href="mockup-60fps.html" style="color:#4ade80;text-decoration:none;font-weight:600;">60fps Interpolated</a>
+        <span style="opacity:0.3;">|</span>
+        <a href="mockup-threejs.html" style="color:#f59e0b;text-decoration:none;font-weight:600;">Three.js (Veo style)</a>
+        <button onclick="document.getElementById('mockup-banner').remove()" style="margin-left:12px;background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">&times;</button>
     </div>
 
     <!-- ===== SECTION 1: HERO ===== -->
@@ -2760,10 +2757,10 @@
         renderer.setPixelRatio(2);
         renderer.setClearColor(0x000000, 0);
 
-        // Earth sphere — high resolution for smooth shading
+        // Earth sphere — Bright pastel clay, airy/light feel, soft wrap lighting
         var geometry = new THREE.SphereGeometry(1, 128, 128);
 
-        // Load earth-day.jpg for terrain detail + water mask for ocean/land separation
+        // Load textures (day texture kept for uniform compat, water mask for land/ocean)
         var textureLoader = new THREE.TextureLoader();
         textureLoader.crossOrigin = 'anonymous';
 
@@ -2774,15 +2771,13 @@
             'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-water.png'
         );
 
-        // Globe with vertex displacement + earth-day.jpg terrain detail
-        // Ocean replaced with bright cyan via water mask
-        // Continents physically protrude above ocean surface
+        // Bright pastel clay: high ambient, soft wrap, subtle displacement, rim light
         var material = new THREE.ShaderMaterial({
             uniforms: {
                 uDayMap: { value: dayMap },
                 uWaterMask: { value: waterMask },
                 uLightDir: { value: new THREE.Vector3(4, 3, 5).normalize() },
-                uLandHeight: { value: 0.035 }
+                uLandHeight: { value: 0.03 }
             },
             vertexShader: [
                 'uniform sampler2D uWaterMask;',
@@ -2790,16 +2785,17 @@
                 'varying vec2 vUv;',
                 'varying vec3 vNormal;',
                 'varying vec3 vViewDir;',
+                'varying float vLandFactor;',
                 '',
                 'void main() {',
                 '    vUv = uv;',
                 '',
                 '    // Sample water mask: 1.0 = water, 0.0 = land',
                 '    float w = texture2D(uWaterMask, uv).r;',
-                '    float landFactor = 1.0 - smoothstep(0.4, 0.6, w);',
+                '    vLandFactor = 1.0 - smoothstep(0.4, 0.6, w);',
                 '',
-                '    // DISPLACE land vertices outward along normal',
-                '    vec3 displaced = position + normal * landFactor * uLandHeight;',
+                '    // Subtle displacement for gently raised continents',
+                '    vec3 displaced = position + normal * vLandFactor * uLandHeight;',
                 '',
                 '    vNormal = normalize(normalMatrix * normal);',
                 '    vec4 mvPos = modelViewMatrix * vec4(displaced, 1.0);',
@@ -2814,61 +2810,68 @@
                 'varying vec2 vUv;',
                 'varying vec3 vNormal;',
                 'varying vec3 vViewDir;',
+                'varying float vLandFactor;',
                 '',
                 'void main() {',
-                '    vec3 dayColor = texture2D(uDayMap, vUv).rgb;',
                 '    float w = texture2D(uWaterMask, vUv).r;',
                 '    bool isWater = w > 0.5;',
                 '',
-                '    // Wrap lighting for smooth sphere shading',
+                '    // Very soft wrap lighting (0.45 factor) for minimal contrast',
                 '    float NdotL = dot(vNormal, uLightDir);',
+                '    float wrap = NdotL * 0.45 + 0.55;',
                 '    float diff = max(NdotL, 0.0);',
-                '    float wrap = NdotL * 0.5 + 0.5;',
+                '',
+                '    // High ambient (0.35) for bright pastel feel',
+                '    float lightVal = 0.35 + wrap * 0.65;',
+                '',
+                '    // Soft coastline shadow (lighter than other variants)',
+                '    float coastAO = 1.0;',
+                '    float texelSize = 1.0 / 2048.0;',
+                '    float ao = 0.0;',
+                '    for (int x = -2; x <= 2; x++) {',
+                '        for (int y = -2; y <= 2; y++) {',
+                '            vec2 offset = vec2(float(x), float(y)) * texelSize * 2.5;',
+                '            float sample = texture2D(uWaterMask, vUv + offset).r;',
+                '            ao += step(0.5, sample);',
+                '        }',
+                '    }',
+                '    ao /= 25.0;',
+                '    if (isWater) {',
+                '        coastAO = mix(0.82, 1.0, smoothstep(0.3, 0.9, ao));',
+                '    } else {',
+                '        coastAO = mix(0.85, 1.0, smoothstep(0.1, 0.7, 1.0 - ao));',
+                '    }',
                 '',
                 '    vec3 color;',
                 '',
                 '    if (isWater) {',
-                '        // Replace ocean with bright cyan',
-                '        vec3 oceanLight = vec3(0.40, 0.82, 0.96);',
-                '        vec3 oceanMid   = vec3(0.30, 0.72, 0.91);',
-                '        vec3 oceanShade = vec3(0.20, 0.55, 0.80);',
+                '        // Brightest pastel sky-blue ocean',
+                '        vec3 oceanLight = vec3(0.68, 0.82, 0.92);',
+                '        vec3 oceanMid   = vec3(0.62, 0.77, 0.89);',
+                '        vec3 oceanShade = vec3(0.55, 0.70, 0.82);',
                 '',
                 '        color = mix(oceanShade, oceanMid, wrap);',
-                '        color = mix(color, oceanLight, diff * 0.7);',
+                '        color = mix(color, oceanLight, diff * 0.5);',
                 '',
-                '        // Coastline shadow from raised land',
-                '        float coastDist = smoothstep(0.5, 0.78, w);',
-                '        color *= mix(0.70, 1.0, coastDist);',
-                '',
-                '        // Specular glint',
+                '        // Minimal waxy specular',
                 '        vec3 h = normalize(uLightDir + vViewDir);',
-                '        float spec = pow(max(dot(vNormal, h), 0.0), 60.0);',
-                '        color += vec3(1.0) * spec * 0.10;',
+                '        float spec = pow(max(dot(vNormal, h), 0.0), 8.0);',
+                '        color += vec3(1.0) * spec * 0.025;',
                 '    } else {',
-                '        // Land: use day texture, brighten and boost green',
-                '        vec3 land = dayColor;',
+                '        // Lighter sage green — bright pastel',
+                '        vec3 land = vec3(0.60, 0.73, 0.48);',
                 '',
-                '        // Brighten',
-                '        land = pow(land, vec3(0.65));',
-                '',
-                '        // Boost green saturation, shift toward vibrant green',
-                '        land.g *= 1.15;',
-                '        land.r *= 0.90;',
-                '        land.b *= 0.80;',
-                '',
-                '        // Apply sphere lighting',
-                '        float landLight = 0.55 + wrap * 0.45;',
-                '        color = land * landLight;',
-                '',
-                '        // Coastline darkening on land side',
-                '        float landEdge = smoothstep(0.3, 0.5, 1.0 - w);',
-                '        color *= mix(0.80, 1.0, landEdge);',
+                '        // Apply soft lighting',
+                '        color = land * lightVal;',
                 '    }',
                 '',
-                '    // Atmosphere rim',
+                '    // Apply coastline AO',
+                '    color *= coastAO;',
+                '',
+                '    // No SSS — use rim light for edge effect instead',
                 '    float fresnel = 1.0 - max(dot(vNormal, vViewDir), 0.0);',
                 '    float rim = pow(fresnel, 2.5);',
-                '    color = mix(color, vec3(0.88, 0.94, 1.0), rim * 0.45);',
+                '    color = mix(color, vec3(0.95, 0.97, 1.0), rim * 0.45);',
                 '',
                 '    gl_FragColor = vec4(color, 1.0);',
                 '}'
@@ -2879,13 +2882,13 @@
         globe.rotation.x = 0.15;
         scene.add(globe);
 
-        // Atmosphere glow (BackSide + AdditiveBlending)
+        // Atmosphere glow — bright white for airy pastel feel
         var atmosphereGeometry = new THREE.SphereGeometry(1, 64, 64);
         var atmosphereMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 c: { value: 0.52 },
-                p: { value: 3.5 },
-                glowColor: { value: new THREE.Color(0.78, 0.90, 1.0) }
+                p: { value: 3.0 },
+                glowColor: { value: new THREE.Color(0.95, 0.97, 1.0) }
             },
             vertexShader: [
                 'varying vec3 vNormal;',

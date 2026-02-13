@@ -2037,17 +2037,14 @@
     </a>
 
     <!-- ===== MOCKUP PREVIEW LINKS (temporary) ===== -->
-    <div id="mockup-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#1e293b;color:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;padding:10px 16px;font-family:Inter,sans-serif;font-size:0.8rem;">
-        <span style="opacity:0.7;">Clay (Veo match):</span>
-        <a href="mockup-clay-v1.html" style="color:#f59e0b;text-decoration:none;font-weight:600;">V1 Oren-Nayar</a>
-        <a href="mockup-clay-v2.html" style="color:#f59e0b;text-decoration:none;font-weight:600;">V2 Embossed</a>
-        <a href="mockup-clay-v3.html" style="color:#f59e0b;text-decoration:none;font-weight:600;">V3 Bright Pastel</a>
+    <div id="mockup-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#1e293b;color:#fff;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px;font-family:Inter,sans-serif;font-size:0.85rem;">
+        <span style="opacity:0.7;">Globe video mockups:</span>
+        <a href="mockup-24fps.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">24fps Original</a>
         <span style="opacity:0.3;">|</span>
-        <span style="opacity:0.7;">Premium:</span>
-        <a href="mockup-premium-v1.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">V1 PBR</a>
-        <a href="mockup-premium-v2.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">V2 Toon</a>
-        <a href="mockup-premium-v3.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">V3 Dark Luxe</a>
-        <button onclick="document.getElementById('mockup-banner').remove()" style="margin-left:8px;background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">&times;</button>
+        <a href="mockup-60fps.html" style="color:#4ade80;text-decoration:none;font-weight:600;">60fps Interpolated</a>
+        <span style="opacity:0.3;">|</span>
+        <a href="mockup-threejs.html" style="color:#f59e0b;text-decoration:none;font-weight:600;">Three.js (Veo style)</a>
+        <button onclick="document.getElementById('mockup-banner').remove()" style="margin-left:12px;background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">&times;</button>
     </div>
 
     <!-- ===== SECTION 1: HERO ===== -->
@@ -2760,7 +2757,7 @@
         renderer.setPixelRatio(2);
         renderer.setClearColor(0x000000, 0);
 
-        // Earth sphere — high resolution for smooth shading
+        // Earth sphere — Toon/Cel-Shaded Globe
         var geometry = new THREE.SphereGeometry(1, 128, 128);
 
         // Load earth-day.jpg for terrain detail + water mask for ocean/land separation
@@ -2774,15 +2771,14 @@
             'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-water.png'
         );
 
-        // Globe with vertex displacement + earth-day.jpg terrain detail
-        // Ocean replaced with bright cyan via water mask
-        // Continents physically protrude above ocean surface
+        // Toon/Cel-shaded: quantized lighting, bold coastline outlines,
+        // flat color fills with hard shadow boundaries
         var material = new THREE.ShaderMaterial({
             uniforms: {
                 uDayMap: { value: dayMap },
                 uWaterMask: { value: waterMask },
                 uLightDir: { value: new THREE.Vector3(4, 3, 5).normalize() },
-                uLandHeight: { value: 0.035 }
+                uLandHeight: { value: 0.025 }
             },
             vertexShader: [
                 'uniform sampler2D uWaterMask;',
@@ -2798,7 +2794,7 @@
                 '    float w = texture2D(uWaterMask, uv).r;',
                 '    float landFactor = 1.0 - smoothstep(0.4, 0.6, w);',
                 '',
-                '    // DISPLACE land vertices outward along normal',
+                '    // Displace land vertices outward along normal',
                 '    vec3 displaced = position + normal * landFactor * uLandHeight;',
                 '',
                 '    vNormal = normalize(normalMatrix * normal);',
@@ -2820,55 +2816,57 @@
                 '    float w = texture2D(uWaterMask, vUv).r;',
                 '    bool isWater = w > 0.5;',
                 '',
-                '    // Wrap lighting for smooth sphere shading',
-                '    float NdotL = dot(vNormal, uLightDir);',
-                '    float diff = max(NdotL, 0.0);',
-                '    float wrap = NdotL * 0.5 + 0.5;',
+                '    // 3-step quantized lighting',
+                '    float NdotL = max(dot(vNormal, uLightDir), 0.0);',
+                '    float toon = floor(NdotL * 3.0) / 3.0;',
+                '',
+                '    // Edge detection on water mask for coastline outlines',
+                '    float texelSize = 1.0 / 2048.0;',
+                '    float wR = texture2D(uWaterMask, vUv + vec2(texelSize, 0.0)).r;',
+                '    float wL = texture2D(uWaterMask, vUv - vec2(texelSize, 0.0)).r;',
+                '    float wU = texture2D(uWaterMask, vUv + vec2(0.0, texelSize)).r;',
+                '    float wD = texture2D(uWaterMask, vUv - vec2(0.0, texelSize)).r;',
+                '    float gradient = abs(wR - wL) + abs(wU - wD);',
+                '    float outline = smoothstep(0.15, 0.5, gradient);',
                 '',
                 '    vec3 color;',
                 '',
                 '    if (isWater) {',
-                '        // Replace ocean with bright cyan',
-                '        vec3 oceanLight = vec3(0.40, 0.82, 0.96);',
-                '        vec3 oceanMid   = vec3(0.30, 0.72, 0.91);',
-                '        vec3 oceanShade = vec3(0.20, 0.55, 0.80);',
+                '        // Ocean: 3 discrete toon levels',
+                '        vec3 oceanShadow = vec3(0.15, 0.25, 0.45);',
+                '        vec3 oceanMid    = vec3(0.25, 0.45, 0.65);',
+                '        vec3 oceanHi     = vec3(0.35, 0.55, 0.75);',
                 '',
-                '        color = mix(oceanShade, oceanMid, wrap);',
-                '        color = mix(color, oceanLight, diff * 0.7);',
-                '',
-                '        // Coastline shadow from raised land',
-                '        float coastDist = smoothstep(0.5, 0.78, w);',
-                '        color *= mix(0.70, 1.0, coastDist);',
-                '',
-                '        // Specular glint',
-                '        vec3 h = normalize(uLightDir + vViewDir);',
-                '        float spec = pow(max(dot(vNormal, h), 0.0), 60.0);',
-                '        color += vec3(1.0) * spec * 0.10;',
+                '        if (toon < 0.34) {',
+                '            color = oceanShadow;',
+                '        } else if (toon < 0.67) {',
+                '            color = oceanMid;',
+                '        } else {',
+                '            color = oceanHi;',
+                '        }',
                 '    } else {',
-                '        // Land: use day texture, brighten and boost green',
-                '        vec3 land = dayColor;',
+                '        // Land: 3 discrete toon levels — rich green',
+                '        vec3 landShadow = vec3(0.25, 0.50, 0.20);',
+                '        vec3 landMid    = vec3(0.35, 0.65, 0.30);',
+                '        vec3 landHi     = vec3(0.50, 0.78, 0.40);',
                 '',
-                '        // Brighten',
-                '        land = pow(land, vec3(0.65));',
-                '',
-                '        // Boost green saturation, shift toward vibrant green',
-                '        land.g *= 1.15;',
-                '        land.r *= 0.90;',
-                '        land.b *= 0.80;',
-                '',
-                '        // Apply sphere lighting',
-                '        float landLight = 0.55 + wrap * 0.45;',
-                '        color = land * landLight;',
-                '',
-                '        // Coastline darkening on land side',
-                '        float landEdge = smoothstep(0.3, 0.5, 1.0 - w);',
-                '        color *= mix(0.80, 1.0, landEdge);',
+                '        if (toon < 0.34) {',
+                '            color = landShadow;',
+                '        } else if (toon < 0.67) {',
+                '            color = landMid;',
+                '        } else {',
+                '            color = landHi;',
+                '        }',
                 '    }',
                 '',
-                '    // Atmosphere rim',
+                '    // Draw bold coastline outline',
+                '    vec3 outlineColor = vec3(0.08, 0.10, 0.15);',
+                '    color = mix(color, outlineColor, outline * 0.85);',
+                '',
+                '    // Thin bright atmosphere rim',
                 '    float fresnel = 1.0 - max(dot(vNormal, vViewDir), 0.0);',
-                '    float rim = pow(fresnel, 2.5);',
-                '    color = mix(color, vec3(0.88, 0.94, 1.0), rim * 0.45);',
+                '    float rim = pow(fresnel, 4.0);',
+                '    color = mix(color, vec3(0.6, 0.85, 1.0), rim * 0.55);',
                 '',
                 '    gl_FragColor = vec4(color, 1.0);',
                 '}'
@@ -2879,13 +2877,13 @@
         globe.rotation.x = 0.15;
         scene.add(globe);
 
-        // Atmosphere glow (BackSide + AdditiveBlending)
+        // Atmosphere glow — thin bright toon rim
         var atmosphereGeometry = new THREE.SphereGeometry(1, 64, 64);
         var atmosphereMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                c: { value: 0.52 },
-                p: { value: 3.5 },
-                glowColor: { value: new THREE.Color(0.78, 0.90, 1.0) }
+                c: { value: 0.48 },
+                p: { value: 4.0 },
+                glowColor: { value: new THREE.Color(0.6, 0.85, 1.0) }
             },
             vertexShader: [
                 'varying vec3 vNormal;',
