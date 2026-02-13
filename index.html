@@ -99,7 +99,7 @@
 
         .nav-cta {
             padding: 10px 24px;
-            background: #1e293b;
+            background: #6366f1;
             color: #ffffff !important;
             border-radius: 100px;
             font-weight: 600;
@@ -109,9 +109,9 @@
         }
 
         .nav-cta:hover {
-            background: #334155;
+            background: #4f46e5;
             transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(30, 41, 59, 0.25);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
             color: #ffffff !important;
         }
 
@@ -160,10 +160,10 @@
         }
 
         .progress-dot.active {
-            background: #1e293b;
-            border-color: #1e293b;
+            background: #6366f1;
+            border-color: #6366f1;
             transform: scale(1.4);
-            box-shadow: 0 0 12px rgba(30, 41, 59, 0.3);
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
         }
 
         /* ===== FLOATING DOWNLOAD BUTTON ===== */
@@ -172,7 +172,7 @@
             bottom: 32px;
             right: 32px;
             z-index: 998;
-            background: #1e293b;
+            background: #6366f1;
             color: #ffffff;
             padding: 16px 28px;
             border-radius: 100px;
@@ -182,7 +182,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 8px 32px rgba(30, 41, 59, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -195,9 +195,9 @@
         }
 
         .floating-download:hover {
-            background: #334155;
+            background: #4f46e5;
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(30, 41, 59, 0.35), 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .floating-download svg {
@@ -273,7 +273,7 @@
             content: '';
             width: 24px;
             height: 2px;
-            background: #1e293b;
+            background: #6366f1;
             border-radius: 1px;
         }
 
@@ -284,16 +284,23 @@
             position: relative;
         }
 
-        /* Subtle dot grid */
+        /* Animated gradient mesh */
         .hero::after {
             content: '';
             position: absolute;
-            inset: 0;
-            background-image: radial-gradient(rgba(30, 41, 59, 0.06) 1px, transparent 1px);
-            background-size: 32px 32px;
+            inset: -50%;
+            background:
+                radial-gradient(ellipse 600px 400px at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 500px at 70% 60%, rgba(129, 140, 248, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 300px at 50% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
             pointer-events: none;
-            mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
-            -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+            animation: meshDrift 20s ease-in-out infinite;
+        }
+
+        @keyframes meshDrift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -20px) rotate(1deg); }
+            66% { transform: translate(-20px, 15px) rotate(-1deg); }
         }
 
         .hero-content {
@@ -340,24 +347,21 @@
 
         .hero-title-word {
             display: inline-block;
-            opacity: 0;
-            transform: translateY(40px);
-            animation: wordReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            clip-path: inset(100% 0 0 0);
+            animation: clipReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .hero-title-word:nth-child(1) { animation-delay: 0.3s; }
         .hero-title-word:nth-child(2) { animation-delay: 0.5s; }
         .hero-title-word:nth-child(3) { animation-delay: 0.7s; }
 
-        @keyframes wordReveal {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes clipReveal {
+            0% { clip-path: inset(100% 0 0 0); }
+            100% { clip-path: inset(0 0 0 0); }
         }
 
         .hero-title .accent {
-            background: linear-gradient(135deg, #1e293b, #475569);
+            background: linear-gradient(135deg, #6366f1, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -598,20 +602,44 @@
             50% { transform: translateX(-50%) translateY(12px); }
         }
 
-        /* ===== SECTION 2: GLOBE / EXPLORE ===== */
-        .globe-section {
-            background: #ffffff;
-            position: relative;
+        /* ===== SECTION WAVE DIVIDERS ===== */
+        .wave-divider {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 1;
         }
 
-        .globe-section::before {
-            content: '';
+        .wave-divider svg {
+            display: block;
+            width: calc(100% + 2px);
+            height: 60px;
+        }
+
+        .wave-divider-bottom {
             position: absolute;
-            top: 0;
-            left: 10%;
-            right: 10%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 1;
+            transform: rotate(180deg);
+        }
+
+        .wave-divider-bottom svg {
+            display: block;
+            width: calc(100% + 2px);
+            height: 60px;
+        }
+
+        /* ===== SECTION 2: GLOBE / EXPLORE ===== */
+        .globe-section {
+            background: #f8f9fb;
+            position: relative;
         }
 
         .globe-layout {
@@ -637,7 +665,7 @@
         }
 
         .globe-text h2 .accent {
-            background: linear-gradient(135deg, #1e293b, #475569);
+            background: linear-gradient(135deg, #6366f1, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -692,6 +720,7 @@
         .explore-card {
             position: absolute;
             width: 240px;
+            height: 300px;
             background: #ffffff;
             border-radius: 20px;
             border: 1px solid rgba(30, 41, 59, 0.08);
@@ -701,25 +730,22 @@
         }
 
         .explore-card-header {
-            height: 200px;
-            position: relative;
-            overflow: hidden;
+            height: 100%;
+            position: absolute;
+            inset: 0;
             background-size: cover;
             background-position: center;
         }
 
-        .explore-card-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: linear-gradient(transparent, rgba(255,255,255,0.9));
-        }
-
         .explore-card-body {
+            position: relative;
+            z-index: 2;
+            margin-top: 180px;
             padding: 16px 20px 20px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .explore-card-location {
@@ -807,16 +833,6 @@
         .stories-section {
             background: #ffffff;
             position: relative;
-        }
-
-        .stories-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10%;
-            right: 10%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
         }
 
         .stories-layout {
@@ -969,7 +985,7 @@
         }
 
         .stories-text h2 .accent {
-            background: linear-gradient(135deg, #1e293b, #475569);
+            background: linear-gradient(135deg, #6366f1, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1021,19 +1037,11 @@
 
         /* ===== SECTION 4: SOCIAL ===== */
         .social-section {
-            background: #fafaf9;
+            background: #f8f9fb;
             position: relative;
         }
 
-        .social-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10%;
-            right: 10%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.06), transparent);
-        }
+        /* Section dividers now handled by wave SVGs */
 
         .social-layout {
             display: grid;
@@ -1057,7 +1065,7 @@
         }
 
         .social-text h2 .accent {
-            background: linear-gradient(135deg, #1e293b, #475569);
+            background: linear-gradient(135deg, #6366f1, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1280,15 +1288,7 @@
             overflow: hidden;
         }
 
-        .games-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10%;
-            right: 10%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
-        }
+        /* Games section divider handled by wave SVGs */
 
         /* Floating geometric shapes */
         .games-bg-shapes {
@@ -1475,13 +1475,20 @@
             border-radius: 24px;
             padding: 40px 28px;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 4px 16px rgba(30, 41, 59, 0.04);
             position: relative;
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
             overflow: hidden;
         }
 
-        .game-card:hover {
+        .game-card-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .game-card-visible:hover {
             transform: translateY(-8px) rotateX(2deg) rotateY(-1deg);
             box-shadow: 0 20px 60px rgba(30, 41, 59, 0.08), 0 8px 24px rgba(30, 41, 59, 0.04);
             border-color: rgba(30, 41, 59, 0.1);
@@ -1531,19 +1538,9 @@
 
         /* ===== SECTION 6: DOWNLOAD ===== */
         .download-section {
-            background: #ffffff;
+            background: #f8f9fb;
             position: relative;
             overflow: hidden;
-        }
-
-        .download-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 10%;
-            right: 10%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(30, 41, 59, 0.08), transparent);
         }
 
         .download-content {
@@ -1563,7 +1560,7 @@
         }
 
         .download-content h2 .accent {
-            background: linear-gradient(135deg, #1e293b, #475569);
+            background: linear-gradient(135deg, #6366f1, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -1669,10 +1666,28 @@
         }
 
         /* ===== FOOTER ===== */
+        .footer-prelude {
+            text-align: center;
+            padding: 60px 40px 0;
+            background: linear-gradient(180deg, #f8f9fb 0%, #0a0f1e 100%);
+        }
+
+        .footer-tagline {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: -0.01em;
+            padding-bottom: 48px;
+        }
+
+        .footer-tagline span {
+            color: #818cf8;
+        }
+
         .footer {
             background: #0a0f1e;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 48px 40px 32px;
+            padding: 32px 40px 32px;
             color: rgba(255, 255, 255, 0.4);
         }
 
@@ -1696,7 +1711,7 @@
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 800;
             font-size: 20px;
-            color: rgba(255, 255, 255, 0.5);
+            color: #818cf8;
             text-decoration: none;
         }
 
@@ -2076,6 +2091,7 @@
 
     <!-- ===== SECTION 2: GLOBE / EXPLORE ===== -->
     <section class="section globe-section" id="globe">
+        <div class="wave-divider"><svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,60 C300,0 900,0 1200,60 L1200,0 L0,0 Z" fill="#ffffff"/></svg></div>
         <div class="section-inner">
             <div class="globe-layout">
                 <div class="globe-text">
@@ -2090,7 +2106,7 @@
                     </p>
                     <div class="globe-stats reveal reveal-delay-3">
                         <div class="globe-stat">
-                            <div class="globe-stat-number">195</div>
+                            <div class="globe-stat-number" data-target="195">0</div>
                             <div class="globe-stat-label">Countries</div>
                         </div>
                         <div class="globe-stat">
@@ -2104,7 +2120,7 @@
                     </div>
                 </div>
                 <div class="globe-visual reveal from-right reveal-delay-2">
-                    <div class="explore-cards-stack">
+                    <div class="explore-cards-stack" data-parallax data-speed="0.06">
                         <div class="explore-card">
                             <div class="explore-card-header" style="background-image: url('https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=480&h=400&fit=crop&q=80');"></div>
                             <div class="explore-card-body">
@@ -2146,9 +2162,10 @@
 
     <!-- ===== SECTION 3: STORIES ===== -->
     <section class="section stories-section" id="stories">
+        <div class="wave-divider"><svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,60 C300,0 900,0 1200,60 L1200,0 L0,0 Z" fill="#f8f9fb"/></svg></div>
         <div class="section-inner">
             <div class="stories-layout">
-                <div class="stories-visual reveal from-left reveal-delay-1">
+                <div class="stories-visual reveal from-left reveal-delay-1" data-parallax data-speed="0.05">
                     <div class="stories-phone">
                         <div class="stories-phone-screen">
                             <div class="stories-feed-header">My Stories</div>
@@ -2243,6 +2260,7 @@
 
     <!-- ===== SECTION 4: SOCIAL ===== -->
     <section class="section social-section" id="social">
+        <div class="wave-divider"><svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,60 C300,0 900,0 1200,60 L1200,0 L0,0 Z" fill="#ffffff"/></svg></div>
         <div class="section-inner">
             <div class="social-layout">
                 <div class="social-text">
@@ -2285,7 +2303,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="social-visual reveal from-right reveal-delay-2">
+                <div class="social-visual reveal from-right reveal-delay-2" data-parallax data-speed="0.05">
                     <div class="social-orbit">
                         <!-- Orbit rings -->
                         <div class="orbit-ring orbit-ring--1"></div>
@@ -2333,6 +2351,7 @@
 
     <!-- ===== SECTION 5: GAMES ===== -->
     <section class="section games-section" id="games">
+        <div class="wave-divider"><svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,60 C300,0 900,0 1200,60 L1200,0 L0,0 Z" fill="#f8f9fb"/></svg></div>
         <div class="games-bg-shapes">
             <div class="games-bg-shape"></div>
             <div class="games-bg-shape"></div>
@@ -2392,6 +2411,7 @@
 
     <!-- ===== SECTION 6: DOWNLOAD ===== -->
     <section class="section download-section" id="download">
+        <div class="wave-divider"><svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,60 C300,0 900,0 1200,60 L1200,0 L0,0 Z" fill="#ffffff"/></svg></div>
         <div class="section-inner download-content">
             <div class="section-label reveal">
                 <span>Get Started</span>
@@ -2456,6 +2476,9 @@
     </section>
 
     <!-- ===== FOOTER ===== -->
+    <div class="footer-prelude">
+        <p class="footer-tagline">Your world. Your pins. <span>Your stories.</span></p>
+    </div>
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-left">
@@ -2578,6 +2601,64 @@
                 el.classList.add('visible');
             });
         }, 200);
+
+        // ===== #4: MAGNETIC CURSOR EFFECT ON BUTTONS =====
+        document.querySelectorAll('.btn-google-play, .nav-cta, .floating-download').forEach(function(btn) {
+            btn.addEventListener('mousemove', function(e) {
+                var rect = btn.getBoundingClientRect();
+                var x = e.clientX - rect.left - rect.width / 2;
+                var y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = 'translate(' + (x * 0.15) + 'px, ' + (y * 0.15) + 'px)';
+            });
+            btn.addEventListener('mouseleave', function() {
+                btn.style.transform = '';
+            });
+        });
+
+        // ===== #5: ANIMATED NUMBER COUNTERS =====
+        var counterObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting && !entry.target.dataset.counted) {
+                    entry.target.dataset.counted = 'true';
+                    var target = entry.target.dataset.target;
+                    var suffix = entry.target.dataset.suffix || '';
+                    var end = parseInt(target);
+                    var duration = 1500;
+                    var start = performance.now();
+                    function tick(now) {
+                        var elapsed = now - start;
+                        var progress = Math.min(elapsed / duration, 1);
+                        var eased = 1 - Math.pow(1 - progress, 3);
+                        var current = Math.round(eased * end);
+                        entry.target.textContent = current.toLocaleString() + suffix;
+                        if (progress < 1) requestAnimationFrame(tick);
+                    }
+                    requestAnimationFrame(tick);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-target]').forEach(function(el) {
+            counterObserver.observe(el);
+        });
+
+        // ===== #6: STAGGERED GAME CARD ENTRANCE =====
+        var gameCardObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var cards = entry.target.querySelectorAll('.game-card');
+                    cards.forEach(function(card, i) {
+                        setTimeout(function() {
+                            card.classList.add('game-card-visible');
+                        }, i * 150);
+                    });
+                    gameCardObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        var gamesGrid = document.querySelector('.games-grid');
+        if (gamesGrid) gameCardObserver.observe(gamesGrid);
 
     })();
     </script>
