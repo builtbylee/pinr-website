@@ -2036,15 +2036,6 @@
         Get Pinr
     </a>
 
-    <!-- ===== MOCKUP PREVIEW LINKS (temporary) ===== -->
-    <div id="mockup-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#1e293b;color:#fff;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px;font-family:Inter,sans-serif;font-size:0.85rem;">
-        <span style="opacity:0.7;">Globe video mockups:</span>
-        <a href="mockup-24fps.html" style="color:#38bdf8;text-decoration:none;font-weight:600;">24fps Original</a>
-        <span style="opacity:0.3;">|</span>
-        <a href="mockup-60fps.html" style="color:#4ade80;text-decoration:none;font-weight:600;">60fps Interpolated</a>
-        <button onclick="document.getElementById('mockup-banner').remove()" style="margin-left:12px;background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">&times;</button>
-    </div>
-
     <!-- ===== SECTION 1: HERO ===== -->
     <section class="section hero" id="hero">
         <div class="section-inner hero-content">
@@ -2079,26 +2070,12 @@
                     </div>
                 </div>
 
-                <!-- Right column: globe -->
+                <!-- Right column: globe video (24fps mockup) -->
                 <div class="hero-globe-col">
                     <div class="globe-canvas-container hero-globe-wrap reveal from-right reveal-delay-3">
-                        <canvas id="heroGlobe"></canvas>
-                        <!-- Pin markers pinned to globe locations -->
-                        <div class="pin-marker pin-marker--dark" data-lat="48.86" data-lng="2.35">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-1"></div></div>
-                        </div>
-                        <div class="pin-marker pin-marker--red" data-lat="40.71" data-lng="-74.01">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-4"></div></div>
-                        </div>
-                        <div class="pin-marker pin-marker--blue" data-lat="35.68" data-lng="139.69">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-2"></div></div>
-                        </div>
-                        <div class="pin-marker pin-marker--green" data-lat="-33.92" data-lng="18.42">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-3"></div></div>
-                        </div>
-                        <div class="pin-marker pin-marker--orange" data-lat="-22.91" data-lng="-43.17">
-                            <div class="pin-marker-body"><div class="pin-marker-photo pin-photo-5"></div></div>
-                        </div>
+                        <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                            <source src="assets/globe-24fps.mp4" type="video/mp4">
+                        </video>
                         <div class="globe-shadow"></div>
                     </div>
                 </div>
