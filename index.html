@@ -97,24 +97,6 @@
             color: #1e293b;
         }
 
-        .nav-cta {
-            padding: 10px 24px;
-            background: #0ea5e9;
-            color: #ffffff !important;
-            border-radius: 100px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            opacity: 1 !important;
-        }
-
-        .nav-cta:hover {
-            background: #0284c7;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.35);
-            color: #ffffff !important;
-        }
-
         /* ===== PROGRESS DOTS ===== */
         .progress-dots {
             position: fixed;
@@ -164,45 +146,6 @@
             border-color: #0ea5e9;
             transform: scale(1.4);
             box-shadow: 0 0 12px rgba(14, 165, 233, 0.4);
-        }
-
-        /* ===== FLOATING DOWNLOAD BUTTON ===== */
-        .floating-download {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            z-index: 998;
-            background: #0ea5e9;
-            color: #ffffff;
-            padding: 16px 28px;
-            border-radius: 100px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
-
-        .floating-download.visible {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .floating-download:hover {
-            background: #0284c7;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(14, 165, 233, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .floating-download svg {
-            width: 20px;
-            height: 20px;
         }
 
         /* ===== SECTION BASE ===== */
@@ -426,28 +369,34 @@
             align-items: center;
             gap: 10px;
             padding: 10px 22px;
-            background: transparent;
-            color: rgba(30, 41, 59, 0.4);
-            border: 1px solid rgba(30, 41, 59, 0.15);
+            background: #1e293b;
+            color: #ffffff;
             border-radius: 12px;
             font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            cursor: default;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-app-store:hover {
+            background: #334155;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(30, 41, 59, 0.2);
         }
 
         .btn-app-store svg {
-            width: 18px;
-            height: 18px;
-            opacity: 0.4;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
         }
 
         .btn-app-store .btn-sub {
             font-size: 10px;
             font-weight: 400;
             font-family: 'Inter', sans-serif;
-            opacity: 0.7;
+            color: rgba(255, 255, 255, 0.5);
             display: block;
             text-align: left;
             margin-top: -1px;
@@ -1971,13 +1920,6 @@
                 justify-content: center;
             }
 
-            .floating-download {
-                bottom: 20px;
-                right: 20px;
-                padding: 14px 22px;
-                font-size: 14px;
-            }
-
             .story-card-float {
                 display: none;
             }
@@ -2032,7 +1974,6 @@
             <li><a href="#stories">Stories</a></li>
             <li><a href="#social">Social</a></li>
             <li><a href="#games">Games</a></li>
-            <li><a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="nav-cta">Download</a></li>
         </ul>
     </nav>
 
@@ -2045,12 +1986,6 @@
         <div class="progress-dot" data-section="games" data-label="Games" onclick="scrollToSection('games')"></div>
         <div class="progress-dot" data-section="download" data-label="Download" onclick="scrollToSection('download')"></div>
     </div>
-
-    <!-- ===== FLOATING DOWNLOAD BUTTON ===== -->
-    <a href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" target="_blank" rel="noopener" class="floating-download" id="floatingDownload">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5v-17c0-.83.52-1.28 1.23-.89l14.54 8.5c.71.39.71 1.39 0 1.78l-14.54 8.5C3.52 21.78 3 21.33 3 20.5z"/></svg>
-        Get Pinr
-    </a>
 
 <!-- ===== SECTION 1: HERO ===== -->
     <section class="section hero" id="hero">
@@ -2076,13 +2011,13 @@
                                 Google Play
                             </span>
                         </a>
-                        <div class="btn-app-store">
+                        <a href="https://apps.apple.com/us/app/pinr-travel-made-social/id6757422507" target="_blank" rel="noopener" class="btn-app-store">
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
                             <span>
-                                <span class="btn-sub">Coming soon to</span>
+                                <span class="btn-sub">Download on</span>
                                 App Store
                             </span>
-                        </div>
+                        </a>
                     </div>
                 </div>
 
@@ -2461,13 +2396,13 @@
                         Google Play
                     </span>
                 </a>
-                <div class="btn-app-store">
+                <a href="https://apps.apple.com/us/app/pinr-travel-made-social/id6757422507" target="_blank" rel="noopener" class="btn-app-store">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
                     <span class="btn-text">
-                        <span class="btn-sub">Coming soon to</span>
+                        <span class="btn-sub">Download on</span>
                         App Store
                     </span>
-                </div>
+                </a>
             </div>
             <div class="notif-stack reveal from-scale reveal-delay-4">
                 <div class="notif-card">
@@ -2556,8 +2491,6 @@
         var sections = document.querySelectorAll('.section');
         var nav = document.getElementById('nav');
         var dots = document.querySelectorAll('.progress-dot');
-        var floatingBtn = document.getElementById('floatingDownload');
-
         var sectionObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
@@ -2577,7 +2510,7 @@
             sectionObserver.observe(section);
         });
 
-        // ===== SCROLL LISTENER - PARALLAX + NAV SCROLL STATE + FLOATING BTN =====
+        // ===== SCROLL LISTENER - PARALLAX + NAV SCROLL STATE =====
         var ticking = false;
 
         function onScroll() {
@@ -2587,15 +2520,6 @@
                 nav.classList.add('scrolled');
             } else {
                 nav.classList.remove('scrolled');
-            }
-
-            var downloadSection = document.getElementById('download');
-            var downloadRect = downloadSection.getBoundingClientRect();
-
-            if (scrollY > window.innerHeight * 0.8 && downloadRect.top > window.innerHeight * 0.5) {
-                floatingBtn.classList.add('visible');
-            } else {
-                floatingBtn.classList.remove('visible');
             }
 
             document.querySelectorAll('[data-parallax]').forEach(function(el) {
@@ -2635,7 +2559,7 @@
         }, 200);
 
         // ===== #4: MAGNETIC CURSOR EFFECT ON BUTTONS =====
-        document.querySelectorAll('.btn-google-play, .nav-cta, .floating-download').forEach(function(btn) {
+        document.querySelectorAll('.btn-google-play, .btn-app-store').forEach(function(btn) {
             btn.addEventListener('mousemove', function(e) {
                 var rect = btn.getBoundingClientRect();
                 var x = e.clientX - rect.left - rect.width / 2;
