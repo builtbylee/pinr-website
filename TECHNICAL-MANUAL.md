@@ -3,7 +3,7 @@
 **URL:** https://getpinr.com
 **Repository:** https://github.com/builtbylee/pinr-website
 **Branch:** `main`
-**Last updated:** February 2025
+**Last updated:** March 2026
 
 ---
 
@@ -24,14 +24,15 @@
 
 ## 1. Architecture Overview
 
-The landing page is a **single-file HTML application** (`mockup5.html`) with all CSS and JavaScript inlined. There are no build tools, bundlers, or frameworks — the site is purely static and served via GitHub Pages.
+The landing page is a **single-file HTML application** (`index.html`) with all CSS and JavaScript inlined. There are no build tools, bundlers, or frameworks — the site is purely static and served via GitHub Pages.
 
 **Key architectural decisions:**
 - All CSS is in a single `<style>` block in `<head>`
 - Main JavaScript is in a `<script>` block at the end of `<body>`
 - The Three.js 3D globe uses a separate `<script type="module">` for ES module imports
 - No external CSS frameworks (custom-built design system)
-- `index.html` is always an exact copy of `mockup5.html` (the live deployment file)
+- `index.html` is the live deployment file and source of truth for the marketing site
+- The same landing-page source is also mirrored in the main app repo under `docs/index.html` so the product repo and website repo stay aligned
 
 **Design style:** Immersive Parallax — premium white backgrounds, dark navy primary, sky blue accents, wave dividers between sections, scroll-linked animations.
 
@@ -41,8 +42,7 @@ The landing page is a **single-file HTML application** (`mockup5.html`) with all
 
 ```
 pinr-website/
-├── index.html              # Live deployment (copy of mockup5.html)
-├── mockup5.html            # Primary working file (~2,985 lines)
+├── index.html              # Live deployment and source of truth
 ├── mockup1.html            # Archive: Dark Cinematic mockup
 ├── mockup2.html            # Archive: Light Airy mockup
 ├── mockup3.html            # Archive: Bold Colorful mockup
@@ -376,18 +376,18 @@ Styled as: uppercase, 13px, `#475569`, with a 24px sky blue bar via `::before` p
 ### 5.3 Custom GLSL Shader
 
 **Vertex Shader:**
-- Samples water mask to determine land/water
-- **Displaces land vertices outward** along normals by `uLandHeight` (0.035), making continents physically protrude above the ocean surface
-- Smoothstep at `w ∈ [0.4, 0.6]` for soft coastline transitions
+- Samples the water mask to determine land/water
+- Displaces land vertices outward along normals by `uLandHeight` (`0.014`) for a subtle raised-continent effect instead of a pronounced 3D extrusion
+- Uses soft coastline transitions so land/ocean boundaries stay illustrated rather than sharply embossed
 
 **Fragment Shader:**
-- **Ocean:** Bright cyan color palette (3-tone: light/mid/shade), wrap lighting, coastline shadows from raised land, subtle specular glint (power 60)
-- **Land:** Day texture with brightened gamma (`pow(0.65)`), boosted green saturation, reduced red/blue, wrap lighting, coastline edge darkening
-- **Atmosphere rim:** Fresnel-based rim light blending toward pale blue, strength 0.45
+- **Ocean:** pastel blue palette with soft wrap lighting and gentle deep-water darkening
+- **Land:** flatter green illustrated treatment derived from the day texture, with subdued contrast and coastline shading
+- **Atmosphere rim:** pale blue fresnel rim mixed lightly into the globe edge for a cleaner premium render instead of a strong glow-heavy look
 
 ### 5.4 Atmosphere Glow
 
-- Separate sphere (scale 1.18x), BackSide rendering, AdditiveBlending
+- Separate sphere (scale 1.12x), BackSide rendering, AdditiveBlending
 - Custom glow shader based on fresnel angle from camera
 
 ### 5.5 Pin Projection System
@@ -395,20 +395,20 @@ Styled as: uppercase, 13px, `#475569`, with a 24px sky blue bar via `::before` p
 - 5 pin markers defined in HTML with `data-lat` and `data-lng` attributes
 - Locations: Paris (48.86°N, 2.35°E), NYC (40.71°N, 74.01°W), Tokyo (35.68°N, 139.69°E), Cape Town (33.92°S, 18.42°E), Rio (22.91°S, 43.17°W)
 - Each frame:
-  1. Convert lat/lng to 3D sphere position (r=1.06, above displaced land)
+  1. Convert lat/lng to 3D sphere position (r=`1.02`, close to the globe surface)
   2. Transform through globe's world matrix (accounts for rotation)
-  3. Dot product with camera direction to determine front/back facing
-  4. If facing < 0.05: hide pin (behind globe)
-  5. If visible: project to 2D screen coordinates, apply opacity fade near edges (facing 0.05→0.25), scale based on depth (0.6→1.0)
+  3. Dot product the pin normal against the camera vector to determine horizon visibility
+  4. Use smootherstep-based visibility and emphasis curves to avoid abrupt popping at the horizon
+  5. If visible: project to 2D screen coordinates, then apply depth-based opacity, scale, vertical sink, z-index, and shadow scaling so pins feel anchored as they pass the globe edge
 - Globe rotates slowly: `rotation.y += 0.0006` per frame
 
 ### 5.6 Pin Marker Styling
 
-- Teardrop shape: `border-radius: 50% 50% 50% 0` rotated -45°
-- 56px body with 36px circular profile photo inside (rotated back +45°)
-- 5 color variants: dark, red, blue, green, orange
+- Rotated rounded-square teardrop body, closer to the mobile app pin silhouette than the earlier chunkier marker
+- Avatar/photo centered inside the teardrop head using CSS variables tied to the pin core geometry
+- 5 color variants: dark, pink, amber, dark, coral
 - Profile photos from pravatar.cc
-- Drop shadow filter for depth
+- Depth shadow and small projected ground shadow both scale with facing value
 - Hidden on mobile (`<768px`)
 
 ---
@@ -616,9 +616,9 @@ Separate `<script type="module">` importing Three.js. Wrapped in IIFE. Contains:
 
 ### Deployment workflow
 
-1. Make changes to `mockup5.html`
-2. Copy to `index.html`: `cp mockup5.html index.html`
-3. Commit both files
+1. Make changes to `index.html`
+2. If the same hero is maintained in the main app repo, mirror the final version into `pinr/docs/index.html`
+3. Commit `index.html` and any supporting docs updates
 4. Push to `main` — GitHub Pages automatically deploys
 
 ### Google Play link

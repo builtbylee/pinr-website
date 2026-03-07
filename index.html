@@ -412,6 +412,7 @@
 
         .globe-canvas-container {
             position: relative;
+            filter: drop-shadow(0 24px 34px rgba(15, 23, 42, 0.08));
         }
 
         .globe-canvas-container canvas {
@@ -421,59 +422,132 @@
         }
 
         .hero-globe-wrap {
-            width: 480px;
-            height: 480px;
+            width: 500px;
+            height: 500px;
         }
 
         /* Globe shadow beneath */
         .globe-shadow {
             position: absolute;
-            bottom: -15px;
-            left: 15%;
-            right: 15%;
-            height: 30px;
-            background: radial-gradient(ellipse, rgba(30, 41, 59, 0.08) 0%, transparent 70%);
-            filter: blur(10px);
+            bottom: -20px;
+            left: 12%;
+            right: 12%;
+            height: 42px;
+            background: radial-gradient(ellipse, rgba(15, 23, 42, 0.16) 0%, rgba(15, 23, 42, 0.05) 50%, transparent 78%);
+            filter: blur(12px);
         }
 
         /* ===== MAP PIN MARKERS (projected onto globe) ===== */
         .pin-marker {
+            --pin-body-width: 58px;
+            --pin-body-height: 72px;
+            --pin-core-size: 50px;
+            --pin-photo-size: 37px;
+            --pin-core-top: 10px;
+            --pin-shadow-opacity: 0.2;
+            --pin-shadow-scale: 1;
+            --pin-color: #101418;
+            --pin-top: #1d242d;
             position: absolute;
             z-index: 10;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-            transition: opacity 0.3s ease;
             pointer-events: none;
             will-change: transform, opacity;
+            transform-origin: 50% 100%;
             left: 0;
             top: 0;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .pin-marker::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            width: 24px;
+            height: 7px;
+            transform: translate(-50%, -13px) scale(var(--pin-shadow-scale));
+            transform-origin: center center;
+            background: radial-gradient(ellipse, rgba(15, 23, 42, 0.28) 0%, rgba(15, 23, 42, 0.08) 52%, transparent 80%);
+            filter: blur(4px);
+            z-index: -1;
+            opacity: var(--pin-shadow-opacity);
         }
 
         .pin-marker-body {
-            width: 56px;
-            height: 56px;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: var(--pin-body-width);
+            height: var(--pin-body-height);
+            display: block;
             position: relative;
+            filter: drop-shadow(0 10px 16px rgba(15, 23, 42, var(--pin-shadow-opacity)));
+        }
+
+        .pin-marker-body::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            background:
+                radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.06) 34%, transparent 35%),
+                linear-gradient(180deg, var(--pin-top) 0%, var(--pin-color) 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.16),
+                inset 0 -3px 0 rgba(0, 0, 0, 0.08);
+            top: var(--pin-core-top);
+            width: var(--pin-core-size);
+            height: var(--pin-core-size);
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            border-bottom-right-radius: 50%;
+            border-bottom-left-radius: 8%;
+            transform: translateX(-50%) rotate(-45deg);
+        }
+
+        .pin-marker-photo,
+        .pin-marker-camera {
+            position: absolute;
+            left: 50%;
+            top: calc(var(--pin-core-top) + (var(--pin-core-size) - var(--pin-photo-size)) / 2);
+            width: var(--pin-photo-size);
+            height: var(--pin-photo-size);
+            transform: translateX(-50%);
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 2;
         }
 
         .pin-marker-photo {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            transform: rotate(45deg);
-            border: 2px solid #ffffff;
-            overflow: hidden;
+            border: 3px solid #ffffff;
+            box-shadow:
+                0 0 0 1px rgba(15, 23, 42, 0.08),
+                0 5px 12px rgba(15, 23, 42, 0.08);
+            background-color: #dbe4ef;
         }
 
         /* Pin color variants */
-        .pin-marker--dark .pin-marker-body { background: #1e293b; }
-        .pin-marker--red .pin-marker-body { background: #dc2626; }
-        .pin-marker--blue .pin-marker-body { background: #2563eb; }
-        .pin-marker--green .pin-marker-body { background: #16a34a; }
-        .pin-marker--orange .pin-marker-body { background: #ea580c; }
+        .pin-marker--dark {
+            --pin-color: #101418;
+            --pin-top: #232a33;
+        }
+
+        .pin-marker--red {
+            --pin-color: #ef4d85;
+            --pin-top: #ff72a2;
+        }
+
+        .pin-marker--blue {
+            --pin-color: #f4a427;
+            --pin-top: #ffc75a;
+        }
+
+        .pin-marker--green {
+            --pin-color: #101418;
+            --pin-top: #232a33;
+        }
+
+        .pin-marker--orange {
+            --pin-color: #f37b69;
+            --pin-top: #ffa089;
+        }
 
         /* Profile photos in pins */
         .pin-photo-1 { background: url('https://i.pravatar.cc/80?img=1') center/cover; }
@@ -484,32 +558,30 @@
 
         /* Camera icon pin (no photo) */
         .pin-marker-camera {
-            width: 30px;
-            height: 30px;
-            transform: rotate(45deg);
             display: flex;
             align-items: center;
             justify-content: center;
+            background: #ffffff;
+            box-shadow:
+                0 0 0 1px rgba(15, 23, 42, 0.08),
+                0 5px 12px rgba(15, 23, 42, 0.08);
         }
 
         .pin-marker-camera svg {
-            width: 18px;
-            height: 18px;
-            color: #ffffff;
+            width: 20px;
+            height: 20px;
+            color: var(--pin-color);
         }
 
         /* Pins are now positioned via JS projection — no static positions */
 
         /* Small pin variant */
-        .pin-marker--sm .pin-marker-body {
-            width: 38px;
-            height: 38px;
-        }
-
-        .pin-marker--sm .pin-marker-photo,
-        .pin-marker--sm .pin-marker-camera {
-            width: 24px;
-            height: 24px;
+        .pin-marker--sm {
+            --pin-body-width: 46px;
+            --pin-body-height: 58px;
+            --pin-core-size: 39px;
+            --pin-photo-size: 28px;
+            --pin-core-top: 8px;
         }
 
         .pin-marker--sm .pin-marker-camera svg {
@@ -2454,7 +2526,7 @@
                     <li><a href="privacy-policy.html">Privacy Policy</a></li>
                     <li><a href="terms-of-service.html">Terms of Service</a></li>
                     <li><a href="faq.html">FAQ</a></li>
-                    <li><a href="mailto:lee@getpinr.com">Support</a></li>
+                    <li><a href="/cdn-cgi/l/email-protection#8ae6efefcaedeffefae3e4f8a4e9e5e7">Support</a></li>
                 </ul>
             </div>
             <div class="footer-right">
@@ -2467,7 +2539,7 @@
     </footer>
 
     <!-- ===== JAVASCRIPT (main) ===== -->
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     (function() {
         'use strict';
 
@@ -2683,8 +2755,11 @@
             alpha: true
         });
         renderer.setSize(size * 2, size * 2);
-        renderer.setPixelRatio(2);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setClearColor(0x000000, 0);
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.05;
 
         // Earth sphere — high resolution for smooth shading
         var geometry = new THREE.SphereGeometry(1, 128, 128);
@@ -2699,16 +2774,18 @@
         var waterMask = textureLoader.load(
             'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-water.png'
         );
+        dayMap.colorSpace = THREE.SRGBColorSpace;
+        dayMap.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        waterMask.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-        // Globe with vertex displacement + earth-day.jpg terrain detail
-        // Ocean replaced with bright cyan via water mask
-        // Continents physically protrude above ocean surface
+        // Globe tuned toward a softer illustrated look:
+        // flatter pastel oceans/land, subtle shading, and light land extrusion.
         var material = new THREE.ShaderMaterial({
             uniforms: {
                 uDayMap: { value: dayMap },
                 uWaterMask: { value: waterMask },
-                uLightDir: { value: new THREE.Vector3(4, 3, 5).normalize() },
-                uLandHeight: { value: 0.035 }
+                uLightDir: { value: new THREE.Vector3(3.2, 2.6, 5.4).normalize() },
+                uLandHeight: { value: 0.014 }
             },
             vertexShader: [
                 'uniform sampler2D uWaterMask;',
@@ -2720,11 +2797,9 @@
                 'void main() {',
                 '    vUv = uv;',
                 '',
-                '    // Sample water mask: 1.0 = water, 0.0 = land',
                 '    float w = texture2D(uWaterMask, uv).r;',
-                '    float landFactor = 1.0 - smoothstep(0.4, 0.6, w);',
+                '    float landFactor = 1.0 - smoothstep(0.40, 0.58, w);',
                 '',
-                '    // DISPLACE land vertices outward along normal',
                 '    vec3 displaced = position + normal * landFactor * uLandHeight;',
                 '',
                 '    vNormal = normalize(normalMatrix * normal);',
@@ -2744,57 +2819,34 @@
                 'void main() {',
                 '    vec3 dayColor = texture2D(uDayMap, vUv).rgb;',
                 '    float w = texture2D(uWaterMask, vUv).r;',
-                '    bool isWater = w > 0.5;',
+                '    float waterFactor = smoothstep(0.43, 0.57, w);',
+                '    float landFactor = 1.0 - waterFactor;',
                 '',
-                '    // Wrap lighting for smooth sphere shading',
-                '    float NdotL = dot(vNormal, uLightDir);',
-                '    float diff = max(NdotL, 0.0);',
+                '    float NdotL = dot(normalize(vNormal), uLightDir);',
                 '    float wrap = NdotL * 0.5 + 0.5;',
+                '    float luminance = dot(dayColor, vec3(0.2126, 0.7152, 0.0722));',
+                '    float terrain = smoothstep(0.18, 0.82, luminance);',
                 '',
-                '    vec3 color;',
+                '    vec3 oceanDeep = vec3(0.50, 0.78, 0.90);',
+                '    vec3 oceanLight = vec3(0.69, 0.88, 0.95);',
+                '    vec3 ocean = mix(oceanDeep, oceanLight, wrap);',
+                '    ocean += vec3(0.015, 0.02, 0.025) * (1.0 - wrap);',
                 '',
-                '    if (isWater) {',
-                '        // Replace ocean with bright cyan',
-                '        vec3 oceanLight = vec3(0.40, 0.82, 0.96);',
-                '        vec3 oceanMid   = vec3(0.30, 0.72, 0.91);',
-                '        vec3 oceanShade = vec3(0.20, 0.55, 0.80);',
+                '    vec3 landDark = vec3(0.73, 0.83, 0.61);',
+                '    vec3 landLight = vec3(0.84, 0.90, 0.70);',
+                '    vec3 land = mix(landDark, landLight, 0.24 + terrain * 0.55);',
+                '    land += vec3(dayColor.g - dayColor.r) * 0.045;',
+                '    land *= 0.90 + wrap * 0.20;',
                 '',
-                '        color = mix(oceanShade, oceanMid, wrap);',
-                '        color = mix(color, oceanLight, diff * 0.7);',
+                '    float coastShadow = smoothstep(0.32, 0.52, w);',
+                '    land *= mix(1.0, 0.92, coastShadow * landFactor);',
+                '    ocean *= mix(0.88, 1.0, smoothstep(0.52, 0.72, w));',
                 '',
-                '        // Coastline shadow from raised land',
-                '        float coastDist = smoothstep(0.5, 0.78, w);',
-                '        color *= mix(0.70, 1.0, coastDist);',
+                '    vec3 color = mix(land, ocean, waterFactor);',
                 '',
-                '        // Specular glint',
-                '        vec3 h = normalize(uLightDir + vViewDir);',
-                '        float spec = pow(max(dot(vNormal, h), 0.0), 60.0);',
-                '        color += vec3(1.0) * spec * 0.10;',
-                '    } else {',
-                '        // Land: use day texture, brighten and boost green',
-                '        vec3 land = dayColor;',
-                '',
-                '        // Brighten',
-                '        land = pow(land, vec3(0.65));',
-                '',
-                '        // Boost green saturation, shift toward vibrant green',
-                '        land.g *= 1.15;',
-                '        land.r *= 0.90;',
-                '        land.b *= 0.80;',
-                '',
-                '        // Apply sphere lighting',
-                '        float landLight = 0.55 + wrap * 0.45;',
-                '        color = land * landLight;',
-                '',
-                '        // Coastline darkening on land side',
-                '        float landEdge = smoothstep(0.3, 0.5, 1.0 - w);',
-                '        color *= mix(0.80, 1.0, landEdge);',
-                '    }',
-                '',
-                '    // Atmosphere rim',
-                '    float fresnel = 1.0 - max(dot(vNormal, vViewDir), 0.0);',
-                '    float rim = pow(fresnel, 2.5);',
-                '    color = mix(color, vec3(0.88, 0.94, 1.0), rim * 0.45);',
+                '    float fresnel = 1.0 - max(dot(normalize(vNormal), normalize(vViewDir)), 0.0);',
+                '    float rim = pow(fresnel, 3.0);',
+                '    color = mix(color, vec3(0.95, 0.98, 1.0), rim * 0.20);',
                 '',
                 '    gl_FragColor = vec4(color, 1.0);',
                 '}'
@@ -2802,16 +2854,16 @@
         });
 
         var globe = new THREE.Mesh(geometry, material);
-        globe.rotation.x = 0.15;
+        globe.rotation.x = 0.12;
         scene.add(globe);
 
         // Atmosphere glow (BackSide + AdditiveBlending)
         var atmosphereGeometry = new THREE.SphereGeometry(1, 64, 64);
         var atmosphereMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                c: { value: 0.52 },
-                p: { value: 3.5 },
-                glowColor: { value: new THREE.Color(0.78, 0.90, 1.0) }
+                c: { value: 0.66 },
+                p: { value: 5.0 },
+                glowColor: { value: new THREE.Color(0.93, 0.97, 1.0) }
             },
             vertexShader: [
                 'varying vec3 vNormal;',
@@ -2836,7 +2888,7 @@
             depthWrite: false
         });
         var atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-        atmosphere.scale.set(1.18, 1.18, 1.18);
+        atmosphere.scale.set(1.12, 1.12, 1.12);
         scene.add(atmosphere);
 
         // Collect pin elements and their lat/lng
@@ -2847,7 +2899,7 @@
             var lng = parseFloat(el.dataset.lng);
             var phi = (90 - lat) * Math.PI / 180;
             var theta = (lng + 180) * Math.PI / 180;
-            var r = 1.06; // slightly above displaced land surface
+            var r = 1.02;
             pins.push({
                 el: el,
                 // 3D position on sphere surface (local to globe)
@@ -2860,6 +2912,20 @@
         });
 
         var projected = new THREE.Vector3();
+        var projectedScreen = new THREE.Vector3();
+        var globeWorldPos = new THREE.Vector3();
+        var cameraWorldPos = new THREE.Vector3();
+        var cameraDir = new THREE.Vector3();
+        var worldNormal = new THREE.Vector3();
+
+        function clamp01(value) {
+            return Math.max(0, Math.min(1, value));
+        }
+
+        function smootherstep(edge0, edge1, value) {
+            var x = clamp01((value - edge0) / (edge1 - edge0));
+            return x * x * x * (x * (x * 6 - 15) + 10);
+        }
 
         // Animation
         function animate() {
@@ -2868,8 +2934,9 @@
             renderer.render(scene, camera);
 
             // Project pins onto screen
-            var halfW = size / 2;
-            var halfH = size / 2;
+            globe.getWorldPosition(globeWorldPos);
+            camera.getWorldPosition(cameraWorldPos);
+            cameraDir.copy(cameraWorldPos).sub(globeWorldPos).normalize();
 
             for (var i = 0; i < pins.length; i++) {
                 var pin = pins[i];
@@ -2879,26 +2946,30 @@
                 globe.localToWorld(projected);
 
                 // Check if pin faces camera (front side of globe)
-                var dir = projected.clone().sub(globe.position).normalize();
-                var camDir = new THREE.Vector3(0, 0, 1); // camera looks along -Z, so front-facing normals point +Z
-                var facing = dir.dot(camDir);
+                worldNormal.copy(projected).sub(globeWorldPos).normalize();
+                var facing = worldNormal.dot(cameraDir);
 
-                if (facing < 0.05) {
-                    // Behind the globe — hide
+                if (facing <= -0.12) {
                     pin.el.style.opacity = '0';
+                    pin.el.style.visibility = 'hidden';
                 } else {
-                    // Project to screen coordinates
-                    var screenPos = projected.clone().project(camera);
-                    var x = (screenPos.x * 0.5 + 0.5) * size;
-                    var y = (-screenPos.y * 0.5 + 0.5) * size;
+                    projectedScreen.copy(projected).project(camera);
 
-                    // Fade in near edges
-                    var opacity = facing < 0.25 ? (facing - 0.05) / 0.2 : 1.0;
-                    // Scale slightly based on facing angle for depth
-                    var s = 0.6 + facing * 0.4;
+                    var x = (projectedScreen.x * 0.5 + 0.5) * size;
+                    var y = (-projectedScreen.y * 0.5 + 0.5) * size;
+                    var visibility = smootherstep(-0.04, 0.16, facing);
+                    var emphasis = smootherstep(0.04, 0.52, facing);
+                    var scale = 0.66 + emphasis * 0.2 + visibility * 0.08;
+                    var sink = (1 - visibility) * 18;
+                    var shadowOpacity = 0.05 + emphasis * 0.16;
+                    var shadowScale = 0.82 + emphasis * 0.26;
 
-                    pin.el.style.opacity = String(opacity);
-                    pin.el.style.transform = 'translate(' + x + 'px, ' + y + 'px) translate(-50%, -100%) scale(' + s.toFixed(2) + ')';
+                    pin.el.style.visibility = visibility < 0.01 ? 'hidden' : 'visible';
+                    pin.el.style.opacity = visibility.toFixed(3);
+                    pin.el.style.zIndex = String(110 + Math.round(emphasis * 120));
+                    pin.el.style.setProperty('--pin-shadow-opacity', shadowOpacity.toFixed(3));
+                    pin.el.style.setProperty('--pin-shadow-scale', shadowScale.toFixed(3));
+                    pin.el.style.transform = 'translate(' + x.toFixed(2) + 'px, ' + y.toFixed(2) + 'px) translate(-50%, calc(-100% + ' + sink.toFixed(1) + 'px)) scale(' + scale.toFixed(3) + ')';
                 }
             }
         }
@@ -2916,6 +2987,7 @@
             canvas.style.width = newSize + 'px';
             canvas.style.height = newSize + 'px';
             renderer.setSize(newSize * 2, newSize * 2);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
             camera.updateProjectionMatrix();
         });
     })();
