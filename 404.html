@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="apple-itunes-app" content="app-id=6757422507">
+<meta name="theme-color" content="#E9FBFF">
+<title>Pinr</title>
+<link rel="icon" href="/favicon-v3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#101418; --ink2:#56616B; --hair:#E1EAEF; --lip:#C7D7E1; --you:#FF5A1F;
+  --display:'Bricolage Grotesque', ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
+  --mono:'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;background:#BDEFF7}
+body{
+  min-height:100vh;min-height:100dvh;font-family:var(--display);color:var(--ink);
+  background:linear-gradient(180deg,#E9FBFF,#BDEFF7);
+  display:flex;flex-direction:column;align-items:center;
+  padding:max(20px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom));
+}
+.top{width:100%;max-width:520px;display:flex;justify-content:center;align-items:center;gap:10px;padding:4px 0 8px;
+  animation:rise .6s var(--ease) both}
+.top img{width:36px;height:36px;border-radius:10px;display:block;object-fit:contain}
+.top b{font-weight:800;font-size:22px;letter-spacing:-.02em}
+main{width:100%;max-width:520px;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0}
+
+/* stage: globe with a pin that drops onto it */
+.stage{position:relative;width:min(72vw,300px);aspect-ratio:1;margin:8px auto 14px;animation:rise .7s var(--ease) .05s both}
+.globe{position:absolute;inset:0;border-radius:50%;overflow:hidden;
+  box-shadow:0 2px 4px rgba(20,60,110,.06),0 26px 50px -24px rgba(20,60,110,.45)}
+.globe img{width:100%;height:100%;display:block;animation:spin 22s linear infinite;transform-origin:50% 50%}
+.shade{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  box-shadow:inset -14px -18px 30px -10px rgba(20,60,110,.28), inset 8px 8px 22px -8px rgba(255,255,255,.55)}
+.spot{position:absolute;left:56%;top:46%;width:0;height:0}
+.ring{position:absolute;left:-36px;top:-12px;width:72px;height:24px;border-radius:50%;
+  border:2px solid rgba(16,20,24,.5);opacity:0;animation:ring 3.6s var(--ease) 1.1s infinite}
+.pin{position:absolute;left:-32px;bottom:0;width:64px;height:auto;transform-origin:50% 100%;
+  filter:drop-shadow(0 6px 4px rgba(16,40,80,.28));animation:drop 3.6s cubic-bezier(.5,0,.75,0) 0.5s infinite}
+.pin.static{animation:none}
+
+h1{font-weight:800;font-size:clamp(30px,8.4vw,44px);line-height:1.04;letter-spacing:-.03em;text-wrap:balance;
+  overflow-wrap:anywhere;animation:rise .6s var(--ease) .2s both}
+h1 .u{color:var(--you)}
+.copy{margin-top:12px;font-size:17px;line-height:1.4;color:var(--ink2);max-width:360px;text-wrap:balance;animation:rise .6s var(--ease) .3s both}
+.actions{width:100%;max-width:360px;margin-top:24px;display:flex;flex-direction:column;gap:14px;animation:rise .6s var(--ease) .4s both}
+.key{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 22px;border-radius:999px;
+  font:700 18px/1 var(--display);text-decoration:none;color:#fff;cursor:pointer;
+  transition:transform .12s var(--ease),box-shadow .12s var(--ease)}
+.key.ink{background:linear-gradient(180deg,#2A323A,#141A20);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1.5px 0 rgba(0,0,0,.55),0 3px 0 #000,0 14px 20px -10px rgba(12,16,22,.65)}
+.key.ink:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1.5px 0 rgba(0,0,0,.55),0 0 0 #000,0 6px 10px -8px rgba(12,16,22,.65)}
+.key.line{background:linear-gradient(180deg,#fff,#F4F8FA);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink),0 2.5px 0 var(--lip),0 10px 16px -10px rgba(20,60,110,.5)}
+.key.line:active{transform:translateY(2.5px);box-shadow:inset 0 0 0 1.5px var(--ink),0 0 0 var(--lip)}
+.key:focus-visible{outline:3px solid var(--you);outline-offset:3px}
+.key svg{width:20px;height:20px;flex:none}
+.get{font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin:6px 0 -4px}
+.stores{display:flex;flex-direction:column;gap:12px}
+.desk{font:400 13px/1.4 var(--mono);color:var(--ink2);margin-top:2px}
+.note{margin-top:22px;font:400 12.5px/1.4 var(--mono);color:var(--ink2);animation:rise .6s var(--ease) .5s both}
+[hidden]{display:none!important}
+
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+/* pin falls from above, squashes on landing, settles, holds, then lifts for the next loop */
+@keyframes drop{
+  0%{transform:translateY(-230px) scaleY(1.08);opacity:0}
+  6%{opacity:1}
+  26%{transform:translateY(0) scale(1.18,.8)}
+  34%{transform:translateY(-12px) scale(.95,1.06)}
+  42%{transform:translateY(0) scale(1.04,.96)}
+  50%,86%{transform:translateY(0) scale(1)}
+  96%,100%{transform:translateY(-230px) scaleY(1.08);opacity:0}
+}
+@keyframes ring{
+  0%,24%{opacity:0;transform:scale(.3)}
+  28%{opacity:.7;transform:scale(.5)}
+  50%{opacity:0;transform:scale(1.7)}
+  100%{opacity:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .ring{display:none}
+}
+@media (max-height:640px){.stage{width:min(56vw,210px)}.copy{margin-top:8px}.actions{margin-top:16px}}
+@media (min-width:700px){.stage{width:320px}}
+</style>
+</head>
+<body>
+<div class="top"><img src="/assets/share/logo.png" alt="" width="36" height="36"><b>Pinr</b></div>
+<main>
+  <div class="stage" aria-hidden="true">
+    <div class="globe"><img src="/assets/share/globe.webp" alt="" width="640" height="640"></div>
+    <div class="shade"></div>
+    <div class="spot"><div class="ring"></div><img class="pin" id="pin" src="/assets/share/pin-you.webp" alt="" width="440" height="484"></div>
+  </div>
+  <h1 id="title">Pinr</h1>
+  <p class="copy" id="copy"></p>
+  <div class="actions">
+    <a class="key ink" id="open" href="pinr://" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+      Open in Pinr
+    </a>
+    <div class="get" id="getlabel">Get Pinr</div>
+    <div class="stores" id="stores">
+      <a class="key line" id="ios" href="https://apps.apple.com/us/app/pinr-travel-made-social/id6757422507" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.8-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.100 1.700 2.400 2.900 2.300 1.200 0 1.600-.7 3-.7s1.800.7 3 .7c1.300 0 2.100-1.100 2.800-2.300.9-1.300 1.300-2.600 1.300-2.700-.1 0-2.500-1-2.500-3.700zM14.200 5.800c.6-.8 1.100-1.900.9-3-.9 0-2.100.6-2.700 1.400-.6.700-1.100 1.800-1 2.900 1.100.1 2.100-.5 2.800-1.300z"/></svg>
+        App Store
+      </a>
+      <a class="key line" id="android" href="https://play.google.com/store/apps/details?id=com.builtbylee.app80days" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 3.2v17.6c0 .5.5.8.9.5l15-8.800c.4-.2.4-.8 0-1L4.900 2.700c-.4-.3-.9 0-.9.500z"/></svg>
+        Google Play
+      </a>
+    </div>
+  </div>
+  <p class="desk" id="desk" hidden>On a computer? Open this link on your phone.</p>
+  <p class="note" id="note">See friends' pins on your own globe.</p>
+</main>
+<script>
+(function () {
+  'use strict';
+  var path = location.pathname;
+  var ID_RE = /^[A-Za-z0-9_]{1,128}$/;
+  var USER_RE = /^[A-Za-z0-9._-]{1,40}$/;
+  var SLUG_RE = /^[A-Za-z0-9_-]{1,200}$/;
+
+  // id is everything after the last '-', or the whole segment when there is no '-'
+  function idFrom(segment) {
+    if (!SLUG_RE.test(segment)) return null;
+    var id = segment.slice(segment.lastIndexOf('-') + 1);
+    return ID_RE.test(id) ? id : null;
+  }
+
+  function route(p) {
+    var parts = p.replace(/\/+$/, '').split('/'); // ['', 'p', 'tram-28-xyz']
+    if (parts[0] !== '') return { kind: 'missing' };
+    if (parts.length === 3 && parts[1] === 'p') {
+      var pid = idFrom(parts[2]);
+      if (pid) return { kind: 'pin', id: pid };
+    } else if (parts.length === 3 && parts[1] === 'j') {
+      var sid = idFrom(parts[2]);
+      if (sid) return { kind: 'journey', id: sid };
+    } else if (parts.length === 2 && USER_RE.test(parts[1]) && parts[1] !== 'p' && parts[1] !== 'j' && !/^\.+$/.test(parts[1])) {
+      return { kind: 'invite', user: parts[1] };
+    }
+    return { kind: 'missing' };
+  }
+
+  var r = route(path);
+  var title = document.getElementById('title');
+  var copy = document.getElementById('copy');
+  var open = document.getElementById('open');
+  var note = document.getElementById('note');
+  var label = document.getElementById('getlabel');
+
+  if (r.kind === 'pin') {
+    title.textContent = 'A pin on Pinr';
+    copy.textContent = 'A friend shared a pin with you. Open Pinr to see it.';
+    open.href = 'pinr://pin/' + r.id;
+  } else if (r.kind === 'journey') {
+    title.textContent = 'A journey on Pinr';
+    copy.textContent = 'A friend shared a journey with you. Open Pinr to follow it.';
+    open.href = 'pinr://journey/' + r.id;
+  } else if (r.kind === 'invite') {
+    title.textContent = '';
+    var at = document.createElement('span');
+    at.className = 'u';
+    at.textContent = '@' + r.user;
+    title.appendChild(at);
+    title.appendChild(document.createTextNode(' is on Pinr. Join them.'));
+    copy.textContent = 'Open Pinr to add them as a friend and see their pins.';
+    open.href = 'pinr://friend/add/' + r.user;
+  } else {
+    title.textContent = 'This page is not here';
+    copy.textContent = 'The link may be mistyped or out of date. Pinr is free on iPhone and Android.';
+    note.hidden = true;
+    var home = document.createElement('a');
+    home.className = 'key ink';
+    home.href = '/';
+    home.textContent = 'Go to getpinr.com';
+    open.parentNode.insertBefore(home, open);
+  }
+  if (r.kind !== 'missing') open.hidden = false;
+  document.title = r.kind === 'missing' ? 'Not found - Pinr' : title.textContent + ' - Pinr';
+
+  // matching store first on a phone, both on a desktop
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/.test(ua);
+  var ios = document.getElementById('ios');
+  var android = document.getElementById('android');
+  var stores = document.getElementById('stores');
+  if (isAndroid) {
+    stores.insertBefore(android, ios);
+    ios.hidden = true;
+  } else if (isIOS) {
+    android.hidden = true;
+  } else if (r.kind !== 'missing') {
+    document.getElementById('desk').hidden = false;
+  }
+  if (r.kind === 'missing') label.textContent = 'Get Pinr';
+})();
+</script>
+</body>
+</html>
