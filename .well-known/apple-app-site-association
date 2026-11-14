@@ -1,0 +1,111 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "CMBSFLQ5V6.com.builtbylee.app80days"
+        ],
+        "components": [
+          {
+            "/": "/",
+            "exclude": true,
+            "comment": "home"
+          },
+          {
+            "/": "/index.html",
+            "exclude": true
+          },
+          {
+            "/": "/pin.html",
+            "exclude": true
+          },
+          {
+            "/": "/faq.html",
+            "exclude": true
+          },
+          {
+            "/": "/privacy-policy.html",
+            "exclude": true
+          },
+          {
+            "/": "/terms-of-service.html",
+            "exclude": true
+          },
+          {
+            "/": "/share-flow-mockup.html",
+            "exclude": true
+          },
+          {
+            "/": "/404.html",
+            "exclude": true
+          },
+          {
+            "/": "/README.md",
+            "exclude": true
+          },
+          {
+            "/": "/favicon*",
+            "exclude": true
+          },
+          {
+            "/": "/assets/*",
+            "exclude": true
+          },
+          {
+            "/": "/slides/*",
+            "exclude": true
+          },
+          {
+            "/": "/.well-known/*",
+            "exclude": true
+          },
+          {
+            "/": "/faq",
+            "exclude": true
+          },
+          {
+            "/": "/privacy-policy",
+            "exclude": true
+          },
+          {
+            "/": "/terms-of-service",
+            "exclude": true
+          },
+          {
+            "/": "/pin",
+            "exclude": true
+          },
+          {
+            "/": "/index",
+            "exclude": true
+          },
+          {
+            "/": "/share-flow-mockup",
+            "exclude": true
+          },
+          {
+            "/": "/404",
+            "exclude": true
+          },
+          {
+            "/": "/p",
+            "exclude": true
+          },
+          {
+            "/": "/j",
+            "exclude": true
+          },
+          {
+            "/": "/p/*"
+          },
+          {
+            "/": "/j/*"
+          },
+          {
+            "/": "/*"
+          }
+        ]
+      }
+    ]
+  }
+}
