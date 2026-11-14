@@ -60,6 +60,42 @@
             "exclude": true
           },
           {
+            "/": "/faq",
+            "exclude": true
+          },
+          {
+            "/": "/privacy-policy",
+            "exclude": true
+          },
+          {
+            "/": "/terms-of-service",
+            "exclude": true
+          },
+          {
+            "/": "/pin",
+            "exclude": true
+          },
+          {
+            "/": "/index",
+            "exclude": true
+          },
+          {
+            "/": "/share-flow-mockup",
+            "exclude": true
+          },
+          {
+            "/": "/404",
+            "exclude": true
+          },
+          {
+            "/": "/p",
+            "exclude": true
+          },
+          {
+            "/": "/j",
+            "exclude": true
+          },
+          {
             "/": "/p/*"
           },
           {
