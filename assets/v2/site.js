@@ -1,3 +1,4 @@
+/* eslint-env browser */
 /* getpinr.com: loops play only while on screen, and nothing moves with reduced motion. */
 (() => {
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
